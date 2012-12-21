@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        >
+        <ImageView
+            android:id="@+id/iv_categories_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/top_bar" />
+        <TextView 
+            android:id="@+id/tv_categories_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:gravity="left|center_horizontal"
+            
+            android:text=""
+            android:textSize="15dip"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="2.0"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            />
+
+    </RelativeLayout>
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/white"
+        android:layout_marginTop="20dip"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="40dip" 
+        android:horizontalSpacing="10dip">
+
+    </GridView>
+
+</LinearLayout>

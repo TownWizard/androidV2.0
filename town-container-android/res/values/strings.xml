@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Town Wizard</string>
+    <string name="header_image"></string>
+    <string name="places_image"></string>
+    <string name="info_button"></string>
+    <string name="enter_ZIP">Enter ZIP or name of town</string>
+    <string name="update_your_status">Update your status</string>
+    <string name="tag_friends">Tag friends</string>
+    <string name="search_for_friends">Search for friends</string>
+    <string name="whoops">Whoops</string>
+    <string name="partners_not_found">Sorry, but it looks like we don\'t have a TownWizard in your area yet!</string>
+    <string name="upload_successful">Upload Successful!</string>
+    <string name="thanks_for_sharing">Thanks for sharing!</string>
+    <string name="sorry">Sorry</string>
+    <string name="service_currently_unavaible">Service currently unavaible. Please try again later.</string>
+</resources>

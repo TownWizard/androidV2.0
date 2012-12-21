@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/fb_tag_friend_bg"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/iv_header_map"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/top_bar" />
+
+        <TextView
+            android:id="@+id/tv_header_map"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dip"
+            android:gravity="left|center_horizontal"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="2.0"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="15dip" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="1.0" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/background_fb_input_status" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:baselineAligned="false"
+                android:weightSum="1.0" >
+
+                <FrameLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dip"
+                    android:layout_weight="0.3" >
+
+                    <EditText
+                        android:id="@+id/et_post_status"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dip"
+                        android:background="@drawable/et_bg_post"
+                        android:hint="@string/update_your_status"
+                        android:paddingLeft="10dip"
+                        android:singleLine="true"
+                        android:textColor="#6f675a" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="15dip"
+                    android:layout_weight="0.7" >
+
+                    <ImageButton
+                        android:id="@+id/bt_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|right"
+                        android:background="@drawable/bt_post_res" />
+                </FrameLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginTop="10dip"
+            android:text="@string/tag_friends"
+            android:textColor="#6f675a" />
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="5dip" >
+
+            <EditText
+                android:id="@+id/et_search_friend"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:background="@color/fb_search_friend_et_bg"
+                android:hint="@string/search_for_friends"
+                android:imeOptions="actionSearch"
+                android:minHeight="30dip"
+                android:singleLine="true" />
+
+            <ImageButton
+                android:id="@+id/bt_clear_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|right"
+                android:layout_marginRight="5dip"
+                android:background="@color/fb_search_friend_et_bg"
+                android:src="@drawable/bt_clear_friend_search"
+                android:visibility="invisible" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/@android:id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip"
+        android:background="@drawable/background_friend_list"
+        android:cacheColorHint="#00000000" >
+    </ListView>
+
+</LinearLayout>

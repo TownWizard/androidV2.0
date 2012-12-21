@@ -1,0 +1,4 @@
+[ui]
+username = fir
+[paths]
+default = http://fir@hg.mlsdev.com/town-container-android/
