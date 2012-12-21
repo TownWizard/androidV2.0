@@ -213,7 +213,7 @@ public class FacebookPlaceActivity extends ListActivity {
 
 	    @Override
 	    public void onIOException(IOException e, Object state) {
-		// TODO Auto-generated method stub
+
 
 	    }
 

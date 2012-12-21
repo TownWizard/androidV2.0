@@ -25,7 +25,7 @@ public class DownloadImageHelper extends AsyncTask<String, Void, Bitmap> {
 
     // private static final String DEFAULT_URL = "http://container.mlsdev.com";
     /*
-     * @Override protected void onProgressUpdate(Bitmap... values) { // TODO Auto-generated method stub
+     * @Override protected void onProgressUpdate(Bitmap... values) {
      * super.onProgressUpdate(values); ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
      * iv.setImageBitmap(values[0]); }
      */
@@ -38,8 +38,7 @@ public class DownloadImageHelper extends AsyncTask<String, Void, Bitmap> {
         try {
             url = new URL(imageUrl);
             Log.d("IMAGE_URL", url.toString());
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
+        } catch (MalformedURLException e) {            
             e.printStackTrace();
         }
         HttpURLConnection httpConnection;

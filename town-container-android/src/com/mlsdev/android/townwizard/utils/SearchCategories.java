@@ -33,7 +33,6 @@ public class SearchCategories extends AsyncTask<String, Categories, Void> {
 
     @Override
     protected void onProgressUpdate(Categories... values) {
-	// TODO Auto-generated method stub
 	super.onProgressUpdate(values);
 	mCategoriesAdapter.addItem(values[0]);
 	mCategoriesAdapter.notifyDataSetChanged();
@@ -46,10 +45,8 @@ public class SearchCategories extends AsyncTask<String, Categories, Void> {
 	try {
 	    url = new URL(DEFAULT_URL + PARTNER_API_URL + URLEncoder.encode(mId, "UTF-8"));
 	} catch (MalformedURLException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (UnsupportedEncodingException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 	try {

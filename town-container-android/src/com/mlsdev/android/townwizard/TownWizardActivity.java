@@ -98,13 +98,11 @@ public class TownWizardActivity extends ListActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
 
             }
         });
@@ -157,10 +155,8 @@ public class TownWizardActivity extends ListActivity {
             mOffset = new SearchPartners(this, mListAdapter).execute(params).get();
 
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
