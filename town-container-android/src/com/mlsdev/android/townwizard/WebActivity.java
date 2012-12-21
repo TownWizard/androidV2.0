@@ -178,7 +178,7 @@ public class WebActivity extends Activity {
 		    if (url.indexOf("SHOWMAP") != -1) {
 			showMap(url);
 		    } else if (url.indexOf("FBCHECKIN") != -1) {
-			facebookCheckin(url);
+			facebookCheckin();
 		    }
 		}
 	    }
@@ -221,7 +221,7 @@ public class WebActivity extends Activity {
 	startActivity(i);
     }
 
-    private void facebookCheckin(String url) {
+    private void facebookCheckin() {
 	Intent i = new Intent(WebActivity.this, FacebookPlaceActivity.class);
 	Drawable drawable = mImageView.getDrawable();
 	Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
@@ -232,11 +232,12 @@ public class WebActivity extends Activity {
     
     private void mailSend(String url){
 	    String mt = "mailto:?";
-	    url = url.substring("mailto:?".length());
-	    url = url.replaceAll(":", "%3A");
-	    url = url.replaceAll("/", "%2F");
-	    url = url.replaceAll(" ", "%20");
-	    MailTo mailTo = MailTo.parse(mt+url);
+	    String u = url;
+	    u = u.substring("mailto:?".length());
+	    u = u.replaceAll(":", "%3A");
+	    u = u.replaceAll("/", "%2F");
+	    u = u.replaceAll(" ", "%20");
+	    MailTo mailTo = MailTo.parse(mt+u);
 	    Log.d("mailTo", mailTo.toString());
 	    
 	    Intent i = new Intent(Intent.ACTION_SEND);

@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutionException;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,8 +18,6 @@ import android.widget.ListView;
 
 import com.mlsdev.andoid.townwizard.ui.adapter.PartnersAdapter;
 import com.mlsdev.android.townwizard.R;
-import com.mlsdev.android.townwizard.async.GetLocationTask;
-import com.mlsdev.android.townwizard.async.GetLocationTask.OnLocationObtainedListener;
 import com.mlsdev.android.townwizard.model.Partner;
 import com.mlsdev.android.townwizard.utils.CurrentLocation;
 import com.mlsdev.android.townwizard.utils.SearchPartners;
@@ -32,7 +29,7 @@ public class TownWizardActivity extends ListActivity {
     private ImageButton mInfoButton;
 
 
-    private ImageButton mClearButton;;
+    private ImageButton mClearButton;
     private PartnersAdapter mListAdapter;
     private EditText mInputEditText;
     private int mOffset = 0;

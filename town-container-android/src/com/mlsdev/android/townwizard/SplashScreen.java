@@ -14,14 +14,11 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.mlsdev.android.townwizard.async.GetLocationTask;
-import com.mlsdev.android.townwizard.async.GetLocationTask.OnLocationObtainedListener;
 import com.mlsdev.android.townwizard.model.Partner;
 import com.mlsdev.android.townwizard.utils.CurrentLocation;
 import com.mlsdev.android.townwizard.utils.ServerConnector;

@@ -50,7 +50,7 @@ public class CategoriesActivity extends Activity {
 	    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 		Categories item = (Categories) mCategoriesAdapter.getItem(position);
 		if (item.getUrl().startsWith("http")){
-		    
+		    //What is this?
 		}
 		Log.d("url", params[1] + item.getUrl());
 		startBrowser(params[1], item.getUrl(), mPartnerName + " - " + item.getName());

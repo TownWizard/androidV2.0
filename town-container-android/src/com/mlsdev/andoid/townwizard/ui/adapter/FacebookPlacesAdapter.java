@@ -7,7 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +28,6 @@ import android.widget.TextView;
 import com.mlsdev.android.townwizard.FacebookPlaceActivity;
 import com.mlsdev.android.townwizard.R;
 import com.mlsdev.android.townwizard.model.FacebookPlace;
-import com.mlsdev.android.townwizard.utils.DownloadImageHelper;
 import com.mlsdev.android.townwizard.utils.ServerConnector;
 
 public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
@@ -176,18 +174,19 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
                 url = new URL(imageUrl);
                 Log.d("IMAGE_URL", url.toString());
             } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             HttpURLConnection httpConnection;
-            try {
-                httpConnection = (HttpURLConnection) url.openConnection();
-                InputStream is = httpConnection.getInputStream();
-                bitmap = BitmapFactory.decodeStream(is);
-                is.close();
-                httpConnection.disconnect();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(url != null) {
+                try {
+                    httpConnection = (HttpURLConnection) url.openConnection();
+                    InputStream is = httpConnection.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                    is.close();
+                    httpConnection.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return bitmap;
         }

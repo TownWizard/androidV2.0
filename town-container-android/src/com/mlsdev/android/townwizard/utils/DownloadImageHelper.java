@@ -43,16 +43,17 @@ public class DownloadImageHelper extends AsyncTask<String, Void, Bitmap> {
             e.printStackTrace();
         }
         HttpURLConnection httpConnection;
-        try {
-            httpConnection = (HttpURLConnection) url.openConnection();
-            InputStream is = httpConnection.getInputStream();
-            bitmap = BitmapFactory.decodeStream(is);
-            is.close();
-            httpConnection.disconnect();
-            // publishProgress(image);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if(url != null) {
+            try {
+                httpConnection = (HttpURLConnection) url.openConnection();
+                InputStream is = httpConnection.getInputStream();
+                bitmap = BitmapFactory.decodeStream(is);
+                is.close();
+                httpConnection.disconnect();
+                // publishProgress(image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return bitmap;
     }

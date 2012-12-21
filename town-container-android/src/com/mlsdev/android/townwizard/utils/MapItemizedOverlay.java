@@ -10,7 +10,6 @@ import android.net.Uri;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 import com.mlsdev.android.townwizard.MapViewActivity;
-import com.mlsdev.android.townwizard.TownWizardActivity;
 
 public class MapItemizedOverlay extends ItemizedOverlay<OverlayItem> {
     private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();

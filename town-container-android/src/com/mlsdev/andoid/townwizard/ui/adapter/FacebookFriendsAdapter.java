@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +20,7 @@ import com.mlsdev.android.townwizard.R;
 import com.mlsdev.android.townwizard.model.FacebookFriend;
 import com.mlsdev.android.townwizard.utils.DownloadImageHelper;
 
-public class FacebookFriendsAdapter extends ArrayAdapter<FacebookFriend> implements Filterable {
+public class FacebookFriendsAdapter extends ArrayAdapter<FacebookFriend> {
 
     private Context mContext;
     private List<FacebookFriend> mItems;

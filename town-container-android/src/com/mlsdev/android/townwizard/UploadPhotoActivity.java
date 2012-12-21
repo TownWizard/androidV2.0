@@ -21,8 +21,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.MediaStore.Images.Media;
+import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -237,10 +237,10 @@ public class UploadPhotoActivity extends Activity {
     public String getRealPathFromURI(Uri contentUri) {
 
 	// can post image
-	String[] proj = { MediaStore.Images.Media.DATA };
+	String[] proj = { MediaColumns.DATA };
 	Cursor cursor = managedQuery(contentUri, proj, null, null, null);
 
-	int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	int column_index = cursor.getColumnIndexOrThrow(MediaColumns.DATA);
 	cursor.moveToFirst();
 
 	return cursor.getString(column_index);

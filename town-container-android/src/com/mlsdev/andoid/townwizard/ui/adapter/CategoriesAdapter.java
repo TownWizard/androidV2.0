@@ -52,7 +52,7 @@ public class CategoriesAdapter extends BaseAdapter {
 			LayoutInflater inflater = LayoutInflater.from(mContext);
 			grid = inflater.inflate(R.layout.grid, parent, false);
 		} else {
-			grid = (View) convertView;
+			grid = convertView;
 		}
 
 		ImageView imageView = (ImageView) grid.findViewById(R.id.imagepart);
