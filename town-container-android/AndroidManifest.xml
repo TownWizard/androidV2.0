@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mlsdev.android.townwizard"
+    package="com.townwizard.android"
     android:versionCode="2"
     android:versionName="2.0" >
 
@@ -16,25 +16,25 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name="com.mlsdev.android.townwizard.TownWizardActivity"
+            android:name="com.townwizard.android.TownWizardActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mlsdev.android.townwizard.CategoriesActivity"
+            android:name="com.townwizard.android.CategoriesActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mlsdev.android.townwizard.WebActivity"
+            android:name="com.townwizard.android.WebActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mlsdev.android.townwizard.SplashScreen"
+            android:name="com.townwizard.android.SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -45,25 +45,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mlsdev.android.townwizard.MapViewActivity"
+            android:name="com.townwizard.android.MapViewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mlsdev.android.townwizard.FacebookPlaceActivity"
+            android:name="com.townwizard.android.FacebookPlaceActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mlsdev.android.townwizard.FacebookFriendsList"
+            android:name="com.townwizard.android.FacebookFriendsList"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mlsdev.android.townwizard.UploadPhotoActivity"
+            android:name="com.townwizard.android.UploadPhotoActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
