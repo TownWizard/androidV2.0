@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<target name="-pre-build">
+		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(2);</script>
+		<exec executable="build/pre-build.py" failonerror="true"/>
+		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(0);</script>
+	</target>
+
+	<target name="-post-compile">
+		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(2);</script>
+		<exec executable="build/post-compile.py" failonerror="true"/>
+		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(0);</script>
+	</target>
+
+	<target name="-post-build">
+		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(2);</script>
+		<exec executable="build/post-build.py" failonerror="true"/>
+		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(0);</script>
+	</target>
+</project>
