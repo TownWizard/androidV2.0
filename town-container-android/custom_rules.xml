@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-	<target name="-pre-build">
-		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(2);</script>
-		<exec executable="build/pre-build.py" failonerror="true"/>
-		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(0);</script>
-	</target>
+    <target name="-pre-clean">        
+        <exec executable="build/pre-clean.php" failonerror="true"/>        
+    </target>
 
-	<target name="-post-compile">
-		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(2);</script>
-		<exec executable="build/post-compile.py" failonerror="true"/>
-		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(0);</script>
+    <target name="-pre-build">
+        <exec executable="build/pre-build.php" failonerror="true"/>
+    </target>
+
+	<target name="-post-compile">		
+		<exec executable="build/post-compile.php" failonerror="true"/>
 	</target>
 
 	<target name="-post-build">
-		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(2);</script>
-		<exec executable="build/post-build.py" failonerror="true"/>
-		<script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(0);</script>
+		<exec executable="build/post-build.php" failonerror="true"/>
 	</target>
+	
+    <!--
+    <target name="-pre-build">
+        <script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(2);</script>
+        <exec executable="build/pre-build.php" failonerror="true"/>
+        <script language="javascript">project.getBuildListeners( ).firstElement().setMessageOutputLevel(0);</script>
+    </target>
+    -->	
 </project>
