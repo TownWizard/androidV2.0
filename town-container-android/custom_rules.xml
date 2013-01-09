@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-    <target name="-pre-clean">        
+    <property environment="env"/>
+    <condition property="partnerId.set">
+        <not><equals arg1="${env.PARTNER_ID}" arg2="0"/></not>
+    </condition>
+    
+    <target name="-pre-clean">
         <exec executable="build/pre-clean.php" failonerror="true"/>        
     </target>
 
-    <target name="-pre-build">
+    <target name="-pre-build" if="partnerId.set">
         <exec executable="build/pre-build.php" failonerror="true"/>
     </target>
 
-	<target name="-post-compile">		
+	<target name="-post-compile" if="partnerId.set">
 		<exec executable="build/post-compile.php" failonerror="true"/>
 	</target>
 
-	<target name="-post-build">
+	<target name="-post-build" if="partnerId.set">
 		<exec executable="build/post-build.php" failonerror="true"/>
 	</target>
 	

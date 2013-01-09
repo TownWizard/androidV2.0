@@ -4,8 +4,11 @@
 
 define("PARTNERS_FILE", 'build/partners/partners.json');
 define("STRINGS_FILE", 'res/values/strings.xml');
+define("SRC_DIR", 'src');
+define("SRC_DIR_BKP", '_src');
 
 $resources = array(
+		'AndroidManifest.xml',
 		'assets/params.txt',
 		'res/values/strings.xml'
 );
@@ -17,6 +20,20 @@ function loadPartners() {
 		$partners[intval($p->id)] = $p;
 	}
 	return $partners;
+}
+
+function backupSource() {
+	print "Moving: ".SRC_DIR." -> ".SRC_DIR_BKP."\n";
+	rename(SRC_DIR, SRC_DIR_BKP);
+	mkdir(SRC_DIR);
+}
+
+function restoreSource() {
+	if(is_dir(SRC_DIR_BKP)) {
+		print "Moving: ".SRC_DIR_BKP." -> ".SRC_DIR."\n";
+		system("rm -Rf " . SRC_DIR);
+		rename(SRC_DIR_BKP, SRC_DIR);
+	}
 }
 
 function backupResources() {

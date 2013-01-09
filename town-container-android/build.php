@@ -5,19 +5,19 @@
 define("PARTNERS_FILE", 'build/partners/partners.json');
 
 function main($argc, $argv) {
-	$buildAll = false;
-	$partnerId = 0;
+	$buildAll = false;	
+	$partnerId = -1;
 	$install = false;
 	
-	if($argc > 1) $partnerId = intval($argv[1]);
-	if($partnerId != 0) {
+	if($argc > 1) $partnerId = intval($argv[1]);	
+	if($partnerId >= 0) {
 		if($argc > 2) $install = ($argv[2] == '-install');
 	} else {
 		if($argc > 1) $buildAll = ($argv[1] == '-all');
 	}
 	
-	if(!$buildAll && $partnerId == 0) {
-		print "Usage:\n\n./build.php <partner_id> [-install]\n\n./build.php -all\n\n";;
+	if(!$buildAll && $partnerId < 0) {
+		print "Usage:\n\n.build.php 0 [-install]\n\n./build.php <partner_id> [-install]\n\n./build.php -all\n\n";;
 		return;
 	}
 	
@@ -25,7 +25,7 @@ function main($argc, $argv) {
 	
 	$partners = loadPartners();
 	
-	if($partnerId != 0) {
+	if($partnerId > 0) {
 		if(!array_key_exists($partnerId, $partners)) {
 			printf("No partner id %d found in %s\n", $partnerId, PARTNERS_FILE);
 			return;
@@ -35,17 +35,22 @@ function main($argc, $argv) {
 		$partners[$partnerId] = $partner;
 	}
 	
-	if($install && $partnerId != 0) {
+	if($install && $partnerId >= 0) {
 		$command = 'ant clean release install';
 	} else if($buildAll) {
 		$command = 'ant -q clean release';
 	} else {
 		$command = 'ant clean release';
-	}
+	}	
 	
-	foreach($partners as $partner) {
-		print "Building partner $partner->id: '$partner->name' ...\n";
-		putenv("PARTNER_ID=$partner->id");
+	if($partnerId != 0) {
+		foreach($partners as $partner) {
+			print "Building partner $partner->id: '$partner->name' ...\n";
+			putenv("PARTNER_ID=$partner->id");
+			system($command);
+		}
+	} else {
+		putenv("PARTNER_ID=0");
 		system($command);
 	}
 }

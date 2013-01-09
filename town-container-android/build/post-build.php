@@ -9,7 +9,8 @@ define("RELEASE_FILE", 'bin/town-container-android-release.apk');
 function main() {
 	print "========== Start post-build.php =============\n";
 	$isError = false;
-	try {		
+	try {
+		restoreSource();
 		restoreResources();
 		saveReleaseFile();
 	} catch (Exception $e) {

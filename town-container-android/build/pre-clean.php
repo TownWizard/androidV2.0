@@ -8,6 +8,7 @@ function main() {
 	print "========== Start pre-clean.php =============\n";
 	$isError = false;
 	try {
+		restoreSource();
 		restoreResources();
 	} catch (Exception $e) {
 		print $e->getMessage();
