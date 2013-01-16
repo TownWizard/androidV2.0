@@ -30,7 +30,6 @@ public class SplashScreen extends Activity{
     private Handler mHandler;
     private Runnable mRunnable;
     private URL mUrl;
-    private static final String DEFAULT_URL = TownWizardConstants.PartnersURL + "/api/partner/";
     private int mStatus;
     private String mPartnersName;
     private boolean isTownWizard = false;
@@ -83,7 +82,7 @@ public class SplashScreen extends Activity{
 
     private void executeSearch() {
         try {
-            mUrl = new URL(DEFAULT_URL + URLEncoder.encode(mPartnersName));
+            mUrl = new URL(TownWizardConstants.CONTAINER_SITE_API + URLEncoder.encode(mPartnersName));
             Log.d("Search URL = ", mUrl.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();

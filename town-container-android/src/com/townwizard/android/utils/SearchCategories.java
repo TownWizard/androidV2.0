@@ -21,8 +21,7 @@ import com.townwizard.android.model.Categories;
 import com.townwizard.android.ui.adapter.CategoriesAdapter;
 
 public class SearchCategories extends AsyncTask<String, Categories, Void> {
-
-    private static final String DEFAULT_URL = "http://www.townwizardcontainerapp.com/";
+    
     private static final String PARTNER_API_URL = "api/section/partner/";
     private CategoriesAdapter mCategoriesAdapter;
     private int mStatus;
@@ -43,7 +42,7 @@ public class SearchCategories extends AsyncTask<String, Categories, Void> {
 	String mId = params[0];
 	URL url = null;
 	try {
-	    url = new URL(DEFAULT_URL + PARTNER_API_URL + URLEncoder.encode(mId, "UTF-8"));
+	    url = new URL(TownWizardConstants.CONTAINER_SITE + PARTNER_API_URL + URLEncoder.encode(mId, "UTF-8"));
 	} catch (MalformedURLException e) {
 	    e.printStackTrace();
 	} catch (UnsupportedEncodingException e) {
@@ -66,7 +65,7 @@ public class SearchCategories extends AsyncTask<String, Categories, Void> {
 			String image_url = jsObject.getString("image_url");
 			String eventUrl = jsObject.getString("url");
 
-			URL imageUrl = new URL(DEFAULT_URL + image_url);
+			URL imageUrl = new URL(TownWizardConstants.CONTAINER_SITE + image_url);
 			HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
 			InputStream is = conn.getInputStream();
 			Bitmap image = BitmapFactory.decodeStream(is);

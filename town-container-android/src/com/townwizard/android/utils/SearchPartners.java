@@ -19,8 +19,7 @@ import com.townwizard.android.model.Partner;
 import com.townwizard.android.ui.adapter.PartnersAdapter;
 
 public class SearchPartners extends AsyncTask<String, Partner, Integer> {
-
-    private static final String DEFAULT_URL = TownWizardConstants.PartnersURL+"/api/partner/?";
+    
     private static final String OFFSET = "&offset=";
     private URL mUrl;
     private int mStatus = -1;
@@ -43,7 +42,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
 	String searchRequest = URLEncoder.encode(params[0]);
 	int offset = Integer.parseInt(params[1]);
 	try {
-	    mUrl = new URL(DEFAULT_URL + searchRequest + OFFSET + offset);
+	    mUrl = new URL(TownWizardConstants.CONTAINER_SITE_API + "?" + searchRequest + OFFSET + offset);
 	    Log.d("Search URL = ", mUrl.toString());
 	} catch (MalformedURLException e) {
 	    e.printStackTrace();

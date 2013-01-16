@@ -21,7 +21,7 @@ import com.townwizard.android.utils.SearchCategories;
 import com.townwizard.android.utils.TownWizardConstants;
 
 public class CategoriesActivity extends Activity {
-    private static final String DEFAULT_URL = TownWizardConstants.PartnersURL;
+    private static final String DEFAULT_URL = TownWizardConstants.CONTAINER_SITE;
     private CategoriesAdapter mCategoriesAdapter;
     private String mPartnerName;
     private String mImageUrl;

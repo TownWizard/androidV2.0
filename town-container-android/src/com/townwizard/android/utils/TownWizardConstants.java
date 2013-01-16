@@ -13,5 +13,6 @@ public class TownWizardConstants {
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
     public static final String ITEM_LOCATION = "ITEM LOCATION";
-    public static String PartnersURL="http://www.townwizardcontainerapp.com";
+    public static final String CONTAINER_SITE="http://www.townwizardcontainerapptest.com";
+    public static final String CONTAINER_SITE_API=CONTAINER_SITE+"/apiv21/partner/";
 }
