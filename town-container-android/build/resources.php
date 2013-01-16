@@ -94,6 +94,7 @@ function getPartnerData($key, $partnersAdditionalData) {
 function getPartnerName($partners, $partnersAdditionalData) {
 	$partnerName = getPartnerData('name', $partnersAdditionalData);
 	if(empty($partnerName)) {
+		$partnerId = getPartnerId();
 		$partnerName = $partners[$partnerId]->name;
 	}
 	return $partnerName;
