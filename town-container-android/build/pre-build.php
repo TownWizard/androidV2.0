@@ -11,12 +11,14 @@ function main() {
 	$isError = false;
 	try {
 		$partners = loadPartners();
+		$partnersAdditionalData = loadPartnersAdditionalData();		
+		$partnerName = getPartnerName($partners, $partnersAdditionalData);
+		$pkgName = getPartnerPackageName($partners, $partnersAdditionalData);
+		
 		backupSource();
 		backupResources();
 		replaceParams();
-		replaceStrings($partners);
-		
-		$pkgName = getPartnerPackageName($partners);
+		replaceStrings($partnerName);
 		replaceManifestPackageNames($pkgName);
 		replaceSource($pkgName);
 	} catch (Exception $e) {
@@ -41,15 +43,13 @@ function replaceParams() {
 	if($str != $strFromFile) throw new Exception('Problem writing to params.txt');
 }
 
-function replaceStrings($partners) {
+function replaceStrings($partnerName) {
 	$doc = DOMDocument::load(STRINGS_FILE);
 	$strings = $doc->getElementsByTagName('string');
-	$partnerId = getPartnerId();
 	foreach($strings as $s) {
-		if($s->getAttribute('name') == 'app_name') {
-			$appName = $partners[$partnerId]->name;
-			print "Replacing app_name with $appName\n";
-			$s->nodeValue = $appName;
+		if($s->getAttribute('name') == 'app_name') {			
+			print "Replacing app_name with $partnerName\n";
+			$s->nodeValue = $partnerName;
 		}
 	}
 	$doc->save(STRINGS_FILE);
@@ -99,16 +99,11 @@ function replacePackageNames($oldFile, $newFile, $newPkgName) {
 	file_put_contents($newFile, $modifiedContent);	
 }
 
-function getPartnerPackageName($partners) {
+function getPartnerPackageName($partners, $partnersAdditionalData) {	
+	$pkgName = getPartnerData('package', $partnersAdditionalData);
+	if(!empty($pkgName)) return $pkgName;
+	
 	$partnerId = getPartnerId();
-	$pkgFile = "build/partners/$partnerId/package-name.txt";
-	if(file_exists($pkgFile)) {
-		$pkgName = trim(file_get_contents($pkgFile)); 
-		print "Got partner package name '$pkgName' from file '$pkgFile'\n";
-		return $pkgName;
-	}	
-	
-	
 	$url = $partners[$partnerId]->website_url;
 	$original_url = $url;
 	if(empty($url)) {

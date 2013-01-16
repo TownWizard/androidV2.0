@@ -10,9 +10,13 @@ function main() {
 	print "========== Start post-build.php =============\n";
 	$isError = false;
 	try {
+		$partners = loadPartners();
+		$partnersAdditionalData = loadPartnersAdditionalData();
+		$partnerName = getPartnerName($partners, $partnersAdditionalData);
+		
 		restoreSource();
 		restoreResources();
-		saveReleaseFile();
+		saveReleaseFile($partnerName);
 	} catch (Exception $e) {
 		print $e->getMessage();
 		$isError = true;
@@ -22,13 +26,16 @@ function main() {
 	if($isError) return 1;
 }
 
-function saveReleaseFile() {
+function saveReleaseFile($partnerName) {
 	$partnerId = getPartnerId();
-	mkdir("deploy");
-	mkdir("deploy/$partnerId");
+	$partners = loadPartners();
+	$apkFileName = str_replace(' ', '', $partnerName) . '.apk';
+
+	mkdir("deploy");	
 	
 	$src = RELEASE_FILE;
-	$dest = "deploy/$partnerId/".end(explode('/', $src));	
+	//$dest = "deploy/$partnerId/".end(explode('/', $src));
+	$dest = "deploy/$apkFileName";	
 	
 	print "Copying: $src -> $dest\n";
 	copy($src, $dest);

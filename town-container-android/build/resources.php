@@ -3,6 +3,7 @@
 <?php
 
 define("PARTNERS_FILE", 'build/partners/partners.json');
+define("PARTNERS_INI_FILE", 'build/partners/partners.ini');
 define("STRINGS_FILE", 'res/values/strings.xml');
 define("SRC_DIR", 'src');
 define("SRC_DIR_BKP", '_src');
@@ -20,6 +21,10 @@ function loadPartners() {
 		$partners[intval($p->id)] = $p;
 	}
 	return $partners;
+}
+
+function loadPartnersAdditionalData() {
+	return parse_ini_file(PARTNERS_INI_FILE, true);
 }
 
 function backupSource() {
@@ -71,6 +76,27 @@ function deleteBackups() {
 
 function getPartnerId() {
 	return intval(getenv('PARTNER_ID'));
+}
+
+function getPartnerData($key, $partnersAdditionalData) {
+	$data = NULL;
+	$partnerId = getPartnerId();
+	$partnerAddData = $partnersAdditionalData[$partnerId];
+	if(!empty($partnerAddData)) {
+		$data = $partnerAddData[$key];
+		if(!empty($data)) {
+			print "Found partner $key = $data in ini file\n";
+		}
+	}
+	return $data;
+}
+
+function getPartnerName($partners, $partnersAdditionalData) {
+	$partnerName = getPartnerData('name', $partnersAdditionalData);
+	if(empty($partnerName)) {
+		$partnerName = $partners[$partnerId]->name;
+	}
+	return $partnerName;
 }
 
 ?>
