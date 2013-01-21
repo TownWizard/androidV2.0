@@ -42,7 +42,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
 	String searchRequest = URLEncoder.encode(params[0]);
 	int offset = Integer.parseInt(params[1]);
 	try {
-	    mUrl = new URL(TownWizardConstants.CONTAINER_SITE_API + "?" + searchRequest + OFFSET + offset);
+	    mUrl = new URL(TownWizardConstants.PARTNER_API + "?" + searchRequest + OFFSET + offset);
 	    Log.d("Search URL = ", mUrl.toString());
 	} catch (MalformedURLException e) {
 	    e.printStackTrace();

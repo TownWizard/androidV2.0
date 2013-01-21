@@ -21,7 +21,6 @@ import com.townwizard.android.utils.SearchCategories;
 import com.townwizard.android.utils.TownWizardConstants;
 
 public class CategoriesActivity extends Activity {
-    private static final String DEFAULT_URL = TownWizardConstants.CONTAINER_SITE;
     private CategoriesAdapter mCategoriesAdapter;
     private String mPartnerName;
     private String mImageUrl;
@@ -40,7 +39,7 @@ public class CategoriesActivity extends Activity {
         ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
         Log.d("imageUrl", mImageUrl);
         if (mImageUrl.length() > 0) {
-            new DownloadImageHelper(iv).execute(DEFAULT_URL + mImageUrl);
+            new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + mImageUrl);
         }
         GridView gridView = (GridView) findViewById(R.id.gridView);
         TextView tv = (TextView) findViewById(R.id.tv_categories_header);
