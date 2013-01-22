@@ -6,55 +6,50 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ListView;
 
-import com.townwizard.android.R;
-import com.townwizard.android.model.Categories;
+import com.townwizard.android.model.Category;
 import com.townwizard.android.ui.adapter.CategoriesAdapter;
 import com.townwizard.android.utils.DownloadImageHelper;
 import com.townwizard.android.utils.SearchCategories;
 import com.townwizard.android.utils.TownWizardConstants;
 
-public class CategoriesActivity extends Activity {
-    private CategoriesAdapter mCategoriesAdapter;
-    private String mPartnerName;
-    private String mImageUrl;
-
+public class CategoriesActivity extends Activity {   
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);        
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.categories);
-        mCategoriesAdapter = new CategoriesAdapter(this);
-        Bundle extras = getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();        
+        String imageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
+        ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
+        
+        if (imageUrl.length() > 0) {
+            new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + imageUrl);
+        }
+        
         final String[] params = {
                 extras.getString(TownWizardConstants.PARTNER_ID),
-                extras.getString(TownWizardConstants.URL) };
-        mPartnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
-        mImageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
-        ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
-        Log.d("imageUrl", mImageUrl);
-        if (mImageUrl.length() > 0) {
-            new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + mImageUrl);
-        }
-        GridView gridView = (GridView) findViewById(R.id.gridView);
-        TextView tv = (TextView) findViewById(R.id.tv_categories_header);
-        tv.setText(mPartnerName);
-        gridView.setAdapter(mCategoriesAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Categories item = (Categories) mCategoriesAdapter.getItem(position);
-                Log.d("url", params[1] + item.getUrl());
-                startBrowser(params[1], item.getUrl(), mPartnerName + " - "
-                        + item.getName());
+                extras.getString(TownWizardConstants.URL)
+         };
+        final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);
+        final String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
+        
+        ListView listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(categoriesAdapter);
+        listView.setOnItemClickListener(
+            new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Category item = (Category) categoriesAdapter.getItem(position);                
+                    startBrowser(params[1], item.getUrl(), partnerName + " - "
+                            + item.getName());
             }
         });
-        new SearchCategories(mCategoriesAdapter).execute(params);
+        new SearchCategories(this, categoriesAdapter).execute(params);
     }
 
     protected void startBrowser(String urlSite, String urlSection, String name) {

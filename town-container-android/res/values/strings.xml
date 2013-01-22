@@ -14,4 +14,8 @@
     <string name="thanks_for_sharing">Thanks for sharing!</string>
     <string name="sorry">Sorry</string>
     <string name="service_currently_unavaible">Service currently unavaible. Please try again later.</string>
+    
+    <string name="empty"></string>
+    <string name="about">ABOUT</string>
+    <string name="change">CHANGE</string>    
 </resources>

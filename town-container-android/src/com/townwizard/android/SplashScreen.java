@@ -26,7 +26,7 @@ import com.townwizard.android.utils.ServerConnector;
 import com.townwizard.android.utils.TownWizardConstants;
 
 public class SplashScreen extends Activity{
-    private int mSplashTime = 3000;
+    private int mSplashTime = 500;
     private Handler mHandler;
     private Runnable mRunnable;
     private URL mUrl;
