@@ -11,10 +11,10 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.townwizard.android.model.Category;
-import com.townwizard.android.ui.adapter.CategoriesAdapter;
+import com.townwizard.android.category.CategoriesAdapter;
+import com.townwizard.android.category.Category;
+import com.townwizard.android.category.SearchCategories;
 import com.townwizard.android.utils.DownloadImageHelper;
-import com.townwizard.android.utils.SearchCategories;
 import com.townwizard.android.utils.TownWizardConstants;
 
 public class CategoriesActivity extends Activity {   
@@ -37,8 +37,8 @@ public class CategoriesActivity extends Activity {
          };
         final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);
         final String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
-        
-        ListView listView = (ListView) findViewById(R.id.listView);
+
+        ListView listView = (ListView) findViewById(R.id.category_list);
         listView.setAdapter(categoriesAdapter);
         listView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
@@ -49,6 +49,7 @@ public class CategoriesActivity extends Activity {
                             + item.getName());
             }
         });
+        
         new SearchCategories(this, categoriesAdapter).execute(params);
     }
 

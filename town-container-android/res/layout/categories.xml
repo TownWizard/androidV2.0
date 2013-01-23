@@ -64,12 +64,15 @@
               android:textSize="17sp"/>
     </LinearLayout>
 
-    <ListView android:id="@+id/listView"
+
+    <ListView android:id="@+id/category_list"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/tw_bg_logo"
+        android:layout_weight="1"        
         android:listSelector="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent" />
-
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@color/category_list_divider_color"
+        android:dividerHeight="1dp"
+        android:background="@drawable/tw_logo_bg" />
+    
 </LinearLayout>

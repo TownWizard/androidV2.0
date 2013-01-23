@@ -10,6 +10,7 @@
     <color name="fb_search_friend_et_bg">#7d7465</color>
     <color name="bg_go_btn">#f9914b</color>
     
-    <color name="category_list_bg_color">#e0e0e0</color>
-    <color name="category_list_divider_color">#000000</color>
+    <color name="category_list_bg_color">#ebebeb</color>
+    <color name="category_list_selected_color">#f7f7f7</color>
+    <color name="category_list_divider_color">#e0e0e0</color>
 </resources>

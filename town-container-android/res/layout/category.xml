@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
+    
     <ImageView
         android:id="@+id/section_image"
         android:layout_width="30dp"
@@ -16,7 +17,7 @@
         android:layout_height="wrap_content"      
         android:textColor="@android:color/black" 
         android:textSize="@dimen/text_size_large"
-        android:textStyle="bold"
+        android:textStyle="bold"        
         android:layout_toRightOf="@+id/section_image"
         android:layout_centerVertical="true"/>
     
