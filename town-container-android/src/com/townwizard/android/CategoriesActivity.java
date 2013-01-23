@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -24,12 +25,6 @@ public class CategoriesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.categories);
         Bundle extras = getIntent().getExtras();        
-        String imageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
-        ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
-        
-        if (imageUrl.length() > 0) {
-            new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + imageUrl);
-        }
         
         final String[] params = {
                 extras.getString(TownWizardConstants.PARTNER_ID),
@@ -39,6 +34,18 @@ public class CategoriesActivity extends Activity {
         final String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
 
         ListView listView = (ListView) findViewById(R.id.category_list);
+        
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View headerView = inflater.inflate(R.layout.category_list_header, listView, false);
+        listView.addHeaderView(headerView);
+        
+        String imageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
+        ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
+        
+        if (imageUrl.length() > 0) {
+            new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + imageUrl);
+        }        
+        
         listView.setAdapter(categoriesAdapter);
         listView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {

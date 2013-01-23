@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">    
+    
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+        <ImageView
+            android:id="@+id/iv_categories_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/top_bar"
+            android:contentDescription="@string/empty" />
+
+        <ImageView            
+            android:layout_alignBottom="@+id/iv_categories_header"
+            android:layout_alignParentRight="true"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/powered_by_tw"
+            android:scaleType="fitXY"
+            android:drawingCacheQuality="high"
+            android:contentDescription="@string/empty" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" 
+        android:gravity="center">
+        
+        <TextView
+              android:id="@+id/button_about"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="5dp"
+              android:layout_marginRight="5dp"
+              android:layout_marginTop="5dp"
+              android:background="@drawable/black_btn_background"
+              android:gravity="center"
+              android:text="@string/about"
+              android:textColor="@android:color/white"
+              android:textSize="17sp"
+              android:textStyle="bold" />
+        
+        <TextView
+              android:id="@+id/button_change"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"              
+              android:text="@string/change"
+              android:background="@drawable/black_btn_background"
+              android:textColor="@android:color/white"
+              android:textStyle="bold"
+              android:gravity="center"
+              android:layout_marginLeft="5dp"
+              android:layout_marginBottom="5dp"
+              android:layout_marginTop="5dp"
+              android:textSize="17sp"/>
+    </LinearLayout>
+</LinearLayout>
