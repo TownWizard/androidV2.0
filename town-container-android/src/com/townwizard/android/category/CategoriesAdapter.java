@@ -19,12 +19,13 @@ import android.widget.TextView;
 public class CategoriesAdapter extends BaseAdapter {
     
     private Context context;
+        
     private Map<CategorySection, List<Category>> categories = 
             new EnumMap<CategorySection, List<Category>>(CategorySection.class);
     private List<Object> categoryList = new ArrayList<Object>();
     
     public CategoriesAdapter(Context context) {
-        this.context = context;
+        this.context = context;    
     }
     
     public void addItem(Category category) {
@@ -43,7 +44,10 @@ public class CategoriesAdapter extends BaseAdapter {
                 categoryList.add(c);
             }
         }
+        
         this.categoryList = categoryList;
+        
+        notifyDataSetChanged();
     }
     
     @Override
@@ -53,7 +57,7 @@ public class CategoriesAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return categoryList.get(position);
+        return categoryList.get(position-1);
     }
 
     @Override
@@ -68,6 +72,9 @@ public class CategoriesAdapter extends BaseAdapter {
     
     @Override
     public int getItemViewType(int position) {
+        if(position == 0) {
+            return HEADER_VIEW_TYPE;
+        }
         Object item = categoryList.get(position);
         if(item instanceof CategorySection) {
             return SECTION_VIEW_TYPE;
@@ -121,9 +128,10 @@ public class CategoriesAdapter extends BaseAdapter {
         return CategorySection.GENERAL;
     }
     
-    private static final int VIEW_TYPE_COUNT = 2;
-    private static final int SECTION_VIEW_TYPE = 0;
-    private static final int CATEGORY_VIEW_TYPE = 1;
+    private static final int VIEW_TYPE_COUNT = 3;
+    private static final int HEADER_VIEW_TYPE = 0;
+    private static final int SECTION_VIEW_TYPE = 1;
+    private static final int CATEGORY_VIEW_TYPE = 2;
     
     private static final Map<String, CategorySection> CATEGORY_TO_SECTION = 
             new HashMap<String, CategorySection>();

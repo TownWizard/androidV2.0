@@ -24,21 +24,13 @@ public class CategoriesActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.categories);
-        Bundle extras = getIntent().getExtras();        
-        
-        final String[] params = {
-                extras.getString(TownWizardConstants.PARTNER_ID),
-                extras.getString(TownWizardConstants.URL)
-         };
-        final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);
-        final String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
 
         ListView listView = (ListView) findViewById(R.id.category_list);
-        
         LayoutInflater inflater = LayoutInflater.from(this);
         View headerView = inflater.inflate(R.layout.category_list_header, listView, false);
-        listView.addHeaderView(headerView);
+        listView.addHeaderView(headerView, null, false);        
         
+        Bundle extras = getIntent().getExtras();
         String imageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
         ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
         
@@ -46,16 +38,22 @@ public class CategoriesActivity extends Activity {
             new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + imageUrl);
         }        
         
+        final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);
+        final String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
+        final String[] params = {
+                extras.getString(TownWizardConstants.PARTNER_ID),
+                extras.getString(TownWizardConstants.URL)
+         };
         listView.setAdapter(categoriesAdapter);
         listView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     Category item = (Category) categoriesAdapter.getItem(position);                
-                    startBrowser(params[1], item.getUrl(), partnerName + " - "
-                            + item.getName());
+                    startBrowser(params[1], item.getUrl(), partnerName + " - " + item.getName());
+                }
             }
-        });
+        );
         
         new SearchCategories(this, categoriesAdapter).execute(params);
     }

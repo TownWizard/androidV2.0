@@ -26,8 +26,7 @@ public class SearchCategories extends AsyncTask<String, Category, Void> {
     @Override
     protected void onProgressUpdate(Category ... values) {
     	super.onProgressUpdate(values);
-    	categoriesAdapter.addItem(values[0]);
-    	categoriesAdapter.notifyDataSetChanged();
+    	categoriesAdapter.addItem(values[0]);    	
     }
 
     @Override
