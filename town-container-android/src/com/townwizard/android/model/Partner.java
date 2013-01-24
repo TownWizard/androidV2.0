@@ -1,50 +1,44 @@
 package com.townwizard.android.model;
 
 public class Partner {
-	private String mName;
-	private String mUrl;
-	private String mAndroidAppId;
-	private String mImageUrl;
-	private int mPartnerId;
+	
+    private final String name;
+	private final String url;
+	private final String androidAppId;
+	private final String imageUrl;
+	private final int id;
 
-	public Partner(String name, String url, String androidAppId, int partnerId, String imageUrl) {
-		mName = name;
-		mUrl = url;
-		mAndroidAppId = androidAppId;
-		mPartnerId = partnerId;
-		mImageUrl = imageUrl;
+	public Partner(String name, String url, String androidAppId, int id, String imageUrl) {
+		this.name = name;
+		this.url = url;
+		this.androidAppId = androidAppId;
+		this.id = id;
+		this.imageUrl = imageUrl;
 	}
-	
-	
 	
 	public String getName() {
-		return mName;
-	}
-
-	public void setName(String name) {
-		this.mName = name;
+		return name;
 	}
 
 	public String getUrl() {
-		return mUrl;
-	}
-
-	public void setUrl(String url) {
-		this.mUrl = url;
+		return url;
 	}
 
 	public String getAndroidAppId() {
-		return mAndroidAppId;
-	}
-	public String getImageUrl(){
-		return mImageUrl;
-	}
-
-	public void setAndroidAppId(String androidAppId) {
-		this.mAndroidAppId = androidAppId;
-	}
-	public int getPartnerId(){
-		return this.mPartnerId;
+		return androidAppId;
 	}
 	
+	public String getImageUrl(){
+		return imageUrl;
+	}
+
+	public int getId(){
+		return id;
+	}
+
+    @Override
+    public String toString() {
+        return "Partner [name=" + name + ", url=" + url + ", androidAppId=" + androidAppId
+                + ", imageUrl=" + imageUrl + ", partnerId=" + id + "]";
+    }
 }

@@ -30,11 +30,10 @@ public class CategoriesActivity extends Activity {
         View headerView = inflater.inflate(R.layout.category_list_header, listView, false);
         listView.addHeaderView(headerView, null, false);        
         
-        Bundle extras = getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();                
         String imageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
-        ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
-        
         if (imageUrl.length() > 0) {
+            ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
             new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + imageUrl);
         }        
         
@@ -43,7 +42,8 @@ public class CategoriesActivity extends Activity {
         final String[] params = {
                 extras.getString(TownWizardConstants.PARTNER_ID),
                 extras.getString(TownWizardConstants.URL)
-         };
+        };
+        
         listView.setAdapter(categoriesAdapter);
         listView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {

@@ -120,13 +120,9 @@ public class TownWizardActivity extends ListActivity {
             if (item.getAndroidAppId().length() == 0) {
                 Intent categories = new Intent(this, CategoriesActivity.class);
                 categories.putExtra(TownWizardConstants.PARTNER_NAME, item.getName());
-                categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(item.getPartnerId()));
-                categories.putExtra(TownWizardConstants.URL, item.getUrl());
-                if (item.getImageUrl().length() > 0) {
-                    categories.putExtra(TownWizardConstants.IMAGE_URL, item.getImageUrl());
-                } else {
-                    categories.putExtra(TownWizardConstants.IMAGE_URL, "");
-                }
+                categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(item.getId()));
+                categories.putExtra(TownWizardConstants.URL, item.getUrl());                
+                categories.putExtra(TownWizardConstants.IMAGE_URL, item.getImageUrl());
                 startActivity(categories);
             } else {
                 Intent browseIntent = new Intent(Intent.ACTION_VIEW,
