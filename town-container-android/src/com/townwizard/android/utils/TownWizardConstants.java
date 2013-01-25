@@ -1,7 +1,7 @@
 package com.townwizard.android.utils;
 
 public class TownWizardConstants {
-    public static final String PARTNER_NAME = "PARTNER NAME";
+    public static final String CATEGORY_NAME = "CATEGORY NAME";
     public static final String PARTNER_ID = "PARTNER ID";
     public static final String URL = "URL";
     public static final String IMAGE_URL = "IMAGE URL";

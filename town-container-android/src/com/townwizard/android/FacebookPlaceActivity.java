@@ -55,7 +55,7 @@ public class FacebookPlaceActivity extends ListActivity {
         mImageView = (ImageView) findViewById(R.id.iv_header_fb_places);
         mImageView.setImageBitmap(bitmap);
         mTextView = (TextView) findViewById(R.id.tv_header_fb_places);
-        mTextView.setText(extras.getString(TownWizardConstants.PARTNER_NAME));
+        mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
         mPrefs = getPreferences(MODE_PRIVATE);
         mProgressDialog = new ProgressDialog(FacebookPlaceActivity.this);
         mProgressDialog.setMessage("Loading...");

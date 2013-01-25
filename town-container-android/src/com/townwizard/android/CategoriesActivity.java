@@ -37,8 +37,7 @@ public class CategoriesActivity extends Activity {
             new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + imageUrl);
         }        
         
-        final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);
-        final String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
+        final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);        
         final String[] params = {
                 extras.getString(TownWizardConstants.PARTNER_ID),
                 extras.getString(TownWizardConstants.URL)
@@ -50,7 +49,7 @@ public class CategoriesActivity extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     Category item = (Category) categoriesAdapter.getItem(position);                
-                    startBrowser(params[1], item.getUrl(), partnerName + " - " + item.getName());
+                    startBrowser(params[1], item.getUrl(), item.getName());
                 }
             }
         );
@@ -67,7 +66,7 @@ public class CategoriesActivity extends Activity {
         Drawable drawable = iv.getDrawable();
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         web.putExtra(TownWizardConstants.HEADER_IMAGE, bitmap);
-        web.putExtra(TownWizardConstants.PARTNER_NAME, name);
+        web.putExtra(TownWizardConstants.CATEGORY_NAME, name);
         startActivity(web);
     }
 

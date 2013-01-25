@@ -17,5 +17,6 @@
     
     <string name="empty"></string>
     <string name="about">ABOUT</string>
-    <string name="change">CHANGE</string>    
+    <string name="change">CHANGE</string>
+    <string name="back">Back</string>    
 </resources>

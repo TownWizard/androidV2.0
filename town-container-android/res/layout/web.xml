@@ -2,46 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:background="@drawable/header_bg">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+      <LinearLayout
+          android:id="@+id/header_back_button"       
+          android:layout_width="60dp"
+          android:layout_height="35dp"
+          android:layout_margin="10dp"          
+          android:layout_centerVertical="true"/>
 
-            <ImageView
-                android:id="@+id/iv_header_web"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/top_bar" />
-
-            <TextView
-                android:id="@+id/tv_header_web"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dip"
-                android:gravity="left|center_horizontal"
-                android:shadowColor="@android:color/black"
-                android:shadowDx="0"
-                android:shadowDy="0"
-                android:shadowRadius="2.0"
-                android:text=""
-                android:textColor="@android:color/white"
-                android:textSize="15dip" />
-        </RelativeLayout>
-    </LinearLayout>
+      <TextView
+          android:id="@+id/tv_header_web"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"      
+          android:textColor="@android:color/black" 
+          android:textSize="@dimen/text_size_xlarge"
+          android:textStyle="bold"
+          android:layout_centerVertical="true" 
+          android:layout_centerHorizontal="true"/>
+            
+    </RelativeLayout>
 
     <WebView
         android:id="@+id/webview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"/>
 
 </LinearLayout>

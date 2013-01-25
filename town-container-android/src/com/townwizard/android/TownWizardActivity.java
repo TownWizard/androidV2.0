@@ -67,7 +67,7 @@ public class TownWizardActivity extends ListActivity {
                         Intent web = new Intent(getApplicationContext(), WebActivity.class);
                         web.putExtra(TownWizardConstants.URL_SITE, "http://www.townwizard.com/");
                         web.putExtra(TownWizardConstants.URL_SECTION, "app-info");
-                        web.putExtra(TownWizardConstants.PARTNER_NAME, "info");
+                        //web.putExtra(TownWizardConstants.PARTNER_NAME, "info");
                         startActivity(web);
                         break;
                     }
@@ -119,7 +119,7 @@ public class TownWizardActivity extends ListActivity {
         } else {
             if (item.getAndroidAppId().length() == 0) {
                 Intent categories = new Intent(this, CategoriesActivity.class);
-                categories.putExtra(TownWizardConstants.PARTNER_NAME, item.getName());
+                //categories.putExtra(TownWizardConstants._NAME, item.getName());
                 categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(item.getId()));
                 categories.putExtra(TownWizardConstants.URL, item.getUrl());                
                 categories.putExtra(TownWizardConstants.IMAGE_URL, item.getImageUrl());

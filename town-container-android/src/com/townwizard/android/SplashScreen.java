@@ -124,8 +124,7 @@ public class SplashScreen extends Activity{
     }
 
     private void startCategoriesActivity() {
-        Intent categories = new Intent(this, CategoriesActivity.class);
-        categories.putExtra(TownWizardConstants.PARTNER_NAME, partner.getName());
+        Intent categories = new Intent(this, CategoriesActivity.class);        
         categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(partner.getId()));
         categories.putExtra(TownWizardConstants.URL, partner.getUrl());
         categories.putExtra(TownWizardConstants.IMAGE_URL, partner.getImageUrl());
