@@ -48,7 +48,6 @@ public class WebActivity extends Activity {
         String urlSection = extras.getString(TownWizardConstants.URL_SECTION);
         String categoryName = extras.getString(TownWizardConstants.CATEGORY_NAME);
         if (categoryName.indexOf("Photos") != -1) {
-            Log.d("photos", "photos");
             if (isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
                 setContentView(R.layout.web_with_upload);
