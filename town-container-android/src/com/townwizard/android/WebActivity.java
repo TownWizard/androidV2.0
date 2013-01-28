@@ -44,8 +44,7 @@ public class WebActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        mUrlSite = extras.getString(TownWizardConstants.URL_SITE);
-        String urlSection = extras.getString(TownWizardConstants.URL_SECTION);
+        mUrlSite = extras.getString(TownWizardConstants.URL_SITE);        
         String categoryName = extras.getString(TownWizardConstants.CATEGORY_NAME);
         if (categoryName.indexOf("Photos") != -1) {
             if (isUploadScriptExist(mUrlSite + sUpload)) {
@@ -88,17 +87,15 @@ public class WebActivity extends Activity {
         }
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        if (extras.getParcelable(TownWizardConstants.CATEGORY_NAME) != null) {
-            mTextView = (TextView) findViewById(R.id.tv_header_web);
-            mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
-        }
+        mWebView.getSettings().setJavaScriptEnabled(true);        
+        mTextView = (TextView) findViewById(R.id.tv_header_web);
+        mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
-        String url = urlSection.startsWith("http") ? urlSection : mUrlSite + urlSection; 
-        Log.d("Web Acrivity Url", url);
-        mWebView.loadUrl(url);
+        String urlSection = extras.getString(TownWizardConstants.URL_SECTION);         
+        Log.d("Web Acrivity Url", urlSection);
+        mWebView.loadUrl(urlSection);
     }  
 
 

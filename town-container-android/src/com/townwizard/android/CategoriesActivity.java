@@ -57,7 +57,8 @@ public class CategoriesActivity extends Activity {
     protected void startBrowser(String urlSite, String urlSection, String name) {
         Intent web = new Intent(this, WebActivity.class);
         web.putExtra(TownWizardConstants.URL_SITE, urlSite);
-        web.putExtra(TownWizardConstants.URL_SECTION, urlSection);
+        String fullUrlSection  = urlSection.startsWith("http") ? urlSection : urlSite + urlSection; 
+        web.putExtra(TownWizardConstants.URL_SECTION, fullUrlSection);
         web.putExtra(TownWizardConstants.CATEGORY_NAME, name);
         startActivity(web);
     }
