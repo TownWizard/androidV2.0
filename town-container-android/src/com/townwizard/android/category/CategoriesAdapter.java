@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 public class CategoriesAdapter extends BaseAdapter {
     
+    public static final String ABOUT_US = "About Us";
+    
     private Context context;
         
     private Map<CategorySection, List<Category>> categories = 
@@ -96,6 +98,16 @@ public class CategoriesAdapter extends BaseAdapter {
         return getCategoryView((Category)item, convertView, parent);
     }
     
+    public String getAboutUsUrl() {
+       List<Category> helpCategories = categories.get(CategorySection.HELP);
+       for(Category c : helpCategories) {
+           if(ABOUT_US.equals(c.getName())) {
+               return c.getUrl();
+           }
+       }
+       return null;
+    }
+    
     private View getSectionView(CategorySection section, View convertView, ViewGroup parent) {
         View view = convertView;
         if(view == null) {
@@ -138,7 +150,7 @@ public class CategoriesAdapter extends BaseAdapter {
     static {        
         CATEGORY_TO_SECTION.put("Help & Support", CategorySection.HELP);
         CATEGORY_TO_SECTION.put("Advertise with Us", CategorySection.HELP);
-        CATEGORY_TO_SECTION.put("About Us", CategorySection.HELP);
+        CATEGORY_TO_SECTION.put(ABOUT_US, CategorySection.HELP);
         CATEGORY_TO_SECTION.put("Contact Us", CategorySection.HELP);
     }
 

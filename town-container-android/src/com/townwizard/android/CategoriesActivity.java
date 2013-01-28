@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.Category;
@@ -39,17 +40,30 @@ public class CategoriesActivity extends Activity {
                 extras.getString(TownWizardConstants.PARTNER_ID),
                 extras.getString(TownWizardConstants.URL)
         };
+        final String siteUrl = params[1];
+        
+        TextView aboutButton = (TextView) findViewById(R.id.button_about);
+        aboutButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String aboutUsUrl = categoriesAdapter.getAboutUsUrl();
+                        if(aboutUsUrl == null) {
+                            aboutUsUrl = TownWizardConstants.DEFAULT_ABOUT_US_URI;
+                        }
+                        String categoryUrl = getFullCategoryUrl(siteUrl, aboutUsUrl);
+                        startWebActivity(siteUrl, categoryUrl, CategoriesAdapter.ABOUT_US);
+                    }
+                }
+        );
         
         listView.setAdapter(categoriesAdapter);
         listView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Category category = (Category) categoriesAdapter.getItem(position);
-                    String siteUrl = params[1];
-                    String categoryUrl  = category.getUrl().startsWith("http") ? 
-                            category.getUrl() : siteUrl + category.getUrl();
-                    
+                    Category category = (Category) categoriesAdapter.getItem(position);                    
+                    String categoryUrl = getFullCategoryUrl(siteUrl, category.getUrl());
                     if(Category.ViewType.JSON.equals(category.getViewType())) {
                         startJsonActivity(siteUrl, categoryUrl, category);
                     } else {
@@ -60,6 +74,10 @@ public class CategoriesActivity extends Activity {
         );
         
         new SearchCategories(this, categoriesAdapter).execute(params);
+    }
+    
+    private String getFullCategoryUrl(String siteUrl, String url) {
+        return url.startsWith("http") ? url : siteUrl + url;        
     }
 
     private void startWebActivity(String siteUrl, String categoryUrl, String name) {
