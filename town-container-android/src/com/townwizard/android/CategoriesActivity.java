@@ -57,6 +57,16 @@ public class CategoriesActivity extends Activity {
                 }
         );
         
+        TextView changeButton = (TextView) findViewById(R.id.button_change);
+        changeButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(CategoriesActivity.this, TownWizardActivity.class));
+                    }
+                }
+        );        
+        
         listView.setAdapter(categoriesAdapter);
         listView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
