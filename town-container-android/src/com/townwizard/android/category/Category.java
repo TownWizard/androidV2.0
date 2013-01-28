@@ -6,22 +6,35 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.townwizard.android.R;
-
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.townwizard.android.DefaultJsonActivity;
+import com.townwizard.android.R;
+
 public class Category {
+    
+    public static enum ViewType {
+        WEB,
+        JSON;
+        
+        private static ViewType fromString(String name) {
+            return "json".equals(name) ? JSON : WEB;
+        }
+    }
 	
     private final Bitmap image;
 	private final String name;
 	private final String url;
+	private final ViewType viewType;
 	
-	public Category(Bitmap image, String name, String url){
+	public Category(Bitmap image, String name, String url, String viewType) {
 		this.image = image;
 		this.name = handleSpecialChars(name);
-		this.url = url;		
+		this.url = url;
+		this.viewType = ViewType.fromString(viewType);
 	}
 	
 	public Bitmap getImage(){
@@ -34,7 +47,11 @@ public class Category {
 	
 	public String getUrl(){
 		return url;
-	}	
+	}
+	
+	public ViewType getViewType() {
+	    return viewType;
+	}
 	
     public static Bitmap getImageFromUrl(String url) throws IOException {        
         InputStream is = null;
@@ -54,7 +71,15 @@ public class Category {
             resource = R.drawable.icon_star;
         }
         return BitmapFactory.decodeResource(context.getResources(), resource);
-    }    
+    }
+    
+    public Class<? extends Activity> getJsonViewActivityClass() {
+        Class<? extends Activity> activityClass = IMPLEMENTED_JSON_VIEWS.get(getName());
+        if(activityClass == null) {
+            return DefaultJsonActivity.class;
+        }
+        return activityClass;
+    }
     
     private static Map<String, Integer> categoryToResource = new HashMap<String, Integer>();
     static {
@@ -83,7 +108,10 @@ public class Category {
         categoryToResource.put("About Us", R.drawable.about);
         categoryToResource.put("Contact Us", R.drawable.contact);
         categoryToResource.put("Weather", R.drawable.weather);
-    }	
+    }
+    
+    private static final Map<String, Class<? extends Activity>> IMPLEMENTED_JSON_VIEWS = 
+            new HashMap<String, Class<? extends Activity>>();
 	
 	private String handleSpecialChars(String name) {
 	    if(name == null || "".equals(name))

@@ -45,8 +45,16 @@ public class CategoriesActivity extends Activity {
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Category item = (Category) categoriesAdapter.getItem(position);                
-                    startBrowser(params[1], item.getUrl(), item.getName());
+                    Category category = (Category) categoriesAdapter.getItem(position);
+                    String siteUrl = params[1];
+                    String categoryUrl  = category.getUrl().startsWith("http") ? 
+                            category.getUrl() : siteUrl + category.getUrl();
+                    
+                    if(Category.ViewType.JSON.equals(category.getViewType())) {
+                        startJsonActivity(siteUrl, categoryUrl, category);
+                    } else {
+                        startWebActivity(siteUrl, categoryUrl, category.getName());
+                    }
                 }
             }
         );
@@ -54,13 +62,21 @@ public class CategoriesActivity extends Activity {
         new SearchCategories(this, categoriesAdapter).execute(params);
     }
 
-    protected void startBrowser(String urlSite, String urlSection, String name) {
+    private void startWebActivity(String siteUrl, String categoryUrl, String name) {
         Intent web = new Intent(this, WebActivity.class);
-        web.putExtra(TownWizardConstants.URL_SITE, urlSite);
-        String fullUrlSection  = urlSection.startsWith("http") ? urlSection : urlSite + urlSection; 
-        web.putExtra(TownWizardConstants.URL_SECTION, fullUrlSection);
+        web.putExtra(TownWizardConstants.URL_SITE, siteUrl);
+        web.putExtra(TownWizardConstants.URL_SECTION, categoryUrl);
         web.putExtra(TownWizardConstants.CATEGORY_NAME, name);
         startActivity(web);
+    }
+    
+    private void startJsonActivity(String siteUrl, String categoryUrl, Category category) {        
+        Class<? extends Activity> activityClass = category.getJsonViewActivityClass();
+        Intent i = new Intent(this, activityClass);
+        i.putExtra(TownWizardConstants.URL_SITE, siteUrl);
+        i.putExtra(TownWizardConstants.URL_SECTION, categoryUrl);
+        i.putExtra(TownWizardConstants.CATEGORY_NAME, category.getName());
+        startActivity(i);
     }
 
 }

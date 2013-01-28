@@ -46,9 +46,10 @@ public class SearchCategories extends AsyncTask<String, Category, Void> {
                         JSONObject jsObject = jsArr.getJSONObject(i);
                         String name = jsObject.getString("display_name");
                         String eventUrl = jsObject.getString("url");
+                        String viewType = jsObject.getString("ui_type");
 
                         Bitmap image = Category.getImageFromResourceByName(context, name);
-                        publishProgress(new Category(image, name, eventUrl));
+                        publishProgress(new Category(image, name, eventUrl, viewType));
                     }
                 }
             }
