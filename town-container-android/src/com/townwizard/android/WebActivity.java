@@ -97,11 +97,9 @@ public class WebActivity extends Activity {
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
-        if (urlSection.startsWith("http")) {
-            mWebView.loadUrl(urlSection);
-        } else {
-            mWebView.loadUrl(mUrlSite + urlSection);
-        }
+        String url = urlSection.startsWith("http") ? urlSection : mUrlSite + urlSection; 
+        Log.d("Web Acrivity Url", url);
+        mWebView.loadUrl(url);
     }  
 
 
