@@ -25,7 +25,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
-            android:text="Upload photos"
+            android:text="@string/upload_photo"
             android:visibility="visible" />
     </RelativeLayout>    
 
