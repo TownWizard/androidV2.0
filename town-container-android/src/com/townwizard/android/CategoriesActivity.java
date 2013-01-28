@@ -2,9 +2,6 @@ package com.townwizard.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,11 +58,6 @@ public class CategoriesActivity extends Activity {
         Intent web = new Intent(this, WebActivity.class);
         web.putExtra(TownWizardConstants.URL_SITE, urlSite);
         web.putExtra(TownWizardConstants.URL_SECTION, urlSection);
-
-        ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
-        Drawable drawable = iv.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        web.putExtra(TownWizardConstants.HEADER_IMAGE, bitmap);
         web.putExtra(TownWizardConstants.CATEGORY_NAME, name);
         startActivity(web);
     }

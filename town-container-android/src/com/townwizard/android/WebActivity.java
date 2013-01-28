@@ -89,7 +89,7 @@ public class WebActivity extends Activity {
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);
-        if (extras.getParcelable(TownWizardConstants.HEADER_IMAGE) != null) {
+        if (extras.getParcelable(TownWizardConstants.CATEGORY_NAME) != null) {
             mTextView = (TextView) findViewById(R.id.tv_header_web);
             mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
         }
