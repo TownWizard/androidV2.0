@@ -16,4 +16,6 @@ public class TownWizardConstants {
     public static final String CONTAINER_SITE="http://www.townwizardcontainerapptest.com";
     public static final String PARTNER_API=CONTAINER_SITE+"/apiv21/partner/";
     public static final String SECTION_API=CONTAINER_SITE+"/apiv21/section/partner/";
+    public static final String PARTNER_API_OLD=CONTAINER_SITE+"/api/partner/";
+    public static final String SECTION_API_OLD=CONTAINER_SITE+"/api/section/partner/";
 }
