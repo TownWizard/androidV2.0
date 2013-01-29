@@ -34,7 +34,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     @Override
     protected void onProgressUpdate(Partner... values) {
 	super.onProgressUpdate(values);
-	mListAdapter.addItem(values[0]);
+	mListAdapter.addPartner(values[0]);
     }
 
     @Override

@@ -12,11 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class PartnersAdapter extends ArrayAdapter<Partner> {
-	private LayoutInflater mLayoutInflater;
+	
+    private LayoutInflater layoutInflater;
 
 	public PartnersAdapter(Context context, int textViewResourceId) {
 		super(context, textViewResourceId);
-		mLayoutInflater = LayoutInflater.from(context);
+		layoutInflater = LayoutInflater.from(context);
 	}
 
 	public void clearSearchList() {
@@ -31,28 +32,29 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Partner name = getItem(position);
-		
-		TextView tv;
-		convertView = mLayoutInflater.inflate(R.layout.list_item_partners, null);
-		tv = (TextView) convertView.findViewById(R.id.name);
+	    View view = convertView;
+	    if(view == null) {
+	        view = layoutInflater.inflate(R.layout.list_item_partners, null);    
+	    }
 
-		if (name.getName().equals("Load more")) {
+	    Partner partner = getItem(position);
+	    TextView tv = (TextView) view.findViewById(R.id.name);
+
+		if (partner.getName().equals("Load more")) {
 			tv.setGravity(Gravity.CENTER);
 			tv.setTextColor(Color.BLACK);
-			View circle = convertView.findViewById(R.id.circle);
+			View circle = view.findViewById(R.id.circle);
 			circle.setVisibility(View.INVISIBLE);
 		} else {
 			tv.setGravity(Gravity.LEFT);
 		}
-		tv.setText(name.getName());
-
-		return convertView;
+		
+		tv.setText(partner.getName());
+		return view;
 	}
 
-	public void addItem(Partner item) {
+	public void addPartner(Partner item) {
 		add(item);
 		notifyDataSetChanged();
 	}
-
 }
