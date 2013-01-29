@@ -5,111 +5,95 @@
     android:orientation="vertical"
     android:background="@color/search_list_bg_color">
 
-   <ImageView
-       android:layout_width="fill_parent"
-       android:layout_height="wrap_content"
-       android:adjustViewBounds="true"
-       android:src="@drawable/search_header" 
-       android:contentDescription="@string/empty"/>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/search_header" 
+        android:contentDescription="@string/empty"/>
 
-       <LinearLayout
-           android:layout_width="fill_parent"
-           android:layout_height="wrap_content"
-           android:background="@drawable/search_top"           
-           android:paddingTop="5dp"
-           android:paddingBottom="15dp"
-           android:paddingLeft="15dp"
-           android:paddingRight="15dp"
-           android:orientation="vertical"
-           >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/search_top"           
+        android:paddingTop="5dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:orientation="vertical">
             
-           <TextView
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#555555" 
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"                    
+            android:text="@string/enter_ZIP"/> 
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="true"                
+            android:weightSum="1.0">
+                
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:paddingTop="1dp"
+                android:paddingRight="11dp"
+                android:layout_weight=".85">
+
+                <EditText
+                    android:id="@+id/et_input"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#555555" 
-                    android:textStyle="bold"
-                    android:layout_marginLeft="5dp"                    
-                    android:text="@string/enter_ZIP"/> 
-           
-   
-
+                    android:background="@drawable/search_bar"
+                    android:hint="@string/empty"                    
+                    android:singleLine="true"
+                    android:textColor="#CB0000"
+                    android:textStyle="bold" 
+                    android:includeFontPadding="true"
+                    android:paddingRight="35dp"
+                    android:paddingLeft="35dp" />
+                    
+                <ImageButton
+                    android:id="@+id/search_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/search_btn"
+                    android:layout_gravity="center|left"
+                    android:layout_marginLeft="8dip"
+                    android:layout_marginBottom="2dip"
+                    android:contentDescription="@string/empty" />
+                    
+                <ImageButton
+                    android:id="@+id/bt_clear_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bt_clear_input_edittext"
+                    android:layout_gravity="center|right"
+                    android:layout_marginRight="6dip"
+                    android:layout_marginBottom="2dip"
+                    android:contentDescription="@string/empty" />
             
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="true"                
-                android:weightSum="1.0"
-                >
+            </FrameLayout>
                 
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:paddingTop="1dp"
-                    android:paddingRight="11dp"
-                    android:layout_weight=".85"                
-                    >
-
-                    <EditText
-                        android:id="@+id/et_input"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/search_bar"
-                        android:hint="@string/empty"                    
-                        android:singleLine="true"
-                        android:textColor="#CB0000"
-                        android:textStyle="bold" 
-                        android:includeFontPadding="true"
-                        android:paddingRight="35dp"
-                        android:paddingLeft="35dp"
-                        />
-                    
-                    <ImageButton
-                        android:id="@+id/search_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/search_btn"
-                        android:layout_gravity="center|left"
-                        android:layout_marginLeft="8dip"
-                        android:layout_marginBottom="2dip"
-                        android:contentDescription="@string/empty" />
-                    
-                    
-                    <ImageButton
-                        android:id="@+id/bt_clear_edittext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bt_clear_input_edittext"
-                        android:layout_gravity="center|right"
-                        android:layout_marginRight="6dip"
-                        android:layout_marginBottom="2dip"
-                        android:contentDescription="@string/empty" />
-                </FrameLayout>
-                
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"                                        
-                    android:layout_weight=".15"
-                    
-                    >
-                  <ImageButton
-                      android:id="@+id/bt_search"
-                      android:layout_width="40dip"
-                      android:layout_height="40dip"
-                      android:layout_gravity="top|center_horizontal"
-                                                       
-                      android:background="@drawable/go_button"                
-                                                                      
-                      android:contentDescription="@string/empty"                      
-                      />
-                </FrameLayout>
-                
-                
-            </LinearLayout>
-        
-        
-        
-        </LinearLayout>
-
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"                                        
+                android:layout_weight=".15">
+                  
+              <ImageButton
+                  android:id="@+id/bt_search"
+                  android:layout_width="40dip"
+                  android:layout_height="40dip"
+                  android:layout_gravity="top|center_horizontal"
+                  android:background="@drawable/go_button"                
+                  android:contentDescription="@string/empty" />
+            
+            </FrameLayout>
+       </LinearLayout>       
+    </LinearLayout>
 
     <ListView
         android:id="@+id/@android:id/list"

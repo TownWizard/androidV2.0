@@ -26,9 +26,7 @@ import com.townwizard.android.utils.TownWizardConstants;
 public class TownWizardActivity extends ListActivity {
     /** Called when the activity is first created. */
     private ImageButton mSearchButton;
-    private ImageButton mInfoButton;
-
-
+    
     private ImageButton mClearButton;
     private PartnersAdapter mListAdapter;
     private EditText mInputEditText;
@@ -45,9 +43,9 @@ public class TownWizardActivity extends ListActivity {
         setListAdapter(mListAdapter);
 
         mInputEditText = (EditText) findViewById(R.id.et_input);
-        mSearchButton = (ImageButton) findViewById(R.id.bt_search);
-        mInfoButton = (ImageButton) findViewById(R.id.bt_info);
+        mSearchButton = (ImageButton) findViewById(R.id.bt_search);        
         mClearButton = (ImageButton) findViewById(R.id.bt_clear_edittext);
+        ImageButton searchButton = (ImageButton) findViewById(R.id.search_button);
         mClearButton.setVisibility(View.INVISIBLE);
         
 
@@ -62,28 +60,25 @@ public class TownWizardActivity extends ListActivity {
                         executeSearch();
                         break;
                     }
-                    case R.id.bt_info: {
-
-                        Intent web = new Intent(getApplicationContext(), WebActivity.class);
-                        web.putExtra(TownWizardConstants.URL_SITE, "http://www.townwizard.com/");
-                        web.putExtra(TownWizardConstants.URL_SECTION, "app-info");
-                        //web.putExtra(TownWizardConstants.PARTNER_NAME, "info");
-                        startActivity(web);
-                        break;
-                    }
                     case R.id.bt_clear_edittext: {
                         mInputEditText.setText("");
                         mClearButton.setVisibility(View.INVISIBLE);
                         break;
                     }
-
+                    case R.id.search_button: {
+                        InputMethodManager imm = 
+                                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        mInputEditText.requestFocus();
+                        break;
+                    }
                 }
             }
         };
 
-        mSearchButton.setOnClickListener(mOnClickListener);
-        mInfoButton.setOnClickListener(mOnClickListener);
+        mSearchButton.setOnClickListener(mOnClickListener);        
         mClearButton.setOnClickListener(mOnClickListener);
+        searchButton.setOnClickListener(mOnClickListener);
 
         mInputEditText.addTextChangedListener(new TextWatcher() {
 
