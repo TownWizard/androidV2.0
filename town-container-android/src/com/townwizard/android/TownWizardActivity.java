@@ -17,10 +17,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.townwizard.android.R;
-import com.townwizard.android.model.Partner;
-import com.townwizard.android.ui.adapter.PartnersAdapter;
+import com.townwizard.android.partner.Partner;
+import com.townwizard.android.partner.PartnersAdapter;
+import com.townwizard.android.partner.SearchPartners;
 import com.townwizard.android.utils.CurrentLocation;
-import com.townwizard.android.utils.SearchPartners;
 import com.townwizard.android.utils.TownWizardConstants;
 
 public class TownWizardActivity extends ListActivity {

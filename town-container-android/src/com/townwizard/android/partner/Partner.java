@@ -1,4 +1,4 @@
-package com.townwizard.android.model;
+package com.townwizard.android.partner;
 
 public class Partner {
 	

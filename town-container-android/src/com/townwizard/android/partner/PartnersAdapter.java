@@ -1,7 +1,6 @@
-package com.townwizard.android.ui.adapter;
+package com.townwizard.android.partner;
 
 import com.townwizard.android.R;
-import com.townwizard.android.model.Partner;
 
 import android.content.Context;
 import android.graphics.Color;

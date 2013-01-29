@@ -15,7 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.townwizard.android.R;
-import com.townwizard.android.model.Partner;
+import com.townwizard.android.partner.Partner;
 import com.townwizard.android.utils.CurrentLocation;
 import com.townwizard.android.utils.ServerConnector;
 import com.townwizard.android.utils.TownWizardConstants;

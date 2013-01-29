@@ -1,4 +1,4 @@
-package com.townwizard.android.utils;
+package com.townwizard.android.partner;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,8 +15,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.townwizard.android.R;
-import com.townwizard.android.model.Partner;
-import com.townwizard.android.ui.adapter.PartnersAdapter;
+import com.townwizard.android.utils.ServerConnector;
+import com.townwizard.android.utils.TownWizardConstants;
 
 public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     
