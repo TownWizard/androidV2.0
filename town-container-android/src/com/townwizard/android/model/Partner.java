@@ -9,7 +9,7 @@ public class Partner {
 	private final int id;
 
 	public Partner(String name, String url, String androidAppId, int id, String imageUrl) {
-		this.name = name;
+		this.name = handleSpecialCharacters(name);
 		this.url = url;
 		this.androidAppId = androidAppId;
 		this.id = id;
@@ -40,5 +40,9 @@ public class Partner {
     public String toString() {
         return "Partner [name=" + name + ", url=" + url + ", androidAppId=" + androidAppId
                 + ", imageUrl=" + imageUrl + ", partnerId=" + id + "]";
+    }
+    
+    private String handleSpecialCharacters (String s) {
+        return s.replace("\\\'", "'");
     }
 }

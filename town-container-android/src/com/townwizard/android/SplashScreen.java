@@ -23,7 +23,7 @@ import com.townwizard.android.utils.TownWizardConstants;
 public class SplashScreen extends Activity{
     
     private static final String GENERIC_PARTNER_ID = "TownWizard";
-    private static final int SPLASH_TIME = 1000;  
+    private static final int SPLASH_TIME = 100;  
     
     private Handler handler;
     private Runnable runnable;

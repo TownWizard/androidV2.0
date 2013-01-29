@@ -4,6 +4,7 @@ import com.townwizard.android.R;
 import com.townwizard.android.model.Partner;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,9 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 
 		if (name.getName().equals("Load more")) {
 			tv.setGravity(Gravity.CENTER);
+			tv.setTextColor(Color.BLACK);
+			View circle = convertView.findViewById(R.id.circle);
+			circle.setVisibility(View.INVISIBLE);
 		} else {
 			tv.setGravity(Gravity.LEFT);
 		}
