@@ -101,7 +101,8 @@ public class TownWizardActivity extends ListActivity {
 
             }
         });
-
+        
+        executeSearch();
     }
 
     @Override
