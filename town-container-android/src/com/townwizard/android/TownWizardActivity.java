@@ -37,7 +37,7 @@ public class TownWizardActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.partners);
 
         mListAdapter = new PartnersAdapter(getApplicationContext(), R.id.name);
         setListAdapter(mListAdapter);
