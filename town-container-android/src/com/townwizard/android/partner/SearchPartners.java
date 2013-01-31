@@ -2,7 +2,6 @@ package com.townwizard.android.partner;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +38,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
 
     @Override
     protected Integer doInBackground(String... params) {
-	String searchRequest = URLEncoder.encode(params[0]);
+    String searchRequest = params[0];
 	int offset = Integer.parseInt(params[1]);
 	try {
 	    mUrl = new URL(TownWizardConstants.PARTNER_API + "?" + searchRequest + OFFSET + offset);

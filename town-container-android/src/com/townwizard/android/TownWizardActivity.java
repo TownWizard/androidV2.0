@@ -128,15 +128,13 @@ public class TownWizardActivity extends ListActivity {
     }
 
     public void executeSearch() {
-        String searchRequest = "q=";
-
+        String searchRequest = null;
         if (mInputEditText.getText().toString().equals("")) {
-
-            searchRequest += "&lat=" + CurrentLocation.sLatitude + "&lon=" + CurrentLocation.sLongitude;
+            searchRequest = "lat=" + CurrentLocation.sLatitude + "&lon=" + CurrentLocation.sLongitude;
             Log.d("Latitude", Double.toString(CurrentLocation.sLatitude));
             Log.d("Longitude", Double.toString(CurrentLocation.sLongitude));
         } else {
-            searchRequest += mInputEditText.getText().toString();
+            searchRequest = "q=" + mInputEditText.getText().toString();
 
         }
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

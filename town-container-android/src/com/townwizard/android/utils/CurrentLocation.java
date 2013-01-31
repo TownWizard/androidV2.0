@@ -7,8 +7,8 @@ import com.townwizard.android.async.GetLocationTask;
 import com.townwizard.android.async.GetLocationTask.OnLocationObtainedListener;
 
 public class CurrentLocation implements OnLocationObtainedListener {
-    public static double sLatitude = -1f;
-    public static double sLongitude = -1f;
+    public static double sLatitude = 0.0f;
+    public static double sLongitude = 0.0f;
     private Context mContext;
 
     public CurrentLocation(Context context) {
