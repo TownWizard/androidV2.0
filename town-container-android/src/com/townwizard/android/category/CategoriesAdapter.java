@@ -100,9 +100,11 @@ public class CategoriesAdapter extends BaseAdapter {
     
     public String getAboutUsUrl() {
        List<Category> helpCategories = categories.get(CategorySection.HELP);
-       for(Category c : helpCategories) {
-           if(ABOUT_US.equals(c.getName())) {
-               return c.getUrl();
+       if(helpCategories != null) {
+           for(Category c : helpCategories) {
+               if(ABOUT_US.equals(c.getName())) {
+                   return c.getUrl();
+               }
            }
        }
        return null;
