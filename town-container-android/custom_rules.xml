@@ -17,7 +17,7 @@
 		<exec executable="build/post-compile.php" failonerror="true"/>
 	</target>
 
-	<target name="-post-build" if="partnerId.set">
+	<target name="-post-build">
 		<exec executable="build/post-build.php" failonerror="true"/>
 	</target>
 	
