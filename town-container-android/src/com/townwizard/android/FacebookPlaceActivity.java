@@ -52,7 +52,8 @@ public class FacebookPlaceActivity extends ListActivity {
 //        Bitmap bitmap = extras.getParcelable(TownWizardConstants.HEADER_IMAGE);
 //        mImageView = (ImageView) findViewById(R.id.iv_header_fb_places);
 //        mImageView.setImageBitmap(bitmap);
-        mTextView = (TextView) findViewById(R.id.tv_header_fb_places);
+        //mTextView = (TextView) findViewById(R.id.tv_header_fb_places);
+        mTextView = null;
         mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
         mPrefs = getPreferences(MODE_PRIVATE);
         mProgressDialog = new ProgressDialog(FacebookPlaceActivity.this);

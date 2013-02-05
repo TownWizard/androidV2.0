@@ -212,7 +212,7 @@ public class WebActivity extends Activity {
     }
 
     private void facebookCheckin() {
-        Intent i = new Intent(WebActivity.this, FacebookPlaceActivity.class);
+        Intent i = new Intent(WebActivity.this, FacebookPlacesActivity.class);
         i.putExtra(TownWizardConstants.CATEGORY_NAME, mTextView.getText().toString());
         startActivity(i);
     }
