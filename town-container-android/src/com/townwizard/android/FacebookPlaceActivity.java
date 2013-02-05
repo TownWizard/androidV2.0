@@ -16,12 +16,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,7 +38,7 @@ import com.townwizard.android.utils.TownWizardConstants;
 public class FacebookPlaceActivity extends ListActivity {
     private ProgressDialog mProgressDialog;
     private SharedPreferences mPrefs;
-    private ImageView mImageView;
+    //private ImageView mImageView;
     private TextView mTextView;
 
     public static Facebook sFb = new Facebook("374159485950604");
@@ -51,11 +49,11 @@ public class FacebookPlaceActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.facebook_places);
         Bundle extras = getIntent().getExtras();
-        Bitmap bitmap = extras.getParcelable(TownWizardConstants.HEADER_IMAGE);
-        mImageView = (ImageView) findViewById(R.id.iv_header_fb_places);
-        mImageView.setImageBitmap(bitmap);
+//        Bitmap bitmap = extras.getParcelable(TownWizardConstants.HEADER_IMAGE);
+//        mImageView = (ImageView) findViewById(R.id.iv_header_fb_places);
+//        mImageView.setImageBitmap(bitmap);
         mTextView = (TextView) findViewById(R.id.tv_header_fb_places);
-        mTextView.setText(extras.getString(TownWizardConstants.PARTNER_NAME));
+        mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
         mPrefs = getPreferences(MODE_PRIVATE);
         mProgressDialog = new ProgressDialog(FacebookPlaceActivity.this);
         mProgressDialog.setMessage("Loading...");

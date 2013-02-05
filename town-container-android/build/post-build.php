@@ -28,8 +28,12 @@ function main() {
 
 function saveReleaseFile($partnerName) {
 	$partnerId = getPartnerId();
-	$partners = loadPartners();
-	$apkFileName = str_replace(' ', '', $partnerName) . '.apk';
+	if($partnerId == 0) {
+		$apkFileName = 'TownWizard.apk';
+	} else {
+		$partners = loadPartners();
+		$apkFileName = str_replace(' ', '', $partnerName) . '.apk';
+	}
 
 	mkdir("deploy");	
 	

@@ -17,18 +17,16 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.townwizard.android.R;
-import com.townwizard.android.model.Partner;
-import com.townwizard.android.ui.adapter.PartnersAdapter;
+import com.townwizard.android.partner.Partner;
+import com.townwizard.android.partner.PartnersAdapter;
+import com.townwizard.android.partner.SearchPartners;
 import com.townwizard.android.utils.CurrentLocation;
-import com.townwizard.android.utils.SearchPartners;
 import com.townwizard.android.utils.TownWizardConstants;
 
 public class TownWizardActivity extends ListActivity {
     /** Called when the activity is first created. */
     private ImageButton mSearchButton;
-    private ImageButton mInfoButton;
-
-
+    
     private ImageButton mClearButton;
     private PartnersAdapter mListAdapter;
     private EditText mInputEditText;
@@ -39,15 +37,15 @@ public class TownWizardActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.partners);
 
         mListAdapter = new PartnersAdapter(getApplicationContext(), R.id.name);
         setListAdapter(mListAdapter);
 
         mInputEditText = (EditText) findViewById(R.id.et_input);
-        mSearchButton = (ImageButton) findViewById(R.id.bt_search);
-        mInfoButton = (ImageButton) findViewById(R.id.bt_info);
+        mSearchButton = (ImageButton) findViewById(R.id.bt_search);        
         mClearButton = (ImageButton) findViewById(R.id.bt_clear_edittext);
+        ImageButton searchButton = (ImageButton) findViewById(R.id.search_button);
         mClearButton.setVisibility(View.INVISIBLE);
         
 
@@ -62,28 +60,25 @@ public class TownWizardActivity extends ListActivity {
                         executeSearch();
                         break;
                     }
-                    case R.id.bt_info: {
-
-                        Intent web = new Intent(getApplicationContext(), WebActivity.class);
-                        web.putExtra(TownWizardConstants.URL_SITE, "http://www.townwizard.com/");
-                        web.putExtra(TownWizardConstants.URL_SECTION, "app-info");
-                        web.putExtra(TownWizardConstants.PARTNER_NAME, "info");
-                        startActivity(web);
-                        break;
-                    }
                     case R.id.bt_clear_edittext: {
                         mInputEditText.setText("");
                         mClearButton.setVisibility(View.INVISIBLE);
                         break;
                     }
-
+                    case R.id.search_button: {
+                        InputMethodManager imm = 
+                                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        mInputEditText.requestFocus();
+                        break;
+                    }
                 }
             }
         };
 
-        mSearchButton.setOnClickListener(mOnClickListener);
-        mInfoButton.setOnClickListener(mOnClickListener);
+        mSearchButton.setOnClickListener(mOnClickListener);        
         mClearButton.setOnClickListener(mOnClickListener);
+        searchButton.setOnClickListener(mOnClickListener);
 
         mInputEditText.addTextChangedListener(new TextWatcher() {
 
@@ -106,7 +101,8 @@ public class TownWizardActivity extends ListActivity {
 
             }
         });
-
+        
+        executeSearch();
     }
 
     @Override
@@ -119,14 +115,10 @@ public class TownWizardActivity extends ListActivity {
         } else {
             if (item.getAndroidAppId().length() == 0) {
                 Intent categories = new Intent(this, CategoriesActivity.class);
-                categories.putExtra(TownWizardConstants.PARTNER_NAME, item.getName());
-                categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(item.getPartnerId()));
-                categories.putExtra(TownWizardConstants.URL, item.getUrl());
-                if (item.getImageUrl().length() > 0) {
-                    categories.putExtra(TownWizardConstants.IMAGE_URL, item.getImageUrl());
-                } else {
-                    categories.putExtra(TownWizardConstants.IMAGE_URL, "");
-                }
+                //categories.putExtra(TownWizardConstants._NAME, item.getName());
+                categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(item.getId()));
+                categories.putExtra(TownWizardConstants.URL, item.getUrl());                
+                categories.putExtra(TownWizardConstants.IMAGE_URL, item.getImageUrl());
                 startActivity(categories);
             } else {
                 Intent browseIntent = new Intent(Intent.ACTION_VIEW,
@@ -137,15 +129,13 @@ public class TownWizardActivity extends ListActivity {
     }
 
     public void executeSearch() {
-        String searchRequest = "q=";
-
+        String searchRequest = null;
         if (mInputEditText.getText().toString().equals("")) {
-
-            searchRequest += "&lat=" + CurrentLocation.sLatitude + "&lon=" + CurrentLocation.sLongitude;
+            searchRequest = "lat=" + CurrentLocation.sLatitude + "&lon=" + CurrentLocation.sLongitude;
             Log.d("Latitude", Double.toString(CurrentLocation.sLatitude));
             Log.d("Longitude", Double.toString(CurrentLocation.sLongitude));
         } else {
-            searchRequest += mInputEditText.getText().toString();
+            searchRequest = "q=" + mInputEditText.getText().toString();
 
         }
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

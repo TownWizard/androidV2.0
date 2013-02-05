@@ -2,72 +2,109 @@ package com.townwizard.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import com.townwizard.android.R;
-import com.townwizard.android.model.Categories;
-import com.townwizard.android.ui.adapter.CategoriesAdapter;
+import com.townwizard.android.category.CategoriesAdapter;
+import com.townwizard.android.category.Category;
+import com.townwizard.android.category.SearchCategories;
 import com.townwizard.android.utils.DownloadImageHelper;
-import com.townwizard.android.utils.SearchCategories;
 import com.townwizard.android.utils.TownWizardConstants;
 
-public class CategoriesActivity extends Activity {
-    private CategoriesAdapter mCategoriesAdapter;
-    private String mPartnerName;
-    private String mImageUrl;
-
+public class CategoriesActivity extends Activity {   
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);        
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.categories);
-        mCategoriesAdapter = new CategoriesAdapter(this);
-        Bundle extras = getIntent().getExtras();
+
+        ListView listView = (ListView) findViewById(R.id.category_list);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View headerView = inflater.inflate(R.layout.category_list_header, listView, false);
+        listView.addHeaderView(headerView, null, false);        
+        
+        Bundle extras = getIntent().getExtras();                
+        String imageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
+        if (imageUrl.length() > 0) {
+            ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
+            new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + imageUrl);
+        }        
+        
+        final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);        
         final String[] params = {
                 extras.getString(TownWizardConstants.PARTNER_ID),
-                extras.getString(TownWizardConstants.URL) };
-        mPartnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
-        mImageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
-        ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
-        Log.d("imageUrl", mImageUrl);
-        if (mImageUrl.length() > 0) {
-            new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + mImageUrl);
-        }
-        GridView gridView = (GridView) findViewById(R.id.gridView);
-        TextView tv = (TextView) findViewById(R.id.tv_categories_header);
-        tv.setText(mPartnerName);
-        gridView.setAdapter(mCategoriesAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Categories item = (Categories) mCategoriesAdapter.getItem(position);
-                Log.d("url", params[1] + item.getUrl());
-                startBrowser(params[1], item.getUrl(), mPartnerName + " - "
-                        + item.getName());
+                extras.getString(TownWizardConstants.URL)
+        };
+        final String siteUrl = params[1];
+        
+        TextView aboutButton = (TextView) findViewById(R.id.button_about);
+        aboutButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String aboutUsUrl = categoriesAdapter.getAboutUsUrl();
+                        if(aboutUsUrl == null) {
+                            aboutUsUrl = TownWizardConstants.DEFAULT_ABOUT_US_URI;
+                        }
+                        String categoryUrl = getFullCategoryUrl(siteUrl, aboutUsUrl);
+                        startWebActivity(siteUrl, categoryUrl, CategoriesAdapter.ABOUT_US);
+                    }
+                }
+        );
+        
+        TextView changeButton = (TextView) findViewById(R.id.button_change);
+        changeButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(CategoriesActivity.this, TownWizardActivity.class));
+                    }
+                }
+        );        
+        
+        listView.setAdapter(categoriesAdapter);
+        listView.setOnItemClickListener(
+            new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Category category = (Category) categoriesAdapter.getItem(position);                    
+                    String categoryUrl = getFullCategoryUrl(siteUrl, category.getUrl());
+                    if(Category.ViewType.JSON.equals(category.getViewType())) {
+                        startJsonActivity(siteUrl, categoryUrl, category);
+                    } else {
+                        startWebActivity(siteUrl, categoryUrl, category.getName());
+                    }
+                }
             }
-        });
-        new SearchCategories(mCategoriesAdapter).execute(params);
+        );
+        
+        new SearchCategories(this, categoriesAdapter).execute(params);
+    }
+    
+    private String getFullCategoryUrl(String siteUrl, String url) {
+        return url.startsWith("http") ? url : siteUrl + url;        
     }
 
-    protected void startBrowser(String urlSite, String urlSection, String name) {
+    private void startWebActivity(String siteUrl, String categoryUrl, String name) {
         Intent web = new Intent(this, WebActivity.class);
-        web.putExtra(TownWizardConstants.URL_SITE, urlSite);
-        web.putExtra(TownWizardConstants.URL_SECTION, urlSection);
-
-        ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
-        Drawable drawable = iv.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        web.putExtra(TownWizardConstants.HEADER_IMAGE, bitmap);
-        web.putExtra(TownWizardConstants.PARTNER_NAME, name);
+        web.putExtra(TownWizardConstants.URL_SITE, siteUrl);
+        web.putExtra(TownWizardConstants.URL_SECTION, categoryUrl);
+        web.putExtra(TownWizardConstants.CATEGORY_NAME, name);
         startActivity(web);
+    }
+    
+    private void startJsonActivity(String siteUrl, String categoryUrl, Category category) {        
+        Class<? extends Activity> activityClass = category.getJsonViewActivityClass();
+        Intent i = new Intent(this, activityClass);
+        i.putExtra(TownWizardConstants.URL_SITE, siteUrl);
+        i.putExtra(TownWizardConstants.URL_SECTION, categoryUrl);
+        i.putExtra(TownWizardConstants.CATEGORY_NAME, category.getName());
+        startActivity(i);
     }
 
 }

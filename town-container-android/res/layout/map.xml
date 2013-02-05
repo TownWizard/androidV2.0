@@ -16,7 +16,7 @@
             android:layout_alignParentRight="true"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
-            android:src="@drawable/top_bar" />
+            />
 
         <TextView
             android:id="@+id/tv_header_map"

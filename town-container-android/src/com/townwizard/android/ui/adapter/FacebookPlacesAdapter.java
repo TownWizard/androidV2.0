@@ -36,7 +36,7 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
     private List<FacebookPlace> mItems;
 
     public FacebookPlacesAdapter(Context context, List<FacebookPlace> items) {
-        super(context, R.layout.list_item_places, items);
+        super(context, R.layout.place, items);
         mContext = context;
         mItems = items;
     }
@@ -49,7 +49,7 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
 
         if (rowView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            rowView = inflater.inflate(R.layout.list_item_places, null);
+            rowView = inflater.inflate(R.layout.place, null);
             holder = new ViewHolder();
             holder.tvPlaceName = (TextView) rowView.findViewById(R.id.tv_place_name);
             holder.tvPlaceCategory = (TextView) rowView.findViewById(R.id.tv_place_category);

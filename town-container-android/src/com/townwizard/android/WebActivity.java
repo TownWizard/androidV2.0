@@ -4,14 +4,13 @@ import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.MailTo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,22 +18,22 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.townwizard.android.R;
 import com.townwizard.android.utils.TownWizardConstants;
 
+@SuppressLint("SetJavaScriptEnabled")
 public class WebActivity extends Activity {
 
     private static final String sUpload = "components/com_shines/iuploadphoto.php";
     private String mUrlSite;
-    private WebView mWebView;
-    private ImageView mImageView;
+    private WebView mWebView;    
     private TextView mTextView;
     private Button mUploadButton;
     private static final int sCAMERA_RESULT = 1;
@@ -45,11 +44,9 @@ public class WebActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        mUrlSite = extras.getString(TownWizardConstants.URL_SITE);
-        String urlSection = extras.getString(TownWizardConstants.URL_SECTION);
-        String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
-        if (partnerName.indexOf("Photos") != -1) {
-            Log.d("photos", "photos");
+        mUrlSite = extras.getString(TownWizardConstants.URL_SITE);        
+        String categoryName = extras.getString(TownWizardConstants.CATEGORY_NAME);
+        if (categoryName.indexOf("Photos") != -1) {
             if (isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
                 setContentView(R.layout.web_with_upload);
@@ -90,24 +87,17 @@ public class WebActivity extends Activity {
         }
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        if (extras.getParcelable(TownWizardConstants.HEADER_IMAGE) != null) {
-            Bitmap bitmap = extras.getParcelable(TownWizardConstants.HEADER_IMAGE);
-            mImageView = (ImageView) findViewById(R.id.iv_header_web);
-            mImageView.setImageBitmap(bitmap);
-            mTextView = (TextView) findViewById(R.id.tv_header_web);
-            mTextView.setText(extras.getString(TownWizardConstants.PARTNER_NAME));
-        }
-
+        mWebView.getSettings().setJavaScriptEnabled(true);        
+        mTextView = (TextView) findViewById(R.id.tv_header_web);
+        mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
+        
+        String urlSection = extras.getString(TownWizardConstants.URL_SECTION);         
+        Log.d("Web Acrivity Url", urlSection);
+        mWebView.loadUrl(urlSection);
+    }  
 
-        if (urlSection.startsWith("http")) {
-            mWebView.loadUrl(urlSection);
-        } else {
-            mWebView.loadUrl(mUrlSite + urlSection);
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -178,6 +168,18 @@ public class WebActivity extends Activity {
             }
             return true;
         }
+
+        @Override
+        public void onPageStarted (WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            drawBackButton();
+        }
+        
+        @Override
+        public void onPageFinished (WebView view, String url) {
+            super.onPageFinished(view, url);
+            drawBackButton();
+        }        
     }
 
     private void startCameraIntent() {
@@ -205,21 +207,13 @@ public class WebActivity extends Activity {
         Intent i = new Intent(WebActivity.this, MapViewActivity.class);
         i.putExtra(TownWizardConstants.LATITUDE, latitude);
         i.putExtra(TownWizardConstants.LONGITUDE, longitude);
-
-        Drawable drawable = mImageView.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-
-        i.putExtra(TownWizardConstants.HEADER_IMAGE, bitmap);
-        i.putExtra(TownWizardConstants.PARTNER_NAME, mTextView.getText().toString());
+        i.putExtra(TownWizardConstants.CATEGORY_NAME, mTextView.getText().toString());
         startActivity(i);
     }
 
     private void facebookCheckin() {
         Intent i = new Intent(WebActivity.this, FacebookPlaceActivity.class);
-        Drawable drawable = mImageView.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        i.putExtra(TownWizardConstants.HEADER_IMAGE, bitmap);
-        i.putExtra(TownWizardConstants.PARTNER_NAME, mTextView.getText().toString());
+        i.putExtra(TownWizardConstants.CATEGORY_NAME, mTextView.getText().toString());
         startActivity(i);
     }
 
@@ -241,6 +235,31 @@ public class WebActivity extends Activity {
 
         startActivity(i);
     }
+
+    private void drawBackButton() {
+        LinearLayout backButtonArea = (LinearLayout)findViewById(R.id.header_back_button);
+        backButtonArea.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        int layout = mWebView.canGoBack() ? R.layout.back_button : R.layout.back_button_root;
+        View backButton = inflater.inflate(layout, backButtonArea, false);
+        backButtonArea.addView(backButton);
+        backButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goBack();
+                    }
+                }
+        );        
+    }
+    
+    private void goBack() {
+        if(mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            onBackPressed();
+        }
+    }    
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
