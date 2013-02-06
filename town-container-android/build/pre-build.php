@@ -19,7 +19,7 @@ function main() {
 		backupResources();
 		replaceParams();
 		replaceStrings($partnerName);
-		replaceManifestPackageNames($pkgName);
+		replacePackageNamesInResources($pkgName);
 		replaceSource($pkgName);
 	} catch (Exception $e) {
 		print $e->getMessage();
@@ -57,8 +57,11 @@ function replaceStrings($partnerName) {
 	print "Modified strings.xml is\n $newXml";
 }
 
-function replaceManifestPackageNames($pkgName) {
-	replacePackageNames("AndroidManifest.xml", "AndroidManifest.xml", $pkgName);	
+function replacePackageNamesInResources($pkgName) {
+	global $resources;
+	foreach($resources as $r) {
+		replacePackageNames($r, $r, $pkgName);
+	}
 }
 
 function replaceSource($pkgName) {

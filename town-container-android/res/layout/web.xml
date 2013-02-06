@@ -4,10 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <fragment android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:id="@+id/header_fragment"
-              android:name="com.townwizard.android.HeaderFragment" />
+    <include layout="@layout/header_fragment"/>
     
     <WebView
         android:id="@+id/webview"
