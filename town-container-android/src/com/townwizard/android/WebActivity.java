@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -16,20 +15,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.townwizard.android.utils.TownWizardConstants;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class WebActivity extends Activity {
+public class WebActivity extends FragmentActivity {
 
     private static final String sUpload = "components/com_shines/iuploadphoto.php";
     private String mUrlSite;
@@ -88,8 +86,6 @@ public class WebActivity extends Activity {
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);        
-        mTextView = (TextView) findViewById(R.id.tv_header_web);
-        mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
@@ -172,16 +168,16 @@ public class WebActivity extends Activity {
         @Override
         public void onPageStarted (WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            drawBackButton();
+            HeaderFragment.drawBackButton(WebActivity.this, mWebView);
         }
         
         @Override
         public void onPageFinished (WebView view, String url) {
             super.onPageFinished(view, url);
-            drawBackButton();
+            HeaderFragment.drawBackButton(WebActivity.this, mWebView);
         }        
     }
-
+    
     private void startCameraIntent() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File photo = new File(Environment.getExternalStorageDirectory(),
@@ -235,31 +231,6 @@ public class WebActivity extends Activity {
 
         startActivity(i);
     }
-
-    private void drawBackButton() {
-        LinearLayout backButtonArea = (LinearLayout)findViewById(R.id.header_back_button);
-        backButtonArea.removeAllViews();
-        LayoutInflater inflater = LayoutInflater.from(this);
-        int layout = mWebView.canGoBack() ? R.layout.back_button : R.layout.back_button_root;
-        View backButton = inflater.inflate(layout, backButtonArea, false);
-        backButtonArea.addView(backButton);
-        backButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        goBack();
-                    }
-                }
-        );        
-    }
-    
-    private void goBack() {
-        if(mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
-            onBackPressed();
-        }
-    }    
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
