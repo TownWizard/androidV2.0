@@ -22,7 +22,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.townwizard.android.utils.TownWizardConstants;
 
@@ -32,7 +31,7 @@ public class WebActivity extends FragmentActivity {
     private static final String sUpload = "components/com_shines/iuploadphoto.php";
     private String mUrlSite;
     private WebView mWebView;    
-    private TextView mTextView;
+    private String categoryName;
     private Button mUploadButton;
     private static final int sCAMERA_RESULT = 1;
     private static final int sGALLERY = 2;
@@ -43,7 +42,7 @@ public class WebActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
         mUrlSite = extras.getString(TownWizardConstants.URL_SITE);        
-        String categoryName = extras.getString(TownWizardConstants.CATEGORY_NAME);
+        categoryName = extras.getString(TownWizardConstants.CATEGORY_NAME);
         if (categoryName.indexOf("Photos") != -1) {
             if (isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
@@ -203,13 +202,13 @@ public class WebActivity extends FragmentActivity {
         Intent i = new Intent(WebActivity.this, MapViewActivity.class);
         i.putExtra(TownWizardConstants.LATITUDE, latitude);
         i.putExtra(TownWizardConstants.LONGITUDE, longitude);
-        i.putExtra(TownWizardConstants.CATEGORY_NAME, mTextView.getText().toString());
+        i.putExtra(TownWizardConstants.CATEGORY_NAME, categoryName);
         startActivity(i);
     }
 
     private void facebookCheckin() {
         Intent i = new Intent(WebActivity.this, FacebookPlacesActivity.class);
-        i.putExtra(TownWizardConstants.CATEGORY_NAME, mTextView.getText().toString());
+        i.putExtra(TownWizardConstants.CATEGORY_NAME, categoryName);
         startActivity(i);
     }
 
