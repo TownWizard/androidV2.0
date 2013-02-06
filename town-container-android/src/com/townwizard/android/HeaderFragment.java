@@ -35,7 +35,9 @@ public class HeaderFragment extends Fragment {
     
     public static final void drawBackButton(FragmentActivity activity, WebView webView) {
         Fragment header = activity.getSupportFragmentManager().findFragmentById(R.id.header_fragment);
-        ((HeaderFragment) header).drawBackBtn(activity, webView);
+        if(header != null) {
+            ((HeaderFragment) header).drawBackBtn(activity, webView);
+        }
     }
     
     private void drawBackBtn (final Activity activity, final WebView webView) {
