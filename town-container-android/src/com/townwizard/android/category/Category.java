@@ -18,10 +18,13 @@ public class Category {
     
     public static enum ViewType {
         WEB,
-        JSON;
+        JSON,
+        NONE;
         
         private static ViewType fromString(String name) {
-            return "json".equals(name) ? JSON : WEB;
+            if("json".equals(name)) return JSON;
+            else if("webview".equals(name)) return WEB;
+            else return NONE;
         }
     }
 	
@@ -79,6 +82,13 @@ public class Category {
             return DefaultJsonActivity.class;
         }
         return activityClass;
+    }
+    
+    public boolean hasView() {
+        if (ViewType.NONE.equals(getViewType())) return false;
+        else if(ViewType.JSON.equals(getViewType()) && IMPLEMENTED_JSON_VIEWS.get(getName()) == null)
+            return false;
+        return true;
     }
     
     private static Map<String, Integer> categoryToResource = new HashMap<String, Integer>();

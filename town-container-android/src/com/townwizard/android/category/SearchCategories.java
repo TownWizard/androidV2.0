@@ -4,6 +4,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -45,8 +46,8 @@ public class SearchCategories extends AsyncTask<String, Category, Void> {
                     for (int i = 0; i < jsArr.length(); i++) {
                         JSONObject jsObject = jsArr.getJSONObject(i);
                         String name = jsObject.getString("display_name");
-                        String categoryUrl = jsObject.getString("url");                        
-                        String viewType = jsObject.has("ui_type") ? jsObject.getString("ui_type") : "";
+                        String categoryUrl = getCategoryUrl(jsObject);                        
+                        String viewType = getViewType(jsObject);
                         Bitmap image = Category.getImageFromResourceByName(context, name);
                         publishProgress(new Category(image, name, categoryUrl, viewType));
                     }
@@ -56,6 +57,19 @@ public class SearchCategories extends AsyncTask<String, Category, Void> {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    private String getCategoryUrl(JSONObject jsObject) throws JSONException {
+        String categoryUrl = null;
+        if(jsObject.has("android_url")) {
+            categoryUrl = jsObject.getString("android_url");
+        }
+        if(categoryUrl == null || "null".equals(categoryUrl)) categoryUrl = jsObject.getString("url");        
+        return categoryUrl;
+    }
+    
+    private String getViewType(JSONObject jsObject) throws JSONException {
+        return jsObject.has("android_ui_type") ? jsObject.getString("android_ui_type") : null;
     }
 
 }

@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.townwizard.android.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.townwizard.android.R;
 
 public class CategoriesAdapter extends BaseAdapter {
     
@@ -30,7 +30,9 @@ public class CategoriesAdapter extends BaseAdapter {
         this.context = context;    
     }
     
-    public void addItem(Category category) {
+    public void addItem(Category category) {        
+        if(!category.hasView()) return;
+        
         CategorySection section = getSection(category);
         List<Category> sectionCategories = categories.get(section);
         if(sectionCategories == null) {
