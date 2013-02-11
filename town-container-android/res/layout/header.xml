@@ -17,11 +17,19 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"    
             android:orientation="vertical"            
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_centerVertical="true" 
             android:layout_centerHorizontal="true">
-     
+            
+            <TextView
+                android:id="@+id/header_partner_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"      
+                android:textColor="@android:color/black" 
+                android:textSize="@dimen/text_size_xsmall"
+                android:gravity="center"/>
+                        
             <TextView
                 android:id="@+id/tv_header_web"
                 android:layout_width="fill_parent"
@@ -29,16 +37,7 @@
                 android:textColor="@android:color/black" 
                 android:textSize="@dimen/text_size_xlarge"
                 android:textStyle="bold"
-                android:gravity="center"/>
-    
-            <TextView
-                android:id="@+id/header_partner_name"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"      
-                android:textColor="@android:color/black" 
-                android:textSize="@dimen/text_size_small"
-                android:textStyle="bold"
-                android:gravity="center"/>
+                android:gravity="center"/>            
          
         </LinearLayout>
           
