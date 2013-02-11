@@ -90,6 +90,8 @@ public class WebActivity extends Activity {
         mWebView.getSettings().setJavaScriptEnabled(true);        
         mTextView = (TextView) findViewById(R.id.tv_header_web);
         mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
+        TextView partnerNameView = (TextView) findViewById(R.id.header_partner_name);
+        partnerNameView.setText(extras.getString(TownWizardConstants.PARTNER_NAME));
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
@@ -235,7 +237,7 @@ public class WebActivity extends Activity {
 
         startActivity(i);
     }
-
+    
     private void drawBackButton() {
         LinearLayout backButtonArea = (LinearLayout)findViewById(R.id.header_back_button);
         backButtonArea.removeAllViews();

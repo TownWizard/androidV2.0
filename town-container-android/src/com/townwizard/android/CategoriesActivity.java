@@ -41,6 +41,7 @@ public class CategoriesActivity extends Activity {
                 extras.getString(TownWizardConstants.URL)
         };
         final String siteUrl = params[1];
+        final String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
         
         TextView aboutButton = (TextView) findViewById(R.id.button_about);
         aboutButton.setOnClickListener(
@@ -52,7 +53,7 @@ public class CategoriesActivity extends Activity {
                             aboutUsUrl = TownWizardConstants.DEFAULT_ABOUT_US_URI;
                         }
                         String categoryUrl = getFullCategoryUrl(siteUrl, aboutUsUrl);
-                        startWebActivity(siteUrl, categoryUrl, CategoriesAdapter.ABOUT_US);
+                        startWebActivity(siteUrl, categoryUrl, CategoriesAdapter.ABOUT_US, partnerName);
                     }
                 }
         );
@@ -75,9 +76,9 @@ public class CategoriesActivity extends Activity {
                     Category category = (Category) categoriesAdapter.getItem(position);                    
                     String categoryUrl = getFullCategoryUrl(siteUrl, category.getUrl());
                     if(Category.ViewType.JSON.equals(category.getViewType())) {
-                        startJsonActivity(siteUrl, categoryUrl, category);
+                        startJsonActivity(siteUrl, categoryUrl, category, partnerName);
                     } else {
-                        startWebActivity(siteUrl, categoryUrl, category.getName());
+                        startWebActivity(siteUrl, categoryUrl, category.getName(), partnerName);
                     }
                 }
             }
@@ -90,20 +91,22 @@ public class CategoriesActivity extends Activity {
         return url.startsWith("http") ? url : siteUrl + url;        
     }
 
-    private void startWebActivity(String siteUrl, String categoryUrl, String name) {
+    private void startWebActivity(String siteUrl, String categoryUrl, String name, String partnerName) {
         Intent web = new Intent(this, WebActivity.class);
         web.putExtra(TownWizardConstants.URL_SITE, siteUrl);
         web.putExtra(TownWizardConstants.URL_SECTION, categoryUrl);
         web.putExtra(TownWizardConstants.CATEGORY_NAME, name);
+        web.putExtra(TownWizardConstants.PARTNER_NAME, partnerName);
         startActivity(web);
     }
     
-    private void startJsonActivity(String siteUrl, String categoryUrl, Category category) {        
+    private void startJsonActivity(String siteUrl, String categoryUrl, Category category, String partnerName) {        
         Class<? extends Activity> activityClass = category.getJsonViewActivityClass();
         Intent i = new Intent(this, activityClass);
         i.putExtra(TownWizardConstants.URL_SITE, siteUrl);
         i.putExtra(TownWizardConstants.URL_SECTION, categoryUrl);
         i.putExtra(TownWizardConstants.CATEGORY_NAME, category.getName());
+        i.putExtra(TownWizardConstants.PARTNER_NAME, partnerName);
         startActivity(i);
     }
 
