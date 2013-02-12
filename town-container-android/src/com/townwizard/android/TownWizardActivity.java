@@ -117,6 +117,7 @@ public class TownWizardActivity extends ListActivity {
                 Intent categories = new Intent(this, CategoriesActivity.class);
                 //categories.putExtra(TownWizardConstants._NAME, item.getName());
                 categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(item.getId()));
+                categories.putExtra(TownWizardConstants.PARTNER_NAME, item.getName());
                 categories.putExtra(TownWizardConstants.URL, item.getUrl());                
                 categories.putExtra(TownWizardConstants.IMAGE_URL, item.getImageUrl());
                 startActivity(categories);

@@ -64,7 +64,12 @@ public class SearchCategories extends AsyncTask<String, Category, Void> {
         if(jsObject.has("android_url")) {
             categoryUrl = jsObject.getString("android_url");
         }
-        if(categoryUrl == null || "null".equals(categoryUrl)) categoryUrl = jsObject.getString("url");        
+        if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
+        
+        if(categoryUrl == null && TownWizardConstants.isTest()) {
+            categoryUrl = jsObject.getString("url");
+            if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
+        }
         return categoryUrl;
     }
     

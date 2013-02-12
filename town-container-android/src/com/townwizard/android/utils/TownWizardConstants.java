@@ -3,6 +3,7 @@ package com.townwizard.android.utils;
 public class TownWizardConstants {
     public static final String CATEGORY_NAME = "CATEGORY NAME";
     public static final String PARTNER_ID = "PARTNER ID";
+    public static final String PARTNER_NAME = "PARTNER NAME";
     public static final String URL = "URL";
     public static final String IMAGE_URL = "IMAGE URL";
     public static final String URL_SITE = "URL SITE";
@@ -18,5 +19,9 @@ public class TownWizardConstants {
     public static final String SECTION_API=CONTAINER_SITE+"/apiv30/section/partner/";
     public static final String PARTNER_API_OLD=CONTAINER_SITE+"/api/partner/";
     public static final String SECTION_API_OLD=CONTAINER_SITE+"/api/section/partner/";
-    public static final String DEFAULT_ABOUT_US_URI = "components/com_shines_v2.1/iphone-about.php";    
+    public static final String DEFAULT_ABOUT_US_URI = "components/com_shines_v2.1/iphone-about.php"; 
+    
+    public static final boolean isTest() {
+        return CONTAINER_SITE.contains("test");
+    }
 }

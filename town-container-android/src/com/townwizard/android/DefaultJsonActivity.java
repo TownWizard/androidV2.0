@@ -21,6 +21,9 @@ public class DefaultJsonActivity extends Activity {
         TextView mTextView = (TextView) findViewById(R.id.tv_header_web);
         mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
         
+        TextView partnerNameView = (TextView) findViewById(R.id.header_partner_name);
+        partnerNameView.setText(extras.getString(TownWizardConstants.PARTNER_NAME));
+
         drawBackButton();
     }
     
