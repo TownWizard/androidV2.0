@@ -85,6 +85,7 @@ public class Category {
     }
     
     public boolean hasView() {
+        if(url == null) return false;
         if (ViewType.NONE.equals(getViewType())) return false;
         else if(ViewType.JSON.equals(getViewType()) && IMPLEMENTED_JSON_VIEWS.get(getName()) == null)
             return false;
