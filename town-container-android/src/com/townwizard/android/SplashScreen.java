@@ -27,8 +27,8 @@ public class SplashScreen extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String partnerId = Config.getConfig().getPartnerId();
-        isTownWizard = Config.getConfig().isContainerApp();
+        String partnerId = Config.getConfig(this).getPartnerId();
+        isTownWizard = Config.getConfig(this).isContainerApp();
 
         if (!isTownWizard) {
             partner = loadPartner(partnerId);

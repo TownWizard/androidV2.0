@@ -66,7 +66,7 @@ public class SearchCategories extends AsyncTask<String, Category, Void> {
         }
         if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
         
-        if(categoryUrl == null && Config.getConfig().isTest()) {
+        if(categoryUrl == null && Config.getConfig(context).isTest()) {
             categoryUrl = jsObject.getString("url");
             if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
         }

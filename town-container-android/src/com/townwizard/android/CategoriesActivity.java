@@ -26,7 +26,13 @@ public class CategoriesActivity extends Activity {
 
         ListView listView = (ListView) findViewById(R.id.category_list);
         LayoutInflater inflater = LayoutInflater.from(this);
-        View headerView = inflater.inflate(R.layout.category_list_header, listView, false);
+        
+        boolean isContainerApp = Config.getConfig(this).isContainerApp(); 
+        
+        int headerViewId = isContainerApp ? R.layout.category_list_header_c :
+            R.layout.category_list_header_p;
+        
+        View headerView = inflater.inflate(headerViewId, listView, false);
         listView.addHeaderView(headerView, null, false);        
         
         Bundle extras = getIntent().getExtras();                
@@ -35,7 +41,7 @@ public class CategoriesActivity extends Activity {
             ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
             new DownloadImageHelper(iv).execute(Config.CONTAINER_SITE + imageUrl);
         }        
-        
+
         final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);        
         final String[] params = {
                 extras.getString(Constants.PARTNER_ID),
@@ -43,31 +49,33 @@ public class CategoriesActivity extends Activity {
         };
         final String siteUrl = params[1];
         final String partnerName = extras.getString(Constants.PARTNER_NAME);
-        
-        TextView aboutButton = (TextView) findViewById(R.id.button_about);
-        aboutButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String aboutUsUrl = categoriesAdapter.getAboutUsUrl();
-                        if(aboutUsUrl == null) {
-                            aboutUsUrl = Config.DEFAULT_ABOUT_US_URI;
+
+        if(isContainerApp) {
+            TextView aboutButton = (TextView) findViewById(R.id.button_about);
+            aboutButton.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String aboutUsUrl = categoriesAdapter.getAboutUsUrl();
+                            if(aboutUsUrl == null) {
+                                aboutUsUrl = Config.DEFAULT_ABOUT_US_URI;
+                            }
+                            String categoryUrl = getFullCategoryUrl(siteUrl, aboutUsUrl);
+                            startWebActivity(siteUrl, categoryUrl, CategoriesAdapter.ABOUT_US, partnerName);
                         }
-                        String categoryUrl = getFullCategoryUrl(siteUrl, aboutUsUrl);
-                        startWebActivity(siteUrl, categoryUrl, CategoriesAdapter.ABOUT_US, partnerName);
                     }
-                }
-        );
-        
-        TextView changeButton = (TextView) findViewById(R.id.button_change);
-        changeButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(CategoriesActivity.this, TownWizardActivity.class));
+            );
+            
+            TextView changeButton = (TextView) findViewById(R.id.button_change);
+            changeButton.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(CategoriesActivity.this, TownWizardActivity.class));
+                        }
                     }
-                }
-        );        
+            );        
+        }
         
         listView.setAdapter(categoriesAdapter);
         listView.setOnItemClickListener(

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import android.app.Application;
+import android.content.Context;
 
 public final class Config extends Application {
     
@@ -17,19 +18,18 @@ public final class Config extends Application {
     private static final String GENERIC_PARTNER_ID = "TownWizard";
     private static final String PARAMS_FILE = "params.txt";
 
-    private static final Config c = new Config();
-    
     private boolean test = CONTAINER_SITE.contains("test"); 
     private String partnerId;
     private boolean containerApp;
     
-    private Config() {
-        partnerId = loadPartnerId();
-        containerApp = (GENERIC_PARTNER_ID.equals(partnerId));
+    public static Config getConfig(Context context) {
+        return (Config)context.getApplicationContext();
     }
     
-    public static final Config getConfig() {
-        return c;
+    @Override
+    public void onCreate() {
+        partnerId = loadPartnerId();
+        containerApp = (GENERIC_PARTNER_ID.equals(partnerId));
     }
     
     public boolean isTest() {
