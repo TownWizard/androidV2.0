@@ -1,9 +1,6 @@
 package com.townwizard.android;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.Properties;
 
 import org.json.JSONObject;
 
@@ -14,17 +11,14 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.townwizard.android.R;
+import com.townwizard.android.config.Config;
+import com.townwizard.android.config.Constants;
 import com.townwizard.android.partner.Partner;
 import com.townwizard.android.utils.CurrentLocation;
 import com.townwizard.android.utils.ServerConnector;
-import com.townwizard.android.utils.TownWizardConstants;
 
 public class SplashScreen extends Activity{
-    
-    private static final String GENERIC_PARTNER_ID = "TownWizard";
-    private static final int SPLASH_TIME = 1000;  
-    
+
     private Handler handler;
     private Runnable runnable;
     private boolean isTownWizard;
@@ -33,8 +27,8 @@ public class SplashScreen extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String partnerId = getPartnerId();
-        isTownWizard = (GENERIC_PARTNER_ID.equals(partnerId));
+        String partnerId = Config.getConfig().getPartnerId();
+        isTownWizard = Config.getConfig().isContainerApp();
 
         if (!isTownWizard) {
             partner = loadPartner(partnerId);
@@ -50,7 +44,7 @@ public class SplashScreen extends Activity{
                 startNextActivity();
             }
         };
-        handler.postDelayed(runnable, SPLASH_TIME);
+        handler.postDelayed(runnable, Config.SPLASH_TIME);
     }
 
     @Override
@@ -62,25 +56,9 @@ public class SplashScreen extends Activity{
         return true;
     }
     
-    private String getPartnerId() {
-        InputStream is = null;
-        try {
-            is = getAssets().open("params.txt");
-            Properties p = new Properties();
-            p.load(is);
-            return p.getProperty("ID");            
-        } catch (IOException e) {
-            isTownWizard = true;            
-            e.printStackTrace();
-        } finally {
-            if(is != null) try { is.close(); } catch(IOException e) { e.printStackTrace(); }
-        }
-        return null;
-    }    
-    
     private Partner loadPartner(String partnerId) {
         try {
-            URL url = new URL(TownWizardConstants.PARTNER_API + partnerId);
+            URL url = new URL(Config.PARTNER_API + partnerId);
             Log.d("Search URL = ", url.toString());
 
             String response = ServerConnector.getServerResponse(url);
@@ -125,10 +103,10 @@ public class SplashScreen extends Activity{
 
     private void startCategoriesActivity() {
         Intent categories = new Intent(this, CategoriesActivity.class);        
-        categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(partner.getId()));
-        categories.putExtra(TownWizardConstants.PARTNER_NAME, partner.getName());
-        categories.putExtra(TownWizardConstants.URL, partner.getUrl());
-        categories.putExtra(TownWizardConstants.IMAGE_URL, partner.getImageUrl());
+        categories.putExtra(Constants.PARTNER_ID, Integer.toString(partner.getId()));
+        categories.putExtra(Constants.PARTNER_NAME, partner.getName());
+        categories.putExtra(Constants.URL, partner.getUrl());
+        categories.putExtra(Constants.IMAGE_URL, partner.getImageUrl());
         startActivity(categories);
     }
 }

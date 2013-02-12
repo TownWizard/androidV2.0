@@ -17,11 +17,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.townwizard.android.R;
+import com.townwizard.android.config.Constants;
 import com.townwizard.android.partner.Partner;
 import com.townwizard.android.partner.PartnersAdapter;
 import com.townwizard.android.partner.SearchPartners;
 import com.townwizard.android.utils.CurrentLocation;
-import com.townwizard.android.utils.TownWizardConstants;
 
 public class TownWizardActivity extends ListActivity {
     /** Called when the activity is first created. */
@@ -116,10 +116,10 @@ public class TownWizardActivity extends ListActivity {
             if (item.getAndroidAppId().length() == 0) {
                 Intent categories = new Intent(this, CategoriesActivity.class);
                 //categories.putExtra(TownWizardConstants._NAME, item.getName());
-                categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(item.getId()));
-                categories.putExtra(TownWizardConstants.PARTNER_NAME, item.getName());
-                categories.putExtra(TownWizardConstants.URL, item.getUrl());                
-                categories.putExtra(TownWizardConstants.IMAGE_URL, item.getImageUrl());
+                categories.putExtra(Constants.PARTNER_ID, Integer.toString(item.getId()));
+                categories.putExtra(Constants.PARTNER_NAME, item.getName());
+                categories.putExtra(Constants.URL, item.getUrl());                
+                categories.putExtra(Constants.IMAGE_URL, item.getImageUrl());
                 startActivity(categories);
             } else {
                 Intent browseIntent = new Intent(Intent.ACTION_VIEW,

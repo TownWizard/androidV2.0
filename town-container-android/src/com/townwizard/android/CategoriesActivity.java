@@ -13,8 +13,9 @@ import android.widget.TextView;
 import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.Category;
 import com.townwizard.android.category.SearchCategories;
+import com.townwizard.android.config.Config;
+import com.townwizard.android.config.Constants;
 import com.townwizard.android.utils.DownloadImageHelper;
-import com.townwizard.android.utils.TownWizardConstants;
 
 public class CategoriesActivity extends Activity {   
     
@@ -29,19 +30,19 @@ public class CategoriesActivity extends Activity {
         listView.addHeaderView(headerView, null, false);        
         
         Bundle extras = getIntent().getExtras();                
-        String imageUrl = extras.getString(TownWizardConstants.IMAGE_URL);
+        String imageUrl = extras.getString(Constants.IMAGE_URL);
         if (imageUrl.length() > 0) {
             ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
-            new DownloadImageHelper(iv).execute(TownWizardConstants.CONTAINER_SITE + imageUrl);
+            new DownloadImageHelper(iv).execute(Config.CONTAINER_SITE + imageUrl);
         }        
         
         final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);        
         final String[] params = {
-                extras.getString(TownWizardConstants.PARTNER_ID),
-                extras.getString(TownWizardConstants.URL)
+                extras.getString(Constants.PARTNER_ID),
+                extras.getString(Constants.URL)
         };
         final String siteUrl = params[1];
-        final String partnerName = extras.getString(TownWizardConstants.PARTNER_NAME);
+        final String partnerName = extras.getString(Constants.PARTNER_NAME);
         
         TextView aboutButton = (TextView) findViewById(R.id.button_about);
         aboutButton.setOnClickListener(
@@ -50,7 +51,7 @@ public class CategoriesActivity extends Activity {
                     public void onClick(View v) {
                         String aboutUsUrl = categoriesAdapter.getAboutUsUrl();
                         if(aboutUsUrl == null) {
-                            aboutUsUrl = TownWizardConstants.DEFAULT_ABOUT_US_URI;
+                            aboutUsUrl = Config.DEFAULT_ABOUT_US_URI;
                         }
                         String categoryUrl = getFullCategoryUrl(siteUrl, aboutUsUrl);
                         startWebActivity(siteUrl, categoryUrl, CategoriesAdapter.ABOUT_US, partnerName);
@@ -93,20 +94,20 @@ public class CategoriesActivity extends Activity {
 
     private void startWebActivity(String siteUrl, String categoryUrl, String name, String partnerName) {
         Intent web = new Intent(this, WebActivity.class);
-        web.putExtra(TownWizardConstants.URL_SITE, siteUrl);
-        web.putExtra(TownWizardConstants.URL_SECTION, categoryUrl);
-        web.putExtra(TownWizardConstants.CATEGORY_NAME, name);
-        web.putExtra(TownWizardConstants.PARTNER_NAME, partnerName);
+        web.putExtra(Constants.URL_SITE, siteUrl);
+        web.putExtra(Constants.URL_SECTION, categoryUrl);
+        web.putExtra(Constants.CATEGORY_NAME, name);
+        web.putExtra(Constants.PARTNER_NAME, partnerName);
         startActivity(web);
     }
     
     private void startJsonActivity(String siteUrl, String categoryUrl, Category category, String partnerName) {        
         Class<? extends Activity> activityClass = category.getJsonViewActivityClass();
         Intent i = new Intent(this, activityClass);
-        i.putExtra(TownWizardConstants.URL_SITE, siteUrl);
-        i.putExtra(TownWizardConstants.URL_SECTION, categoryUrl);
-        i.putExtra(TownWizardConstants.CATEGORY_NAME, category.getName());
-        i.putExtra(TownWizardConstants.PARTNER_NAME, partnerName);
+        i.putExtra(Constants.URL_SITE, siteUrl);
+        i.putExtra(Constants.URL_SECTION, categoryUrl);
+        i.putExtra(Constants.CATEGORY_NAME, category.getName());
+        i.putExtra(Constants.PARTNER_NAME, partnerName);
         startActivity(i);
     }
 

@@ -26,7 +26,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.townwizard.android.utils.TownWizardConstants;
+import com.townwizard.android.config.Constants;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class WebActivity extends Activity {
@@ -44,8 +44,8 @@ public class WebActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        mUrlSite = extras.getString(TownWizardConstants.URL_SITE);        
-        String categoryName = extras.getString(TownWizardConstants.CATEGORY_NAME);
+        mUrlSite = extras.getString(Constants.URL_SITE);        
+        String categoryName = extras.getString(Constants.CATEGORY_NAME);
         if (categoryName.indexOf("Photos") != -1) {
             if (isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
@@ -89,13 +89,13 @@ public class WebActivity extends Activity {
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);        
         mTextView = (TextView) findViewById(R.id.tv_header_web);
-        mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
+        mTextView.setText(extras.getString(Constants.CATEGORY_NAME));
         TextView partnerNameView = (TextView) findViewById(R.id.header_partner_name);
-        partnerNameView.setText(extras.getString(TownWizardConstants.PARTNER_NAME));
+        partnerNameView.setText(extras.getString(Constants.PARTNER_NAME));
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
-        String urlSection = extras.getString(TownWizardConstants.URL_SECTION);         
+        String urlSection = extras.getString(Constants.URL_SECTION);         
         Log.d("Web Acrivity Url", urlSection);
         mWebView.loadUrl(urlSection);
     }  
@@ -104,7 +104,7 @@ public class WebActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Intent uploadPhoto = new Intent(this, UploadPhotoActivity.class);
-        uploadPhoto.putExtra(TownWizardConstants.URL, mUrlSite + sUpload);
+        uploadPhoto.putExtra(Constants.URL, mUrlSite + sUpload);
 
         if (requestCode == sGALLERY) {
             Log.d("result is ", Integer.toString(resultCode));
@@ -112,8 +112,8 @@ public class WebActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 Uri imageUri = data.getData();
 
-                uploadPhoto.putExtra(TownWizardConstants.IMAGE_URI, imageUri);
-                uploadPhoto.putExtra(TownWizardConstants.SOURCE, "GALLERY");
+                uploadPhoto.putExtra(Constants.IMAGE_URI, imageUri);
+                uploadPhoto.putExtra(Constants.SOURCE, "GALLERY");
                 startActivity(uploadPhoto);
 
             } else {
@@ -125,8 +125,8 @@ public class WebActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 Log.d("camera result", "start upload activity");
                 Log.d("imagePath", sImagePath.toString());
-                uploadPhoto.putExtra(TownWizardConstants.IMAGE_URI, sImagePath);
-                uploadPhoto.putExtra(TownWizardConstants.SOURCE, "CAMERA");
+                uploadPhoto.putExtra(Constants.IMAGE_URI, sImagePath);
+                uploadPhoto.putExtra(Constants.SOURCE, "CAMERA");
                 startActivity(uploadPhoto);
             } else {
                 WebActivity.this.finish();
@@ -207,15 +207,15 @@ public class WebActivity extends Activity {
         String latitude = latlong.substring(0, latlong.indexOf(":"));
         String longitude = latlong.substring(latlong.indexOf(":") + 1);
         Intent i = new Intent(WebActivity.this, MapViewActivity.class);
-        i.putExtra(TownWizardConstants.LATITUDE, latitude);
-        i.putExtra(TownWizardConstants.LONGITUDE, longitude);
-        i.putExtra(TownWizardConstants.CATEGORY_NAME, mTextView.getText().toString());
+        i.putExtra(Constants.LATITUDE, latitude);
+        i.putExtra(Constants.LONGITUDE, longitude);
+        i.putExtra(Constants.CATEGORY_NAME, mTextView.getText().toString());
         startActivity(i);
     }
 
     private void facebookCheckin() {
         Intent i = new Intent(WebActivity.this, FacebookPlaceActivity.class);
-        i.putExtra(TownWizardConstants.CATEGORY_NAME, mTextView.getText().toString());
+        i.putExtra(Constants.CATEGORY_NAME, mTextView.getText().toString());
         startActivity(i);
     }
 

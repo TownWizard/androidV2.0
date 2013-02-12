@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.townwizard.android.utils.TownWizardConstants;
+import com.townwizard.android.config.Constants;
 
 public class DefaultJsonActivity extends Activity {
 
@@ -19,10 +19,10 @@ public class DefaultJsonActivity extends Activity {
         Bundle extras = getIntent().getExtras();
         
         TextView mTextView = (TextView) findViewById(R.id.tv_header_web);
-        mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
+        mTextView.setText(extras.getString(Constants.CATEGORY_NAME));
         
         TextView partnerNameView = (TextView) findViewById(R.id.header_partner_name);
-        partnerNameView.setText(extras.getString(TownWizardConstants.PARTNER_NAME));
+        partnerNameView.setText(extras.getString(Constants.PARTNER_NAME));
 
         drawBackButton();
     }

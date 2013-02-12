@@ -14,8 +14,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.townwizard.android.R;
+import com.townwizard.android.config.Config;
 import com.townwizard.android.utils.ServerConnector;
-import com.townwizard.android.utils.TownWizardConstants;
 
 public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     
@@ -41,7 +41,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     String searchRequest = params[0];
 	int offset = Integer.parseInt(params[1]);
 	try {
-	    mUrl = new URL(TownWizardConstants.PARTNER_API + "?" + searchRequest + OFFSET + offset);
+	    mUrl = new URL(Config.PARTNER_API + "?" + searchRequest + OFFSET + offset);
 	    Log.d("Search URL = ", mUrl.toString());
 	} catch (MalformedURLException e) {
 	    e.printStackTrace();
