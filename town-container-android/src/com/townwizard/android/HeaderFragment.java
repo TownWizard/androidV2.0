@@ -25,7 +25,6 @@ public class HeaderFragment extends Fragment {
         header = inflater.inflate(R.layout.header, container, false);        
         FragmentActivity activity = getActivity();
         Bundle extras = activity.getIntent().getExtras();
-        String partnerName = extras.getString(Constants.PARTNER_NAME);        
         TextView headerCategoryView = (TextView) header.findViewById(R.id.tv_header_web);
         headerCategoryView.setText(extras.getString(Constants.CATEGORY_NAME));
         TextView headerPartnerView = (TextView) header.findViewById(R.id.header_partner_name);
