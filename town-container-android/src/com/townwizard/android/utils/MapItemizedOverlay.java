@@ -24,7 +24,7 @@ public class MapItemizedOverlay extends ItemizedOverlay<OverlayItem> {
     protected boolean onTap(int index) {
 
 	Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-		Uri.parse("http://maps.google.com/maps?saddr="+CurrentLocation.sLatitude+","+CurrentLocation.sLongitude+"&daddr="+
+		Uri.parse("http://maps.google.com/maps?saddr="+CurrentLocation.latitude()+","+CurrentLocation.longitude()+"&daddr="+
 			MapViewActivity.sLatitude+","+MapViewActivity.sLongitude));
 	intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
 	mContext.startActivity(intent);

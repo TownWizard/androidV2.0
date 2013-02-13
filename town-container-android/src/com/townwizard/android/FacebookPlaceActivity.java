@@ -31,7 +31,7 @@ import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.townwizard.android.R;
 import com.townwizard.android.config.Constants;
-import com.townwizard.android.model.FacebookPlace;
+import com.townwizard.android.facebook.FacebookPlace;
 import com.townwizard.android.ui.adapter.FacebookPlacesAdapter;
 import com.townwizard.android.utils.CurrentLocation;
 
@@ -192,8 +192,8 @@ public class FacebookPlaceActivity extends ListActivity {
         Bundle params = new Bundle();
         JSONObject location = new JSONObject();
         try {
-            location.put("latitude", CurrentLocation.sLatitude);
-            location.put("longitude", CurrentLocation.sLongitude);
+            location.put("latitude", CurrentLocation.latitude());
+            location.put("longitude", CurrentLocation.longitude());
         } catch (JSONException e1) {
             e1.printStackTrace();
         }

@@ -99,8 +99,8 @@ public class FacebookFriendsList extends ListActivity {
 
 	JSONObject coordinates = new JSONObject();
 	try {
-	    coordinates.put("latitude", CurrentLocation.sLatitude);
-	    coordinates.put("longitude", CurrentLocation.sLongitude);
+	    coordinates.put("latitude", CurrentLocation.latitude());
+	    coordinates.put("longitude", CurrentLocation.longitude());
 	} catch (JSONException e) {
 	    e.printStackTrace();
 	}

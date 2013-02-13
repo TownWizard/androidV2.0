@@ -1,2 +1,3 @@
 position tw logo background on categories screen correctly
 simulate go button pressed state
+update partners file against the new apiv3

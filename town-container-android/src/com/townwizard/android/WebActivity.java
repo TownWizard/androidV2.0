@@ -30,8 +30,7 @@ public class WebActivity extends FragmentActivity {
 
     private static final String sUpload = "components/com_shines/iuploadphoto.php";
     private String mUrlSite;
-    private WebView mWebView;    
-    private String categoryName;
+    private WebView mWebView;
     private Button mUploadButton;
     private static final int sCAMERA_RESULT = 1;
     private static final int sGALLERY = 2;
@@ -198,6 +197,7 @@ public class WebActivity extends FragmentActivity {
     }
 
     private void showMap(String url) {
+        Bundle extras = getIntent().getExtras();
         String latlong = url.substring("APP30A:SHOWMAP:".length());
         Log.d("latlong", latlong);
         String latitude = latlong.substring(0, latlong.indexOf(":"));
@@ -205,13 +205,17 @@ public class WebActivity extends FragmentActivity {
         Intent i = new Intent(WebActivity.this, MapViewActivity.class);
         i.putExtra(Constants.LATITUDE, latitude);
         i.putExtra(Constants.LONGITUDE, longitude);
-        i.putExtra(Constants.CATEGORY_NAME, categoryName);
+        i.putExtra(Constants.CATEGORY_NAME, extras.getString(Constants.CATEGORY_NAME));
         startActivity(i);
     }
 
     private void facebookCheckin() {
-        Intent i = new Intent(WebActivity.this, FacebookPlaceActivity.class);
-        i.putExtra(Constants.CATEGORY_NAME, categoryName);
+        Bundle extras = getIntent().getExtras();
+        Intent i = new Intent(WebActivity.this, FacebookPlacesActivity.class);        
+        i.putExtra(Constants.PARTNER_NAME, extras.getString(Constants.PARTNER_NAME));
+        i.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
+        i.putExtra(Constants.CATEGORY_NAME, extras.getString(Constants.CATEGORY_NAME));
+        i.putExtra(Constants.FROM_ACTIVITY, getClass());
         startActivity(i);
     }
 

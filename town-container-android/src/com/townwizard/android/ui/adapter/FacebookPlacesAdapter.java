@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.townwizard.android.R;
 import com.townwizard.android.FacebookPlaceActivity;
-import com.townwizard.android.model.FacebookPlace;
+import com.townwizard.android.facebook.FacebookPlace;
 import com.townwizard.android.utils.ServerConnector;
 
 public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {

@@ -150,8 +150,8 @@ public class CategoriesAdapter extends BaseAdapter {
     private View getCategoryView(Category category, View convertView, ViewGroup parent) {
         View view = convertView;
         if(view == null) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-            view = inflater.inflate(R.layout.category, parent, false);
+            LayoutInflater inflater = LayoutInflater.from(context);
+                view = inflater.inflate(R.layout.category, parent, false);
         }
         ImageView imageView = (ImageView) view.findViewById(R.id.section_image);
         TextView textView = (TextView) view.findViewById(R.id.section_text);        

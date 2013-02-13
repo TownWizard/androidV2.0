@@ -1,18 +1,20 @@
-package com.townwizard.android.model;
+package com.townwizard.android.facebook;
 
 import android.graphics.Bitmap;
 
 public class FacebookPlace {
-	private String name;
+	
+    private String name;
 	private String category;
 	private String street;
 	private String id;
 	private double latitude;
 	private double longitude;
-	private Bitmap image = null;
-	private String urlImage;
-	private String allCheckins=null;
-	private String friendsCheckins=null;
+	private Bitmap image;
+	private String imageUrl;
+	private String allCheckins;
+	private String friendsCheckins;
+	
 	public String getAllCheckins() {
 		return allCheckins;
 	}
@@ -29,14 +31,6 @@ public class FacebookPlace {
 		this.friendsCheckins = friendsCheckins;
 	}
 
-	
-	public String getUrlImage() {
-		return urlImage;
-	}
-
-	public void setUrlImage(String urlImage) {
-		this.urlImage = urlImage;
-	}
 
 	public String getName() {
 		return name;
@@ -45,8 +39,7 @@ public class FacebookPlace {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
+	
 	public String getCategory() {
 		return category;
 	}
@@ -92,11 +85,4 @@ public class FacebookPlace {
 	public void setImage(Bitmap image){
 		this.image = image;
 	}
-
-	public FacebookPlace(){
-		
-	}
-	
-	
-	
 }

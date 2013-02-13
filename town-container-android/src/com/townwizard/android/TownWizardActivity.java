@@ -143,9 +143,9 @@ public class TownWizardActivity extends ListActivity {
     public void executeSearch() {
         String searchRequest = null;
         if (mInputEditText.getText().toString().equals("")) {
-            searchRequest = "lat=" + CurrentLocation.sLatitude + "&lon=" + CurrentLocation.sLongitude;
-            Log.d("Latitude", Double.toString(CurrentLocation.sLatitude));
-            Log.d("Longitude", Double.toString(CurrentLocation.sLongitude));
+            searchRequest = "lat=" + CurrentLocation.latitude() + "&lon=" + CurrentLocation.longitude();
+            Log.d("Latitude", Double.toString(CurrentLocation.latitude()));
+            Log.d("Longitude", Double.toString(CurrentLocation.longitude()));
         } else {
             searchRequest = "q=" + mInputEditText.getText().toString();
 

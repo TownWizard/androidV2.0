@@ -79,7 +79,7 @@ public class HeaderFragment extends Fragment {
         } else {
             Bundle extras = activity.getIntent().getExtras();
             Serializable klass = extras.getSerializable(Constants.FROM_ACTIVITY);
-            if(CategoriesActivity.class.equals(klass)) {
+            if(klass != null) {
                 activity.finish();
             } else {
                 startCategoriesActivity(activity);
