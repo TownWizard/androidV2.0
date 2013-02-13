@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.townwizard.android.R;
+import com.townwizard.android.config.Config;
+import com.townwizard.android.config.Constants;
 
 public class CategoriesAdapter extends BaseAdapter {
-    
-    public static final String ABOUT_US = "About Us";
-    
+
     private Context context;
         
     private Map<CategorySection, List<Category>> categories = 
@@ -101,15 +101,39 @@ public class CategoriesAdapter extends BaseAdapter {
     }
     
     public String getAboutUsUrl() {
-       List<Category> helpCategories = categories.get(CategorySection.HELP);
-       if(helpCategories != null) {
-           for(Category c : helpCategories) {
-               if(ABOUT_US.equals(c.getName())) {
-                   return c.getUrl();
-               }
-           }
-       }
-       return null;
+        String aboutUsUrl = null;
+        List<Category> helpCategories = categories.get(CategorySection.HELP);
+        if(helpCategories != null) {
+            for(Category c : helpCategories) {
+                if(Constants.ABOUT_US.equals(c.getName())) {
+                    aboutUsUrl = c.getUrl();
+                    break;
+                }
+            }
+        }
+        if(aboutUsUrl == null) {
+            aboutUsUrl = Config.DEFAULT_ABOUT_US_URI;
+        }
+       
+        return aboutUsUrl;
+    }
+    
+    public String getHomeUrl() {
+        String homeUrl = null;
+        List<Category> generalCategories = categories.get(CategorySection.GENERAL);
+        if(generalCategories != null) {
+            for(Category c : generalCategories) {
+                if(Constants.HOME.equals(c.getName())) {
+                    homeUrl = c.getUrl();
+                    break;
+                }
+            }
+        }
+        if(homeUrl == null) {
+            homeUrl = Config.DEFAULT_HOME_URI;
+        }
+       
+        return homeUrl;        
     }
     
     private View getSectionView(CategorySection section, View convertView, ViewGroup parent) {
@@ -154,7 +178,7 @@ public class CategoriesAdapter extends BaseAdapter {
     static {        
         CATEGORY_TO_SECTION.put("Help & Support", CategorySection.HELP);
         CATEGORY_TO_SECTION.put("Advertise with Us", CategorySection.HELP);
-        CATEGORY_TO_SECTION.put(ABOUT_US, CategorySection.HELP);
+        CATEGORY_TO_SECTION.put(Constants.ABOUT_US, CategorySection.HELP);
         CATEGORY_TO_SECTION.put("Contact Us", CategorySection.HELP);
     }
 

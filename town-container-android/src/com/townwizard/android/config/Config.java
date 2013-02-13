@@ -13,6 +13,7 @@ public final class Config extends Application {
     public static final String PARTNER_API=CONTAINER_SITE+"/apiv30/partner/";
     public static final String SECTION_API=CONTAINER_SITE+"/apiv30/section/partner/";
     public static final String DEFAULT_ABOUT_US_URI = "components/com_shines_v2.1/iphone-about.php";
+    public static final String DEFAULT_HOME_URI = "components/com_shines_v2.1/iphone-30a-today.php";
     public static final int SPLASH_TIME = 1000;
     
     private static final String GENERIC_PARTNER_ID = "TownWizard";
@@ -21,7 +22,7 @@ public final class Config extends Application {
     private boolean test = CONTAINER_SITE.contains("test"); 
     private String partnerId;
     private boolean containerApp;
-    
+        
     public static Config getConfig(Context context) {
         return (Config)context.getApplicationContext();
     }
@@ -31,7 +32,7 @@ public final class Config extends Application {
         partnerId = loadPartnerId();
         containerApp = (GENERIC_PARTNER_ID.equals(partnerId));
     }
-    
+
     public boolean isTest() {
         return test;
     }
@@ -43,7 +44,7 @@ public final class Config extends Application {
     public String getPartnerId() {
         return partnerId;
     }
-    
+
     private String loadPartnerId() {
         InputStream is = null;
         try {

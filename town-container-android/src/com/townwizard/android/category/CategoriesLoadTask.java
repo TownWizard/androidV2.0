@@ -14,14 +14,18 @@ import android.os.AsyncTask;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.utils.ServerConnector;
 
-public class SearchCategories extends AsyncTask<String, Category, Void> {
+public class CategoriesLoadTask extends AsyncTask<String, Category, Void> {
        
     private CategoriesAdapter categoriesAdapter;
     private Context context;    
 
-    public SearchCategories(Context context, CategoriesAdapter categoriesAdapter) {
+    public CategoriesLoadTask(Context context) {
         this.context = context;
-        this.categoriesAdapter = categoriesAdapter;
+        this.categoriesAdapter = new CategoriesAdapter(context);
+    }
+    
+    public CategoriesAdapter getCategoriesAdapter () {
+        return categoriesAdapter;
     }
 
     @Override

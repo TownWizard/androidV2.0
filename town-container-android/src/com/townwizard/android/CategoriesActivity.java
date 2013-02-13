@@ -11,8 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.townwizard.android.category.CategoriesAdapter;
+import com.townwizard.android.category.CategoriesLoadTask;
 import com.townwizard.android.category.Category;
-import com.townwizard.android.category.SearchCategories;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.utils.DownloadImageHelper;
@@ -21,9 +21,10 @@ public class CategoriesActivity extends Activity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);        
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_from_left);
         setContentView(R.layout.categories);
-
+        
         ListView listView = (ListView) findViewById(R.id.category_list);
         LayoutInflater inflater = LayoutInflater.from(this);
         
@@ -42,12 +43,11 @@ public class CategoriesActivity extends Activity {
             new DownloadImageHelper(iv).execute(Config.CONTAINER_SITE + imageUrl);
         }        
 
-        final CategoriesAdapter categoriesAdapter = new CategoriesAdapter(this);        
-        final String[] params = {
-                extras.getString(Constants.PARTNER_ID),
-                extras.getString(Constants.URL)
-        };
-        final String siteUrl = params[1];
+        CategoriesLoadTask categoryLoader = new CategoriesLoadTask(this);
+        categoryLoader.execute(new String[]{extras.getString(Constants.PARTNER_ID)});
+        
+        final CategoriesAdapter categoriesAdapter = categoryLoader.getCategoriesAdapter();
+        final String siteUrl = extras.getString(Constants.URL);
         final String partnerName = extras.getString(Constants.PARTNER_NAME);
 
         if(isContainerApp) {
@@ -61,7 +61,7 @@ public class CategoriesActivity extends Activity {
                                 aboutUsUrl = Config.DEFAULT_ABOUT_US_URI;
                             }
                             String categoryUrl = getFullCategoryUrl(siteUrl, aboutUsUrl);
-                            startWebActivity(siteUrl, categoryUrl, CategoriesAdapter.ABOUT_US, partnerName);
+                            startWebActivity(siteUrl, categoryUrl, Constants.ABOUT_US, partnerName);
                         }
                     }
             );
@@ -92,8 +92,6 @@ public class CategoriesActivity extends Activity {
                 }
             }
         );
-        
-        new SearchCategories(this, categoriesAdapter).execute(params);
     }
     
     private String getFullCategoryUrl(String siteUrl, String url) {
@@ -101,11 +99,15 @@ public class CategoriesActivity extends Activity {
     }
 
     private void startWebActivity(String siteUrl, String categoryUrl, String name, String partnerName) {
+        Bundle extras = getIntent().getExtras();
         Intent web = new Intent(this, WebActivity.class);
         web.putExtra(Constants.URL_SITE, siteUrl);
         web.putExtra(Constants.URL_SECTION, categoryUrl);
         web.putExtra(Constants.CATEGORY_NAME, name);
         web.putExtra(Constants.PARTNER_NAME, partnerName);
+        web.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
+        web.putExtra(Constants.PARTNER_ID, extras.getString(Constants.PARTNER_ID));
+        web.putExtra(Constants.FROM_ACTIVITY, getClass());
         startActivity(web);
     }
     

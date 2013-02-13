@@ -13,4 +13,7 @@ public class Constants {
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
     public static final String ITEM_LOCATION = "ITEM LOCATION";
+    public static final String ABOUT_US = "About Us";
+    public static final String HOME = "Home";
+    public static final String FROM_ACTIVITY = "FROM ACTIVITY";
 }

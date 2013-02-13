@@ -1,6 +1,7 @@
 package com.townwizard.android;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -259,10 +260,26 @@ public class WebActivity extends Activity {
         if(mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
-            onBackPressed();
+            Bundle extras = getIntent().getExtras();
+            Serializable klass = extras.getSerializable(Constants.FROM_ACTIVITY);
+            if(CategoriesActivity.class.equals(klass)) {
+                finish();
+            } else {
+                startCategoriesActivity();
+            }
         }
+    }
+    
+    private void startCategoriesActivity() {
+        Bundle extras = getIntent().getExtras();
+        Intent categories = new Intent(this, CategoriesActivity.class);        
+        categories.putExtra(Constants.PARTNER_ID, extras.getString(Constants.PARTNER_ID));
+        categories.putExtra(Constants.PARTNER_NAME, extras.getString(Constants.PARTNER_NAME));
+        categories.putExtra(Constants.URL, extras.getString(Constants.URL_SITE));
+        categories.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
+        startActivity(categories);
     }    
-
+    
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {

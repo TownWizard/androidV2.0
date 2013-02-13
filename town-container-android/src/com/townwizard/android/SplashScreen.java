@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.townwizard.android.category.CategoriesAdapter;
+import com.townwizard.android.category.CategoriesLoadTask;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.partner.Partner;
@@ -23,6 +25,7 @@ public class SplashScreen extends Activity{
     private Runnable runnable;
     private boolean isTownWizard;
     private Partner partner;
+    private CategoriesAdapter categoriesAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class SplashScreen extends Activity{
 
         if (!isTownWizard) {
             partner = loadPartner(partnerId);
+            CategoriesLoadTask categoriesLoader = new CategoriesLoadTask(this);
+            categoriesLoader.execute(new String[] {partnerId});
+            categoriesAdapter = categoriesLoader.getCategoriesAdapter();
         }
         
         setContentView(R.layout.splash);
@@ -92,7 +98,7 @@ public class SplashScreen extends Activity{
         if (isTownWizard) {
             startTownWizardActivity();
         } else {
-            startCategoriesActivity();
+            startWebActivity(categoriesAdapter);
         }
         finish();
     }    
@@ -100,13 +106,20 @@ public class SplashScreen extends Activity{
     private void startTownWizardActivity() {        
         startActivity(new Intent(this, TownWizardActivity.class));        
     }
-
-    private void startCategoriesActivity() {
-        Intent categories = new Intent(this, CategoriesActivity.class);        
-        categories.putExtra(Constants.PARTNER_ID, Integer.toString(partner.getId()));
-        categories.putExtra(Constants.PARTNER_NAME, partner.getName());
-        categories.putExtra(Constants.URL, partner.getUrl());
-        categories.putExtra(Constants.IMAGE_URL, partner.getImageUrl());
-        startActivity(categories);
+    
+    private void startWebActivity(CategoriesAdapter categoriesAdapter) {
+        Intent web = new Intent(this, WebActivity.class);
+        web.putExtra(Constants.URL_SITE, partner.getUrl());
+        String categoryUrl = getFullCategoryUrl(partner.getUrl(), categoriesAdapter.getHomeUrl());
+        web.putExtra(Constants.URL_SECTION, categoryUrl);
+        web.putExtra(Constants.CATEGORY_NAME, Constants.HOME);
+        web.putExtra(Constants.PARTNER_NAME, partner.getName());
+        web.putExtra(Constants.PARTNER_ID, Integer.valueOf(partner.getId()).toString());
+        web.putExtra(Constants.IMAGE_URL, partner.getImageUrl());
+        startActivity(web);
+    }
+    
+    private String getFullCategoryUrl(String siteUrl, String url) {
+        return url.startsWith("http") ? url : siteUrl + url;        
     }
 }

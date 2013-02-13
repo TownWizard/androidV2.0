@@ -92,6 +92,11 @@ public class Category {
         return true;
     }
     
+    @Override
+    public String toString() {
+        return name + ": " + url;
+    }
+    
     private static Map<String, Integer> categoryToResource = new HashMap<String, Integer>();
     static {
         /*
