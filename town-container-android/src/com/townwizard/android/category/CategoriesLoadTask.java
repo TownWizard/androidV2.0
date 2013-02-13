@@ -11,17 +11,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
+import com.townwizard.android.config.Config;
 import com.townwizard.android.utils.ServerConnector;
-import com.townwizard.android.utils.TownWizardConstants;
 
-public class SearchCategories extends AsyncTask<String, Category, Void> {
+public class CategoriesLoadTask extends AsyncTask<String, Category, Void> {
        
     private CategoriesAdapter categoriesAdapter;
     private Context context;    
 
-    public SearchCategories(Context context, CategoriesAdapter categoriesAdapter) {
+    public CategoriesLoadTask(Context context) {
         this.context = context;
-        this.categoriesAdapter = categoriesAdapter;
+        this.categoriesAdapter = new CategoriesAdapter(context);
+    }
+    
+    public CategoriesAdapter getCategoriesAdapter () {
+        return categoriesAdapter;
     }
 
     @Override
@@ -34,7 +38,7 @@ public class SearchCategories extends AsyncTask<String, Category, Void> {
     protected Void doInBackground(String ... params) {
         try {
             String mId = params[0];
-            URL url = new URL(TownWizardConstants.SECTION_API + URLEncoder.encode(mId, "UTF-8"));        
+            URL url = new URL(Config.SECTION_API + URLEncoder.encode(mId, "UTF-8"));        
             String response = ServerConnector.getServerResponse(url);
 
             if (response.length() > 0) {
@@ -66,7 +70,7 @@ public class SearchCategories extends AsyncTask<String, Category, Void> {
         }
         if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
         
-        if(categoryUrl == null && TownWizardConstants.isTest()) {
+        if(categoryUrl == null && Config.getConfig(context).isTest()) {
             categoryUrl = jsObject.getString("url");
             if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
         }

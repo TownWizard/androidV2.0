@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import com.townwizard.android.R;
-import com.townwizard.android.utils.TownWizardConstants;
+import com.townwizard.android.config.Constants;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -52,11 +52,11 @@ public class UploadPhotoActivity extends Activity {
 	mUploadButton = (Button) findViewById(R.id.bt_upload);
 	mEditText = (EditText) findViewById(R.id.et_enter_name_description);
 	Bundle extras = getIntent().getExtras();
-	mSource = extras.getString(TownWizardConstants.SOURCE);
-	Uri imageUri = (Uri) extras.get(TownWizardConstants.IMAGE_URI);
+	mSource = extras.getString(Constants.SOURCE);
+	Uri imageUri = (Uri) extras.get(Constants.IMAGE_URI);
 	mImageUri = imageUri;
 
-	mUrlUpload = extras.getString(TownWizardConstants.URL);
+	mUrlUpload = extras.getString(Constants.URL);
 
 	mImagePath = imageUri.getPath();
 	Log.d("mImagePath", mImagePath);

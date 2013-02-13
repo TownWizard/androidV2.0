@@ -28,10 +28,10 @@ import android.widget.ListView;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.FacebookError;
 import com.townwizard.android.R;
+import com.townwizard.android.config.Constants;
 import com.townwizard.android.model.FacebookFriend;
 import com.townwizard.android.ui.adapter.FacebookFriendsAdapter;
 import com.townwizard.android.utils.CurrentLocation;
-import com.townwizard.android.utils.TownWizardConstants;
 
 public class FacebookFriendsList extends ListActivity {
     private FacebookFriendsAdapter mAdapter;
@@ -50,7 +50,7 @@ public class FacebookFriendsList extends ListActivity {
 	setContentView(R.layout.facebook_friends_list);
 
 	Bundle extras = getIntent().getExtras();
-	mCurrentLocationID = extras.getString(TownWizardConstants.ITEM_LOCATION);
+	mCurrentLocationID = extras.getString(Constants.ITEM_LOCATION);
 
 	mImageButtonPost = (ImageButton) findViewById(R.id.bt_post);
 	mImageButtonClear = (ImageButton) findViewById(R.id.bt_clear_edittext);
