@@ -1,7 +1,6 @@
 package com.townwizard.android;
 
 import java.io.File;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -88,10 +87,6 @@ public class WebActivity extends FragmentActivity {
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);        
-        mTextView = (TextView) findViewById(R.id.tv_header_web);
-        mTextView.setText(extras.getString(Constants.CATEGORY_NAME));
-        TextView partnerNameView = (TextView) findViewById(R.id.header_partner_name);
-        partnerNameView.setText(extras.getString(Constants.PARTNER_NAME));
 
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
@@ -210,13 +205,13 @@ public class WebActivity extends FragmentActivity {
         Intent i = new Intent(WebActivity.this, MapViewActivity.class);
         i.putExtra(Constants.LATITUDE, latitude);
         i.putExtra(Constants.LONGITUDE, longitude);
-        i.putExtra(Constants.CATEGORY_NAME, mTextView.getText().toString());
+        i.putExtra(Constants.CATEGORY_NAME, categoryName);
         startActivity(i);
     }
 
     private void facebookCheckin() {
         Intent i = new Intent(WebActivity.this, FacebookPlaceActivity.class);
-        i.putExtra(Constants.CATEGORY_NAME, mTextView.getText().toString());
+        i.putExtra(Constants.CATEGORY_NAME, categoryName);
         startActivity(i);
     }
 
@@ -238,48 +233,6 @@ public class WebActivity extends FragmentActivity {
 
         startActivity(i);
     }
-
-    private void drawBackButton() {
-        LinearLayout backButtonArea = (LinearLayout)findViewById(R.id.header_back_button);
-        backButtonArea.removeAllViews();
-        LayoutInflater inflater = LayoutInflater.from(this);
-        int layout = mWebView.canGoBack() ? R.layout.back_button : R.layout.back_button_root;
-        View backButton = inflater.inflate(layout, backButtonArea, false);
-        backButtonArea.addView(backButton);
-        backButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        goBack();
-                    }
-                }
-        );        
-    }
-    
-    private void goBack() {
-        if(mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
-            Bundle extras = getIntent().getExtras();
-            Serializable klass = extras.getSerializable(Constants.FROM_ACTIVITY);
-            if(CategoriesActivity.class.equals(klass)) {
-                finish();
-            } else {
-                startCategoriesActivity();
-            }
-        }
-    }
-    
-    private void startCategoriesActivity() {
-        Bundle extras = getIntent().getExtras();
-        Intent categories = new Intent(this, CategoriesActivity.class);        
-        categories.putExtra(Constants.PARTNER_ID, extras.getString(Constants.PARTNER_ID));
-        categories.putExtra(Constants.PARTNER_NAME, extras.getString(Constants.PARTNER_NAME));
-        categories.putExtra(Constants.URL, extras.getString(Constants.URL_SITE));
-        categories.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
-        startActivity(categories);
-    }    
-    
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

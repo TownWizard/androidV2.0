@@ -1,6 +1,9 @@
 package com.townwizard.android;
 
+import java.io.Serializable;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,7 +14,7 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.townwizard.android.utils.TownWizardConstants;
+import com.townwizard.android.config.Constants;
 
 public class HeaderFragment extends Fragment {
     
@@ -19,12 +22,14 @@ public class HeaderFragment extends Fragment {
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {        
-        header = inflater.inflate(R.layout.header, container, false);
-        TextView mTextView = (TextView) header.findViewById(R.id.tv_header_web);
+        header = inflater.inflate(R.layout.header, container, false);        
         FragmentActivity activity = getActivity();
         Bundle extras = activity.getIntent().getExtras();
-        String categoryName = extras.getString(TownWizardConstants.CATEGORY_NAME);
-        mTextView.setText(categoryName);
+        String partnerName = extras.getString(Constants.PARTNER_NAME);        
+        TextView headerCategoryView = (TextView) header.findViewById(R.id.tv_header_web);
+        headerCategoryView.setText(extras.getString(Constants.CATEGORY_NAME));
+        TextView headerPartnerView = (TextView) header.findViewById(R.id.header_partner_name);
+        headerPartnerView.setText(extras.getString(Constants.PARTNER_NAME));
         drawBackButton(activity);
         return header;
     }
@@ -58,11 +63,28 @@ public class HeaderFragment extends Fragment {
         );
     }
     
+    private void startCategoriesActivity(Activity activity) {
+        Bundle extras = activity.getIntent().getExtras();
+        Intent categories = new Intent(activity, CategoriesActivity.class);        
+        categories.putExtra(Constants.PARTNER_ID, extras.getString(Constants.PARTNER_ID));
+        categories.putExtra(Constants.PARTNER_NAME, extras.getString(Constants.PARTNER_NAME));
+        categories.putExtra(Constants.URL, extras.getString(Constants.URL_SITE));
+        categories.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
+        startActivity(categories);
+    }    
+    
+    
     private void goBack(Activity activity, WebView webView) {
         if(webView != null && webView.canGoBack()) {
             webView.goBack();
         } else {
-            activity.onBackPressed();
+            Bundle extras = activity.getIntent().getExtras();
+            Serializable klass = extras.getSerializable(Constants.FROM_ACTIVITY);
+            if(CategoriesActivity.class.equals(klass)) {
+                activity.finish();
+            } else {
+                startCategoriesActivity(activity);
+            }
         }
     }
 }
