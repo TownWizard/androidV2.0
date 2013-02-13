@@ -1,24 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/header_bg">
 
-    <LinearLayout
-        android:id="@+id/header_back_button"       
-        android:layout_width="60dp"
-        android:layout_height="35dp"
-        android:layout_margin="10dp"          
-        android:layout_centerVertical="true"/>
+    
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/header_bg">
+    
+        <LinearLayout
+            android:id="@+id/header_back_button"       
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:layout_margin="10dp"          
+            android:layout_centerVertical="true"/>
 
-    <TextView
-        android:id="@+id/tv_header_web"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"      
-        android:textColor="@android:color/black" 
-        android:textSize="@dimen/text_size_xlarge"
-        android:textStyle="bold"
-        android:layout_centerVertical="true" 
-        android:layout_centerHorizontal="true"/>
-           
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"    
+            android:orientation="vertical"            
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_centerVertical="true" 
+            android:layout_centerHorizontal="true">
+            
+            <TextView
+                android:id="@+id/header_partner_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"      
+                android:textColor="@android:color/black" 
+                android:textSize="@dimen/text_size_xsmall"
+                android:gravity="center"/>
+                        
+            <TextView
+                android:id="@+id/tv_header_web"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"      
+                android:textColor="@android:color/black" 
+                android:textSize="@dimen/text_size_xlarge"
+                android:textStyle="bold"
+                android:gravity="center"/>            
+         
+        </LinearLayout>
+          
+    </RelativeLayout>
+
+
+

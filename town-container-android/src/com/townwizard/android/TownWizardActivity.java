@@ -16,12 +16,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.townwizard.android.R;
+import com.townwizard.android.category.CategoriesAdapter;
+import com.townwizard.android.category.CategoriesLoadTask;
+import com.townwizard.android.config.Constants;
 import com.townwizard.android.partner.Partner;
 import com.townwizard.android.partner.PartnersAdapter;
 import com.townwizard.android.partner.SearchPartners;
 import com.townwizard.android.utils.CurrentLocation;
-import com.townwizard.android.utils.TownWizardConstants;
 
 public class TownWizardActivity extends ListActivity {
     /** Called when the activity is first created. */
@@ -114,12 +115,19 @@ public class TownWizardActivity extends ListActivity {
             executeSearch();
         } else {
             if (item.getAndroidAppId().length() == 0) {
-                Intent categories = new Intent(this, CategoriesActivity.class);
-                //categories.putExtra(TownWizardConstants._NAME, item.getName());
-                categories.putExtra(TownWizardConstants.PARTNER_ID, Integer.toString(item.getId()));
-                categories.putExtra(TownWizardConstants.URL, item.getUrl());                
-                categories.putExtra(TownWizardConstants.IMAGE_URL, item.getImageUrl());
-                startActivity(categories);
+                CategoriesLoadTask categoriesLoader = new CategoriesLoadTask(this);
+                categoriesLoader.execute(new String[] {Integer.valueOf(item.getId()).toString()});
+                CategoriesAdapter categoriesAdapter = categoriesLoader.getCategoriesAdapter();
+                
+                Intent web = new Intent(this, WebActivity.class);
+                web.putExtra(Constants.URL_SITE, item.getUrl());
+                String categoryUrl = getFullCategoryUrl(item.getUrl(), categoriesAdapter.getHomeUrl());
+                web.putExtra(Constants.URL_SECTION, categoryUrl);
+                web.putExtra(Constants.CATEGORY_NAME, Constants.HOME);
+                web.putExtra(Constants.PARTNER_NAME, item.getName());
+                web.putExtra(Constants.PARTNER_ID, Integer.valueOf(item.getId()).toString());
+                web.putExtra(Constants.IMAGE_URL, item.getImageUrl());
+                startActivity(web);
             } else {
                 Intent browseIntent = new Intent(Intent.ACTION_VIEW,
                         Uri.parse("https://play.google.com/store/apps/details?id=" + item.getAndroidAppId()));
@@ -127,6 +135,10 @@ public class TownWizardActivity extends ListActivity {
             }
         }
     }
+    
+    private String getFullCategoryUrl(String siteUrl, String url) {
+        return url.startsWith("http") ? url : siteUrl + url;        
+    }    
 
     public void executeSearch() {
         String searchRequest = null;

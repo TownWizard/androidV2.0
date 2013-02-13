@@ -1,6 +1,7 @@
 package com.townwizard.android;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -23,7 +24,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
-import com.townwizard.android.utils.TownWizardConstants;
+import com.townwizard.android.config.Constants;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class WebActivity extends FragmentActivity {
@@ -41,8 +42,10 @@ public class WebActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
-        mUrlSite = extras.getString(TownWizardConstants.URL_SITE);        
-        categoryName = extras.getString(TownWizardConstants.CATEGORY_NAME);
+
+        mUrlSite = extras.getString(Constants.URL_SITE);        
+        String categoryName = extras.getString(Constants.CATEGORY_NAME);
+
         if (categoryName.indexOf("Photos") != -1) {
             if (isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
@@ -85,10 +88,15 @@ public class WebActivity extends FragmentActivity {
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);        
+        mTextView = (TextView) findViewById(R.id.tv_header_web);
+        mTextView.setText(extras.getString(Constants.CATEGORY_NAME));
+        TextView partnerNameView = (TextView) findViewById(R.id.header_partner_name);
+        partnerNameView.setText(extras.getString(Constants.PARTNER_NAME));
+
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
-        String urlSection = extras.getString(TownWizardConstants.URL_SECTION);         
+        String urlSection = extras.getString(Constants.URL_SECTION);         
         Log.d("Web Acrivity Url", urlSection);
         mWebView.loadUrl(urlSection);
     }  
@@ -97,7 +105,7 @@ public class WebActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Intent uploadPhoto = new Intent(this, UploadPhotoActivity.class);
-        uploadPhoto.putExtra(TownWizardConstants.URL, mUrlSite + sUpload);
+        uploadPhoto.putExtra(Constants.URL, mUrlSite + sUpload);
 
         if (requestCode == sGALLERY) {
             Log.d("result is ", Integer.toString(resultCode));
@@ -105,8 +113,8 @@ public class WebActivity extends FragmentActivity {
             if (resultCode == RESULT_OK) {
                 Uri imageUri = data.getData();
 
-                uploadPhoto.putExtra(TownWizardConstants.IMAGE_URI, imageUri);
-                uploadPhoto.putExtra(TownWizardConstants.SOURCE, "GALLERY");
+                uploadPhoto.putExtra(Constants.IMAGE_URI, imageUri);
+                uploadPhoto.putExtra(Constants.SOURCE, "GALLERY");
                 startActivity(uploadPhoto);
 
             } else {
@@ -118,8 +126,8 @@ public class WebActivity extends FragmentActivity {
             if (resultCode == RESULT_OK) {
                 Log.d("camera result", "start upload activity");
                 Log.d("imagePath", sImagePath.toString());
-                uploadPhoto.putExtra(TownWizardConstants.IMAGE_URI, sImagePath);
-                uploadPhoto.putExtra(TownWizardConstants.SOURCE, "CAMERA");
+                uploadPhoto.putExtra(Constants.IMAGE_URI, sImagePath);
+                uploadPhoto.putExtra(Constants.SOURCE, "CAMERA");
                 startActivity(uploadPhoto);
             } else {
                 WebActivity.this.finish();
@@ -200,15 +208,15 @@ public class WebActivity extends FragmentActivity {
         String latitude = latlong.substring(0, latlong.indexOf(":"));
         String longitude = latlong.substring(latlong.indexOf(":") + 1);
         Intent i = new Intent(WebActivity.this, MapViewActivity.class);
-        i.putExtra(TownWizardConstants.LATITUDE, latitude);
-        i.putExtra(TownWizardConstants.LONGITUDE, longitude);
-        i.putExtra(TownWizardConstants.CATEGORY_NAME, categoryName);
+        i.putExtra(Constants.LATITUDE, latitude);
+        i.putExtra(Constants.LONGITUDE, longitude);
+        i.putExtra(Constants.CATEGORY_NAME, mTextView.getText().toString());
         startActivity(i);
     }
 
     private void facebookCheckin() {
-        Intent i = new Intent(WebActivity.this, FacebookPlacesActivity.class);
-        i.putExtra(TownWizardConstants.CATEGORY_NAME, categoryName);
+        Intent i = new Intent(WebActivity.this, FacebookPlaceActivity.class);
+        i.putExtra(Constants.CATEGORY_NAME, mTextView.getText().toString());
         startActivity(i);
     }
 
@@ -230,6 +238,48 @@ public class WebActivity extends FragmentActivity {
 
         startActivity(i);
     }
+
+    private void drawBackButton() {
+        LinearLayout backButtonArea = (LinearLayout)findViewById(R.id.header_back_button);
+        backButtonArea.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        int layout = mWebView.canGoBack() ? R.layout.back_button : R.layout.back_button_root;
+        View backButton = inflater.inflate(layout, backButtonArea, false);
+        backButtonArea.addView(backButton);
+        backButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goBack();
+                    }
+                }
+        );        
+    }
+    
+    private void goBack() {
+        if(mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            Bundle extras = getIntent().getExtras();
+            Serializable klass = extras.getSerializable(Constants.FROM_ACTIVITY);
+            if(CategoriesActivity.class.equals(klass)) {
+                finish();
+            } else {
+                startCategoriesActivity();
+            }
+        }
+    }
+    
+    private void startCategoriesActivity() {
+        Bundle extras = getIntent().getExtras();
+        Intent categories = new Intent(this, CategoriesActivity.class);        
+        categories.putExtra(Constants.PARTNER_ID, extras.getString(Constants.PARTNER_ID));
+        categories.putExtra(Constants.PARTNER_NAME, extras.getString(Constants.PARTNER_NAME));
+        categories.putExtra(Constants.URL, extras.getString(Constants.URL_SITE));
+        categories.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
+        startActivity(categories);
+    }    
+    
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

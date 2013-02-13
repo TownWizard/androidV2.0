@@ -30,10 +30,10 @@ import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.townwizard.android.R;
+import com.townwizard.android.config.Constants;
 import com.townwizard.android.model.FacebookPlace;
 import com.townwizard.android.ui.adapter.FacebookPlacesAdapter;
 import com.townwizard.android.utils.CurrentLocation;
-import com.townwizard.android.utils.TownWizardConstants;
 
 public class FacebookPlaceActivity extends ListActivity {
     private ProgressDialog mProgressDialog;
@@ -54,7 +54,8 @@ public class FacebookPlaceActivity extends ListActivity {
 //        mImageView.setImageBitmap(bitmap);
         //mTextView = (TextView) findViewById(R.id.tv_header_fb_places);
         mTextView = null;
-        mTextView.setText(extras.getString(TownWizardConstants.CATEGORY_NAME));
+        mTextView.setText(extras.getString(Constants.CATEGORY_NAME));
+
         mPrefs = getPreferences(MODE_PRIVATE);
         mProgressDialog = new ProgressDialog(FacebookPlaceActivity.this);
         mProgressDialog.setMessage("Loading...");
@@ -128,7 +129,7 @@ public class FacebookPlaceActivity extends ListActivity {
                     public void onClick(DialogInterface arg0, int arg1) {
                         Intent friendsList = new Intent();
                         friendsList.setClass(FacebookPlaceActivity.this, FacebookFriendsList.class);
-                        friendsList.putExtra(TownWizardConstants.ITEM_LOCATION, item.getId());
+                        friendsList.putExtra(Constants.ITEM_LOCATION, item.getId());
                         startActivity(friendsList);
                     }
                 });
