@@ -35,8 +35,8 @@ public class FacebookPlacesAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void addFriendPlaceCheckins(String placeId, Integer count) {
-        friendCheckins.put(placeId, count);
+    public void addFriendCheckins(Map<String, Integer> friendCheckins) {
+        this.friendCheckins = friendCheckins;
         notifyDataSetChanged();
     }
 

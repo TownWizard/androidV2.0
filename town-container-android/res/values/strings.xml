@@ -21,5 +21,6 @@
     <string name="cancel">Cancel</string>
     <string name="upload">Upload</string>
     <string name="write_a_caption">Write a caption</string>
+    <string name="whats_on_your_mind">What\'s on your mind?</string>
     <string name="empty"></string>
 </resources>

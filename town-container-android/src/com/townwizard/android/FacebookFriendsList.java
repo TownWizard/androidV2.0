@@ -50,7 +50,7 @@ public class FacebookFriendsList extends ListActivity {
 	setContentView(R.layout.facebook_friends_list);
 
 	Bundle extras = getIntent().getExtras();
-	mCurrentLocationID = extras.getString(Constants.ITEM_LOCATION);
+	mCurrentLocationID = extras.getString(Constants.FB_PLACE_ID);
 
 	mImageButtonPost = (ImageButton) findViewById(R.id.bt_post);
 	mImageButtonClear = (ImageButton) findViewById(R.id.bt_clear_edittext);
@@ -119,6 +119,7 @@ public class FacebookFriendsList extends ListActivity {
 	}
 
 	String response = null;
+	/*
 	try {
 	    response = FacebookPlaceActivity.sFb.request("me/checkins", params, "POST");
 	} catch (FileNotFoundException e) {
@@ -128,6 +129,7 @@ public class FacebookFriendsList extends ListActivity {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
+	*/
 	Log.d("Checkin resp", response);
 
 	JSONObject js;
@@ -218,6 +220,7 @@ public class FacebookFriendsList extends ListActivity {
 
     private void getFriendsList() {
 	final Handler handler = new Handler();
+	/*
 	FacebookPlaceActivity.sFacebookRunner.request("me/friends", new RequestListener() {
 
 	    @Override
@@ -245,6 +248,7 @@ public class FacebookFriendsList extends ListActivity {
 		});
 	    }
 	});
+	*/
 
     }
 

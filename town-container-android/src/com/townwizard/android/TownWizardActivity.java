@@ -25,9 +25,8 @@ import com.townwizard.android.partner.SearchPartners;
 import com.townwizard.android.utils.CurrentLocation;
 
 public class TownWizardActivity extends ListActivity {
-    /** Called when the activity is first created. */
-    private ImageButton mSearchButton;
     
+    private ImageButton mSearchButton;
     private ImageButton mClearButton;
     private PartnersAdapter mListAdapter;
     private EditText mInputEditText;

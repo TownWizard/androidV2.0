@@ -1,3 +1,7 @@
 position tw logo background on categories screen correctly
-simulate go button pressed state
+simulate go button and post button pressed state
 update partners file against the new apiv3
+center text on dialogs
+fix back button on facebook pages
+delete default json activity
+see if UI constants can be moved to strings.xml
