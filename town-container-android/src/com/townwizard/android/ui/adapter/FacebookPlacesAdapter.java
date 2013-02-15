@@ -67,7 +67,8 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
         holder.tvPlaceCategory.setText(item.getCategory());
         holder.tvPlaceAddress.setText(item.getStreet());
 
-        if ((item.getAllCheckins() == null) || (item.getFriendsCheckins() == null)) {
+         /*
+        if ((item.getCheckins() == null) || (item.getFriendsCheckins() == null)) {
             holder.pbDownloadImage.setVisibility(View.VISIBLE);
             new GetPlacesInfo(holder, item).execute(item.getId());
         } else {
@@ -78,6 +79,7 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
                 holder.tvFriendsCheckins.setText(item.getFriendsCheckins() + " by friends");
             }
         }
+        */
         return rowView;
     }
 
@@ -104,6 +106,7 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
+            /*
             if (values[0].equals("")) {
                 mItem.setAllCheckins("0");
             } else {
@@ -114,7 +117,7 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
             } else {
                 mItem.setFriendsCheckins(values[1]);
             }
-
+            */
         }
 
         @Override
@@ -131,10 +134,12 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         mPictureURL = jsonObject.getString("picture");
+                        /*
                         if (mItem.getImage() == null) {
                             mItem.setImage(getPlacePicture(mPictureURL));
                             Log.d("mPictureURL", mPictureURL);
                         }
+                        */
                         String returnedParams[] = new String[2];
                         if (jsonObject.has("checkins")) {
                             returnedParams[0] = jsonObject.getString("checkins");
@@ -181,7 +186,7 @@ public class FacebookPlacesAdapter extends ArrayAdapter<FacebookPlace> {
                 try {
                     httpConnection = (HttpURLConnection) url.openConnection();
                     InputStream is = httpConnection.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
+                    bitmap = BitmapFactory.decodeStream(is);                    
                     is.close();
                     httpConnection.disconnect();
                 } catch (IOException e) {

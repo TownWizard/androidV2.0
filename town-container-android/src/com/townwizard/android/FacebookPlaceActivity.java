@@ -167,8 +167,8 @@ public class FacebookPlaceActivity extends ListActivity {
                         street = "";
 
                     item.setCategory(category);
-                    item.setLatitude(latitude);
-                    item.setLongitude(longitude);
+                    //item.setLatitude(latitude);
+                    //item.setLongitude(longitude);
                     item.setStreet(street);
                     item.setName(name);
                     item.setId(id);

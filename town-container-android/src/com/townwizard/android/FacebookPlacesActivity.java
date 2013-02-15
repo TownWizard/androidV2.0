@@ -1,7 +1,12 @@
 package com.townwizard.android;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Intent;
 import android.location.Location;
@@ -11,15 +16,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.facebook.LoggingBehavior;
 import com.facebook.Request;
-import com.facebook.RequestAsyncTask;
+import com.facebook.Request.Callback;
 import com.facebook.Response;
 import com.facebook.Session;
+import com.facebook.SessionDefaultAudience;
 import com.facebook.SessionState;
-import com.facebook.Settings;
-import com.facebook.model.GraphPlace;
+import com.facebook.model.GraphMultiResult;
+import com.facebook.model.GraphObject;
+import com.facebook.model.GraphObjectList;
 import com.townwizard.android.config.Config;
+import com.townwizard.android.facebook.FacebookPlace;
 import com.townwizard.android.facebook.FacebookPlacesAdapter;
 import com.townwizard.android.utils.CurrentLocation;
 
@@ -31,9 +38,7 @@ public class FacebookPlacesActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.facebook_places);
-        
-        Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-        
+
         Session session = checkLogin(savedInstanceState);
         if(session.isOpened()) {
             showPlaces();
@@ -42,7 +47,7 @@ public class FacebookPlacesActivity extends FragmentActivity {
     
     
     private Session checkLogin(Bundle savedInstanceState) {
-        Session session = Session.getActiveSession();        
+        Session session = Session.getActiveSession();
         if(session != null && session.isOpened()) return session;
         
         if (session == null) {
@@ -51,21 +56,17 @@ public class FacebookPlacesActivity extends FragmentActivity {
             }
         }
         
-        if (session == null) {            
+        if (session == null) {
             session = new Session(this);
             Session.setActiveSession(session);
         }
-
-        /*
-        if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
-            session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
-        }
-        */
         
-        if (!session.isOpened() && !session.isClosed()) {
-            session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
-        } else {
-            session = Session.openActiveSession(this, true, statusCallback);
+        if (!session.isOpened()) {
+            Session.OpenRequest openRequest = new Session.OpenRequest(this);
+            openRequest.setDefaultAudience(SessionDefaultAudience.FRIENDS);
+            openRequest.setPermissions(Arrays.asList(new String[]{"friends_status"}));
+            openRequest.setCallback(statusCallback);
+            session.openForRead(openRequest);
         }
         
         return session;
@@ -76,18 +77,12 @@ public class FacebookPlacesActivity extends FragmentActivity {
         Location location = CurrentLocation.location();
         
         if(location != null) {
-            RequestAsyncTask task = Request.executePlacesSearchRequestAsync(
+            getPlacesSearchRequest(
                     Session.getActiveSession(), location,
                     Config.FB_CHECKIN_DISTANCE_METERS, 
                     Config.FB_CHECKIN_RESULTS_LIMIT, 
                     null/*searchText*/,
-                    new PlacesRequestCallback(placesAdapter));
-            
-            try {
-                List<Response> responses = task.get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                    new PlacesRequestCallback(placesAdapter)).executeAsync();
         }
         
         ListView listView = (ListView) findViewById(R.id.places_list);
@@ -96,8 +91,9 @@ public class FacebookPlacesActivity extends FragmentActivity {
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    GraphPlace place = (GraphPlace) placesAdapter.getItem(position);
-                    startCheckinActivity(place);
+                    FacebookPlace place = (FacebookPlace) placesAdapter.getItem(position);
+                    /***********  TODO: Delete this ***********************/
+                    Session.getActiveSession().closeAndClearTokenInformation();
                 }
             }
         );
@@ -132,12 +128,24 @@ public class FacebookPlacesActivity extends FragmentActivity {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
             if(session.isOpened()) {
-                //showPlaces();
+                showPlaces();
             }
         }
     }
     
-    private class PlacesRequestCallback implements Request.GraphPlaceListCallback {
+    static Request getPlacesSearchRequest(
+            Session session, Location location, int radiusInMeters,
+            int resultsLimit, String searchText, Callback callback) {
+            
+        Request request = Request.newPlacesSearchRequest(session, location, radiusInMeters,
+                resultsLimit, searchText, null);
+            
+        request.getParameters().putString("fields", "name,category,location,picture,checkins");
+        request.setCallback(callback);
+        return request;            
+    }
+    
+    private class PlacesRequestCallback implements Request.Callback {
         
         private FacebookPlacesAdapter facebookPlacesAdapter;
         
@@ -146,25 +154,82 @@ public class FacebookPlacesActivity extends FragmentActivity {
         }
         
         @Override
-        public void onCompleted(List<GraphPlace> places, Response response) {
-            if(places != null) {
-                facebookPlacesAdapter.addPlaces(places);            
-                List<String> placeIds = collectPlaceIds(places);
+        public void onCompleted(Response response) {
+            List<FacebookPlace> places = new ArrayList<FacebookPlace>();
+            GraphMultiResult multiResult = response.getGraphObjectAs(GraphMultiResult.class);
+            if (multiResult != null) {
+                GraphObjectList<GraphObject> data = multiResult.getData();
+                if (data != null) {
+                    try {
+                        for(GraphObject o : data) {
+                           JSONObject json = o.getInnerJSONObject();
+                           places.add(placeFromJson(json));
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException (e);
+                    }
+                }
             }
+            facebookPlacesAdapter.addPlaces(places);
+            
+            String commaSeparatedPlaceIds = collectPlaceIds(places);
+            String fql =                     
+                "SELECT author_uid, target_id FROM checkin " +  
+                "WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND target_id IN (" +
+                            commaSeparatedPlaceIds + ")";
+            Bundle parameters = new Bundle(1);
+            parameters.putString("q", fql);
+            new Request(Session.getActiveSession(), "fql", parameters, null, 
+                    new FriendCheckinsRequestCallback()).executeAsync();
         } 
-        
-        private List<String> collectPlaceIds(List<GraphPlace> places) {
-            List<String> ids = new ArrayList<String>(places.size());
-            for(GraphPlace p : places) {
-                ids.add(p.getId());
-            }
-            return ids;
+        private String collectPlaceIds(List<FacebookPlace> places) {
+            StringBuilder sb = new StringBuilder();
+            Iterator<FacebookPlace> iter = places.iterator();
+            while(iter.hasNext()) {
+                FacebookPlace p = iter.next();
+                sb.append("'").append(p.getId()).append("'");
+                if(iter.hasNext()) sb.append(",");
+            }            
+            return sb.toString();
         }
+        
+        private FacebookPlace placeFromJson(JSONObject json) throws JSONException {
+            FacebookPlace place = new FacebookPlace();
+            place.setId(json.optString("id"));
+            place.setName(json.optString("name"));
+            place.setCategory(json.optString("category"));
+            place.setCheckins(json.has("checkins") ? json.getString("checkins") : "0");
+            JSONObject locJson = json.optJSONObject("location");
+            if(locJson != null) {
+                place.setCity(locJson.optString("city"));
+                place.setStreet(locJson.optString("street"));
+            }
+            JSONObject pic = json.optJSONObject("picture");
+            if(pic != null) {
+                JSONObject picData = pic.optJSONObject("data");
+                if(picData != null) {
+                    place.setImageUrl(picData.getString("url"));                    
+                }                
+            }
+            return place;
+        }
+
+        private class FriendCheckinsRequestCallback implements Request.Callback {
+
+            @Override
+            public void onCompleted(Response response) {
+                System.out.println(response);
+                
+            }
+            
+            
+            
+        }
+
+    
     }
     
-    private void startCheckinActivity(GraphPlace place) {
-        //TODO: imlement
-    }
+
 }
 
 
