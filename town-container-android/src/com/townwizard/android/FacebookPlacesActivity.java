@@ -1,7 +1,6 @@
 package com.townwizard.android;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -23,7 +22,6 @@ import com.facebook.Request;
 import com.facebook.Request.Callback;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionDefaultAudience;
 import com.facebook.SessionState;
 import com.facebook.model.GraphMultiResult;
 import com.facebook.model.GraphObject;
@@ -34,14 +32,13 @@ import com.townwizard.android.facebook.FacebookPlace;
 import com.townwizard.android.facebook.FacebookPlacesAdapter;
 import com.townwizard.android.utils.CurrentLocation;
 
-public class FacebookPlacesActivity extends FragmentActivity {
+public class FacebookPlacesActivity extends FacebookActivity {
 
-    private Session.StatusCallback statusCallback = new SessionStatusCallback();
-    
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.facebook_places);
+        statusCallback = new SessionStatusCallback();        
+        setContentView(R.layout.facebook_places);        
 
         Session session = checkLogin(savedInstanceState);
         if(session.isOpened()) {
@@ -49,32 +46,6 @@ public class FacebookPlacesActivity extends FragmentActivity {
         }
     }
    
-    private Session checkLogin(Bundle savedInstanceState) {
-        Session session = Session.getActiveSession();
-        if(session != null && session.isOpened()) return session;
-        
-        if (session == null) {
-            if (savedInstanceState != null) {
-                session = Session.restoreSession(this, null, statusCallback, savedInstanceState);
-            }
-        }
-        
-        if (session == null) {
-            session = new Session(this);
-            Session.setActiveSession(session);
-        }
-        
-        if (!session.isOpened()) {
-            Session.OpenRequest openRequest = new Session.OpenRequest(this);
-            openRequest.setDefaultAudience(SessionDefaultAudience.FRIENDS);
-            openRequest.setPermissions(Arrays.asList(new String[]{"friends_status"}));
-            openRequest.setCallback(statusCallback);
-            session.openForRead(openRequest);
-        }
-        
-        return session;
-    }
-        
     private void showPlaces() {
         final FacebookPlacesAdapter placesAdapter = new FacebookPlacesAdapter(this);
         Location location = CurrentLocation.location();
@@ -86,6 +57,8 @@ public class FacebookPlacesActivity extends FragmentActivity {
                     Config.FB_CHECKIN_RESULTS_LIMIT, 
                     null/*searchText*/,
                     new PlacesRequestCallback(placesAdapter)).executeAsync();
+        } else {
+            Log.w("Location null", "Location is null.  Can't get places");
         }
         
         ListView listView = (ListView) findViewById(R.id.places_list);
@@ -116,31 +89,6 @@ public class FacebookPlacesActivity extends FragmentActivity {
         );
     }
     
-    @Override
-    public void onStart() {
-        super.onStart();
-        Session.getActiveSession().addCallback(statusCallback);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Session.getActiveSession().removeCallback(statusCallback);
-    }
-    
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Session session = Session.getActiveSession();
-        Session.saveSession(session, outState);
-    }
-    
     private void startFacebookCheckinActivity(FacebookPlace place) {
         Intent i = new Intent();
         i.setClass(this, FacebookCheckinActivity.class);
@@ -157,7 +105,7 @@ public class FacebookPlacesActivity extends FragmentActivity {
         }
     }
     
-    static Request getPlacesSearchRequest(
+    private Request getPlacesSearchRequest(
             Session session, Location location, int radiusInMeters,
             int resultsLimit, String searchText, Callback callback) {
             

@@ -5,3 +5,4 @@ center text on dialogs
 fix back button on facebook pages
 delete default json activity
 see if UI constants can be moved to strings.xml
+load friend images asynchronously
