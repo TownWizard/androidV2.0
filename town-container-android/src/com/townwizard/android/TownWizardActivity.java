@@ -63,6 +63,7 @@ public class TownWizardActivity extends ListActivity {
                     case R.id.bt_clear_edittext: {
                         mInputEditText.setText("");
                         mClearButton.setVisibility(View.INVISIBLE);
+                        hideScreenKeyboard(mInputEditText);
                         break;
                     }
                     case R.id.search_button: {
@@ -134,6 +135,12 @@ public class TownWizardActivity extends ListActivity {
             }
         }
     }
+    
+    
+    private void hideScreenKeyboard(EditText et) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);        
+    }    
     
     private String getFullCategoryUrl(String siteUrl, String url) {
         return url.startsWith("http") ? url : siteUrl + url;        
