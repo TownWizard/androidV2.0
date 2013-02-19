@@ -52,4 +52,9 @@ public class FacebookPlace {
     public void setCheckins(String checkins) {
         this.checkins = checkins;
     }
+    
+    @Override
+    public String toString() {
+        return id;
+    }
 }

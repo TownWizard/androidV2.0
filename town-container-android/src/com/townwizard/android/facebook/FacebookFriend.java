@@ -45,6 +45,11 @@ public class FacebookFriend {
             setSelected(false);
         }
     }
+    
+    @Override
+    public String toString() {
+        return id;
+    }
 
     public static FacebookFriend fromGraphUser(GraphUser u) {
         FacebookFriend f = new FacebookFriend();

@@ -61,9 +61,10 @@ public abstract class FacebookActivity extends FragmentActivity {
         if (!session.isOpened()) {
             Session.OpenRequest openRequest = new Session.OpenRequest(this);
             openRequest.setDefaultAudience(SessionDefaultAudience.FRIENDS);
-            openRequest.setPermissions(Arrays.asList(new String[]{"friends_status"}));
+            openRequest.setPermissions(Arrays.asList(new String[]{"friends_status", "publish_stream"}));
             openRequest.setCallback(statusCallback);
-            session.openForRead(openRequest);
+            //session.openForRead(openRequest);
+            session.openForPublish(openRequest);
         }
         
         return session;

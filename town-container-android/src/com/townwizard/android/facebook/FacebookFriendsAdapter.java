@@ -3,6 +3,7 @@ package com.townwizard.android.facebook;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -55,6 +56,16 @@ public class FacebookFriendsAdapter extends BaseAdapter {
             }
         }
         notifyDataSetChanged();
+    }
+    
+    public List<FacebookFriend> getSelectedFriends() {
+        List<FacebookFriend> l = new LinkedList<FacebookFriend>();
+        for(FacebookFriend f : friends) {
+            if(f.isSelected()) {
+                l.add(f);
+            }
+        }
+        return l;
     }
     
     @Override

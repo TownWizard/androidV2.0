@@ -31,6 +31,7 @@ import com.townwizard.android.config.Constants;
 import com.townwizard.android.facebook.FacebookPlace;
 import com.townwizard.android.facebook.FacebookPlacesAdapter;
 import com.townwizard.android.utils.CurrentLocation;
+import com.townwizard.android.utils.Utils;
 
 public class FacebookPlacesActivity extends FacebookActivity {
 
@@ -140,25 +141,14 @@ public class FacebookPlacesActivity extends FacebookActivity {
             }
             facebookPlacesAdapter.addPlaces(places);
             
-            String commaSeparatedPlaceIds = collectPlaceIds(places);
             String fql =                     
                 "SELECT target_id FROM checkin " +  
                 "WHERE author_uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND target_id IN (" +
-                            commaSeparatedPlaceIds + ")";
+                    Utils.join(places, ",", "'") + ")";
             Bundle parameters = new Bundle(1);
             parameters.putString("q", fql);
             new Request(Session.getActiveSession(), "fql", parameters, null, 
                     new FriendCheckinsRequestCallback()).executeAsync();
-        } 
-        private String collectPlaceIds(List<FacebookPlace> places) {
-            StringBuilder sb = new StringBuilder();
-            Iterator<FacebookPlace> iter = places.iterator();
-            while(iter.hasNext()) {
-                FacebookPlace p = iter.next();
-                sb.append("'").append(p.getId()).append("'");
-                if(iter.hasNext()) sb.append(",");
-            }
-            return sb.toString();
         }
         
         private FacebookPlace placeFromJson(JSONObject json) {
