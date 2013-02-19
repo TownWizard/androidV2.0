@@ -16,11 +16,13 @@ public class Constants {
     public static final String FROM_ACTIVITY = "FROM_ACTIVITY";
     public static final String FB_PLACE_ID = "FB_PLACE_ID";
     
+    public static final String SEARCH_FRIENDS = "Search friends to tag";
+    
     // UI strings
     public static final String ABOUT_US = "About Us";
     public static final String HOME = "Home";
     public static final String CHECK_IN = "CHECK IN";
     public static final String YES = "Yes";
     public static final String NO = "No";
-    public static final String CHECKIN_CONFIRM = "Do you want to check in to";
+    public static final String CHECKIN_CONFIRM = "Do you want to check in to";    
 }

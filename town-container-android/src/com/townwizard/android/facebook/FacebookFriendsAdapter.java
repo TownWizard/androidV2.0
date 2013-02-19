@@ -1,14 +1,12 @@
 package com.townwizard.android.facebook;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,22 +14,23 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.model.GraphUser;
 import com.townwizard.android.R;
+
 
 public class FacebookFriendsAdapter extends BaseAdapter {
 
     private Context context;
-    private List<GraphUser> friends = new ArrayList<GraphUser>();
+    private List<FacebookFriend> allFriends = new ArrayList<FacebookFriend>();
+    private List<FacebookFriend> friends = new ArrayList<FacebookFriend>();
     
     public FacebookFriendsAdapter(Context context) {
         this.context = context;
     }
     
-    public void addFriends(List<GraphUser> friends) {
-        Collections.sort(friends, new Comparator<GraphUser>() {
+    public void addFriends(List<FacebookFriend> friends) {
+        Collections.sort(friends, new Comparator<FacebookFriend>() {
             @Override
-            public int compare(GraphUser lhs, GraphUser rhs) {
+            public int compare(FacebookFriend lhs, FacebookFriend rhs) {
                 String thisName = lhs.getName();
                 String thatName = rhs.getName();
                 if(thisName != null && thatName != null) {
@@ -41,7 +40,20 @@ public class FacebookFriendsAdapter extends BaseAdapter {
             }
             
         });
-        this.friends = friends;
+        this.allFriends = friends;
+        filterFriends(null);
+        notifyDataSetChanged();
+    }
+    
+    @SuppressLint("DefaultLocale")
+    public void filterFriends(String searchTxt) {
+        friends = new ArrayList<FacebookFriend>(allFriends.size());
+        for(FacebookFriend f : allFriends) {
+            f.setVisible(searchTxt == null || f.getName().toLowerCase().contains(searchTxt.toLowerCase()));
+            if(f.isVisible()) {
+                friends.add(f);
+            }
+        }
         notifyDataSetChanged();
     }
     
@@ -62,29 +74,25 @@ public class FacebookFriendsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        
         View view = convertView;
+        
         if(view == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
                 view = inflater.inflate(R.layout.friend, parent, false);
         }
-        
-        GraphUser friend = friends.get(position);
-        
+
+        FacebookFriend friend = friends.get(position);
+            
         TextView nameView = (TextView) view.findViewById(R.id.friend_name);
         ImageView imageView = (ImageView) view.findViewById(R.id.friend_image);
-        
+            
         nameView.setText(friend.getName());
-        
-        String imageUrl = "http://graph.facebook.com/"+friend.getId()+"/picture";        
-        try {
-            InputStream in = new URL(imageUrl).openStream();
-            imageView.setImageBitmap(BitmapFactory.decodeStream(in));
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        
+        imageView.setImageBitmap(friend.getImage());
+
+        ImageView plusButton = (ImageView) view.findViewById(R.id.friend_selected);
+        plusButton.setVisibility(friend.isSelected() ? View.VISIBLE : View.INVISIBLE);
+
         return view;
     }
 

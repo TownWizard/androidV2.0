@@ -29,7 +29,7 @@ import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.FacebookError;
 import com.townwizard.android.R;
 import com.townwizard.android.config.Constants;
-import com.townwizard.android.model.FacebookFriend;
+import com.townwizard.android.facebook.FacebookFriend;
 import com.townwizard.android.ui.adapter.FacebookFriendsAdapter;
 import com.townwizard.android.utils.CurrentLocation;
 

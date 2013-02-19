@@ -1,9 +1,14 @@
 package com.townwizard.android;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -15,9 +20,13 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.facebook.FacebookFriend;
 import com.townwizard.android.facebook.FacebookFriendsAdapter;
+import com.townwizard.android.utils.BitmapDownloaderTask;
 
 public class FacebookCheckinActivity extends FacebookActivity {
+    
+    private FacebookFriendsAdapter friendsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,33 @@ public class FacebookCheckinActivity extends FacebookActivity {
             }
         });
         
+        EditText searchFriendsEditText = (EditText) findViewById(R.id.search_friends);
+        searchFriendsEditText.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                EditText view = (EditText)v;
+                if(Constants.SEARCH_FRIENDS.equals(view.getText().toString())) {
+                   view.getText().clear();
+                }
+                return false;
+            }            
+        });
+        searchFriendsEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus && friendsAdapter != null) {
+                    EditText view = (EditText)v;
+                    String searchTxt = view.getText().toString();
+                    searchTxt = searchTxt.length() > 0 ? searchTxt : null;
+                    friendsAdapter.filterFriends(searchTxt);
+                }
+            }
+            
+        });
+        
+        
+        
         
         
         Session session = checkLogin(savedInstanceState);
@@ -54,7 +90,7 @@ public class FacebookCheckinActivity extends FacebookActivity {
     }
     
     private void showFriends() {
-        final FacebookFriendsAdapter friendsAdapter = new FacebookFriendsAdapter(this);
+        friendsAdapter = new FacebookFriendsAdapter(this);
         Request.executeMyFriendsRequestAsync(Session.getActiveSession(), 
                 new FriendListCallback(friendsAdapter));
         
@@ -64,7 +100,9 @@ public class FacebookCheckinActivity extends FacebookActivity {
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    final GraphUser friend = (GraphUser) friendsAdapter.getItem(position);                    
+                    FacebookFriend friend = (FacebookFriend) friendsAdapter.getItem(position);
+                    friend.setSelected(!friend.isSelected());
+                    friendsAdapter.notifyDataSetChanged();
                 }
             }
         );
@@ -79,11 +117,26 @@ public class FacebookCheckinActivity extends FacebookActivity {
         }
 
         @Override
-        public void onCompleted(List<GraphUser> friends, Response response) {
-            friendsAdapter.addFriends(friends);            
+        public void onCompleted(List<GraphUser> users, Response response) {
+            List<FacebookFriend> friends = new ArrayList<FacebookFriend>(users.size());
+            for(GraphUser u : users) {
+                friends.add(FacebookFriend.fromGraphUser(u));
+            }
+            
+            friendsAdapter.addFriends(friends);
+            
+            for(final FacebookFriend f : friends) {
+                new BitmapDownloaderTask() {
+                    @Override
+                    protected void onPostExecute(Bitmap result) {
+                        f.setImage(result);
+                        friendsAdapter.notifyDataSetChanged();
+                    }
+                }.execute("http://graph.facebook.com/"+f.getId()+"/picture");
+            }
         }
     }
-    
+
     private class SessionStatusCallback implements Session.StatusCallback {
         @Override
         public void call(Session session, SessionState state, Exception exception) {

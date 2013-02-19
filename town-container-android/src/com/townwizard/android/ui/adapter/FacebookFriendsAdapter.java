@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.townwizard.android.R;
-import com.townwizard.android.model.FacebookFriend;
+import com.townwizard.android.facebook.FacebookFriend;
 import com.townwizard.android.utils.DownloadImageHelper;
 
 public class FacebookFriendsAdapter extends ArrayAdapter<FacebookFriend> {
@@ -66,11 +66,13 @@ public class FacebookFriendsAdapter extends ArrayAdapter<FacebookFriend> {
 		holder = (ViewHolder) rowView.getTag();
 	    }
 	    holder.tvName.setText(item.getName());
+	    /*
 	    if (item.getPictures() != null) {
 		holder.ivPicture.setImageBitmap(item.getPictures());
 	    } else {
 		new AvatarDownloader(item).execute("http://graph.facebook.com/" + item.getId() + "/picture");
 	    }
+	    */
 	    
 	    if (item.isSelected()){
 		holder.checkBox.setVisibility(View.VISIBLE);
@@ -132,7 +134,7 @@ public class FacebookFriendsAdapter extends ArrayAdapter<FacebookFriend> {
 	@Override
 	protected Void doInBackground(String... params) {
 	    try {
-		mBitmap = new DownloadImageHelper().execute(params[0]).get();
+		mBitmap = new DownloadImageHelper(null).execute(params[0]).get();
 	    } catch (InterruptedException e) {
 		e.printStackTrace();
 	    } catch (ExecutionException e) {
@@ -145,7 +147,7 @@ public class FacebookFriendsAdapter extends ArrayAdapter<FacebookFriend> {
 	protected void onPostExecute(Void result) {
 	    super.onPostExecute(result);
 	    if (mBitmap != null) {
-		mItem.setPictures(mBitmap);
+		//mItem.setPictures(mBitmap);
 		notifyDataSetChanged();
 	    }
 	}
