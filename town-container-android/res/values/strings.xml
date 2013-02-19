@@ -4,7 +4,6 @@
     <string name="app_name">Town Wizard</string>
     <string name="enter_ZIP">Enter ZIP or name of town</string>
     <string name="update_your_status">Update your status</string>
-    <string name="tag_friends">Tag friends</string>
     <string name="search_for_friends">Search friends to tag</string>
     <string name="whoops">Whoops</string>
     <string name="partners_not_found">Sorry, but it looks like we don\'t have a TownWizard in your area yet!</string>
@@ -16,7 +15,6 @@
     <string name="change">CHANGE</string>
     <string name="back">Back</string>  
     <string name="upload_photo">UPLOAD YOUR PHOTOS</string>
-    <string name="upload_photo_btn">Upload photos</string>
     <string name="coming_soon">Coming Soon!</string>
     <string name="cancel">Cancel</string>
     <string name="upload">Upload</string>

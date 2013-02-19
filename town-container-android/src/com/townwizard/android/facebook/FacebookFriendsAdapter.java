@@ -90,7 +90,7 @@ public class FacebookFriendsAdapter extends BaseAdapter {
         
         if(view == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
-                view = inflater.inflate(R.layout.friend, parent, false);
+                view = inflater.inflate(R.layout.facebook_friend, parent, false);
         }
 
         FacebookFriend friend = friends.get(position);
