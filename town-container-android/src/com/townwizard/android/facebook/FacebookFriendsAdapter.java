@@ -99,7 +99,9 @@ public class FacebookFriendsAdapter extends BaseAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.friend_image);
             
         nameView.setText(friend.getName());
-        imageView.setImageBitmap(friend.getImage());
+        if(friend.getImage() != null) {
+            imageView.setImageBitmap(friend.getImage());
+        }
 
         ImageView plusButton = (ImageView) view.findViewById(R.id.friend_selected);
         plusButton.setVisibility(friend.isSelected() ? View.VISIBLE : View.INVISIBLE);
