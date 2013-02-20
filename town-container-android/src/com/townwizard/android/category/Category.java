@@ -11,7 +11,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.townwizard.android.DefaultJsonActivity;
 import com.townwizard.android.R;
 
 public class Category {
@@ -77,11 +76,7 @@ public class Category {
     }
     
     public Class<? extends Activity> getJsonViewActivityClass() {
-        Class<? extends Activity> activityClass = IMPLEMENTED_JSON_VIEWS.get(getName());
-        if(activityClass == null) {
-            return DefaultJsonActivity.class;
-        }
-        return activityClass;
+        return IMPLEMENTED_JSON_VIEWS.get(getName());
     }
     
     public boolean hasView() {
@@ -99,20 +94,6 @@ public class Category {
     
     private static Map<String, Integer> categoryToResource = new HashMap<String, Integer>();
     static {
-        /*
-        @"news feed" : @"news",
-        @"offers" : @"offer",
-        @"nightlife" : @"nightlife",
-        @"entertainment" : @"entertainment",
-        @"town dirrectory" : @"towndirrectory",
-        @"your profile" : @"profile",            -> photos
-        @"your saved items" : @"saved",
-        @"settings & preferences" : @"settings",
-        @"best in town lists" : @"bestintown",
-        @"talk of the town blog" : @"talk",
-        @"ratings & reviews" : @"ratings",
-        @"check-ins & hotspots" : @"checkins",
-         */
         categoryToResource.put("Home", R.drawable.home);
         categoryToResource.put("Events", R.drawable.events);
         categoryToResource.put("Restaurants", R.drawable.restaurants);

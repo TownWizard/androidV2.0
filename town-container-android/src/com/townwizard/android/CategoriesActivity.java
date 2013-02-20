@@ -113,12 +113,14 @@ public class CategoriesActivity extends Activity {
     
     private void startJsonActivity(String siteUrl, String categoryUrl, Category category, String partnerName) {        
         Class<? extends Activity> activityClass = category.getJsonViewActivityClass();
-        Intent i = new Intent(this, activityClass);
-        i.putExtra(Constants.URL_SITE, siteUrl);
-        i.putExtra(Constants.URL_SECTION, categoryUrl);
-        i.putExtra(Constants.CATEGORY_NAME, category.getName());
-        i.putExtra(Constants.PARTNER_NAME, partnerName);
-        startActivity(i);
+        if(activityClass != null) {
+            Intent i = new Intent(this, activityClass);
+            i.putExtra(Constants.URL_SITE, siteUrl);
+            i.putExtra(Constants.URL_SECTION, categoryUrl);
+            i.putExtra(Constants.CATEGORY_NAME, category.getName());
+            i.putExtra(Constants.PARTNER_NAME, partnerName);
+            startActivity(i);
+        }
     }
 
 }
