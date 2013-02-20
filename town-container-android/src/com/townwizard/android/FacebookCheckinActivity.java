@@ -9,10 +9,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,41 +37,20 @@ public class FacebookCheckinActivity extends FacebookActivity {
         super.onCreate(savedInstanceState);
         statusCallback = new SessionStatusCallback();
         setContentView(R.layout.facebook_checkin);
-        
-        final EditText statusEditText = (EditText) findViewById(R.id.facebook_status);
-        statusEditText.setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                EditText view = (EditText)v;
-                if(Constants.CHECKIN_PROMPT.equals(view.getText().toString())) {
-                   view.getText().clear();
-                }
-                return false;
-            }            
-        });       
-        
+
         ImageButton postButton = (ImageButton) findViewById(R.id.facebook_status_post);
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle extras = getIntent().getExtras();
                 String placeId = extras.getString(Constants.FB_PLACE_ID);
+                EditText statusEditText = (EditText) findViewById(R.id.facebook_status);
                 String message = statusEditText.getText().toString();                
                 postCheckin(placeId, message, friendsAdapter.getSelectedFriends());
             }
         });
         
         EditText searchFriendsEditText = (EditText) findViewById(R.id.search_friends);
-        searchFriendsEditText.setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                EditText view = (EditText)v;
-                if(Constants.SEARCH_FRIENDS.equals(view.getText().toString())) {
-                   view.getText().clear();
-                }
-                return false;
-            }            
-        });
         searchFriendsEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -96,7 +73,6 @@ public class FacebookCheckinActivity extends FacebookActivity {
     
     private void postCheckin(String placeId, String msg, List<FacebookFriend> taggedFriends) {
         String message = (msg != null) ? msg.trim() : "";
-        if(Constants.CHECKIN_PROMPT.equals(message)) message = "";
 
         GraphObject params = GraphObject.Factory.create();
         params.setProperty("place", placeId);

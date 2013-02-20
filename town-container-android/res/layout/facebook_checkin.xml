@@ -41,16 +41,16 @@
                     android:id="@+id/facebook_status"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/search_bar"
-                    android:hint="@string/empty"
+                    android:background="@drawable/search_bar"                    
                     android:singleLine="true"
                     android:textColor="#FF0000"
+                    android:textColorHint="#FF0000"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_size_medium"
                     android:includeFontPadding="true"
                     android:paddingRight="5dp"
                     android:paddingLeft="7dp" 
-                    android:text="@string/whats_on_your_mind"/>
+                    android:hint="@string/whats_on_your_mind"/>
                     
             </FrameLayout>
                 
@@ -70,7 +70,7 @@
             </FrameLayout>
        </LinearLayout>       
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -89,18 +89,23 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/search_friends_text_bg"
-            android:hint="@string/empty"
             android:singleLine="true"
             android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_medium" 
             android:includeFontPadding="true"
             android:layout_gravity="center"
             android:paddingRight="5dp"
             android:paddingLeft="7dp"
-            android:text="@string/search_for_friends"/>        
+            android:hint="@string/search_for_friends"/>
         
-    </LinearLayout>    
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
+        android:background="@drawable/shadow_bg"/>
 
     <ListView
         android:id="@+id/friend_list"

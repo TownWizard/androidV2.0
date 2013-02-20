@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="#E5E5E5">
 
     <include layout="@layout/header_fragment"/>
     
@@ -14,7 +14,7 @@
         android:layout_weight="1"        
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent"
-        android:divider="@color/category_list_divider_color"
+        android:divider="@drawable/shadow"
         android:dividerHeight="1dp"
         android:background="@drawable/tw_logo_bg" />
 

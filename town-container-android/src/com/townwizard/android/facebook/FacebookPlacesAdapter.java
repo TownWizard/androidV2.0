@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.townwizard.android.R;
+import com.townwizard.android.utils.Utils;
 
 public class FacebookPlacesAdapter extends BaseAdapter {
     
@@ -54,7 +55,7 @@ public class FacebookPlacesAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
-
+    
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -75,6 +76,11 @@ public class FacebookPlacesAdapter extends BaseAdapter {
         nameView.setText(place.getName());
         categoryView.setText(place.getCategory());
         addressView.setText(placeLocationToString(place));
+
+        eclipsize(nameView);
+        eclipsize(categoryView);
+        eclipsize(addressView);
+
         try {
             InputStream in = new URL(place.getImageUrl()).openStream();
             imageView.setImageBitmap(BitmapFactory.decodeStream(in));
@@ -86,7 +92,7 @@ public class FacebookPlacesAdapter extends BaseAdapter {
         String chns = place.getCheckins();
         Integer fChns = friendCheckins.get(place.getId());
         
-        checkinsView.setText((chns != null ? chns : 0) + " total");
+        checkinsView.setText((chns != null ? chns : 0) + " total     ");
         friendCheckinsView.setText((fChns != null ? fChns : 0) + " by friends");
 
         return view;
@@ -95,5 +101,8 @@ public class FacebookPlacesAdapter extends BaseAdapter {
     private String placeLocationToString(FacebookPlace place) {        
         return place.getCity() + ((place.getStreet() != null)  ?  ", " + place.getStreet() : "");
     }
-
+    
+    private void eclipsize(TextView v) {        
+        Utils.eclipsize(v, 0.75, 1.8);
+    }
 }

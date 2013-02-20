@@ -16,9 +16,6 @@ public class Constants {
     public static final String FROM_ACTIVITY = "FROM_ACTIVITY";
     public static final String FB_PLACE_ID = "FB_PLACE_ID";
     
-    public static final String SEARCH_FRIENDS = "Search friends to tag";
-    public static final String CHECKIN_PROMPT = "What's on your mind?";
-    
     // UI strings
     public static final String ABOUT_US = "About Us";
     public static final String HOME = "Home";

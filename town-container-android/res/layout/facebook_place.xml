@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
     
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingRight="10dp">
     
         <TextView
             android:id="@+id/place_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"      
+            android:layout_height="wrap_content"
+            android:maxLines="1"      
             android:textColor="@android:color/black" 
-            android:textSize="@dimen/text_size_small"
+            android:textSize="@dimen/text_size_large"
             android:textStyle="bold" />
         
         <TextView
             android:id="@+id/place_category"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"      
-            android:textColor="@android:color/black" 
-            android:textSize="@dimen/text_size_small" />
-
+            android:layout_height="wrap_content"
+            android:maxLines="1"                              
+            android:textColor="#AAAAAA" 
+            android:textSize="@dimen/text_size_large" />
+        
         <TextView
             android:id="@+id/place_address"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"      
+            android:layout_height="wrap_content"
+            android:maxLines="1"            
             android:textColor="@android:color/black" 
-            android:textSize="@dimen/text_size_small" />
+            android:textSize="@dimen/text_size_large" />
         
         <LinearLayout
             android:layout_width="fill_parent"
@@ -39,14 +47,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"      
                 android:textColor="@android:color/black" 
-                android:textSize="@dimen/text_size_small" />
+                android:textSize="@dimen/text_size_large" />
             
             <TextView
                 android:id="@+id/place_friend_checkins"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"      
                 android:textColor="@android:color/black" 
-                android:textSize="@dimen/text_size_small" />            
+                android:textSize="@dimen/text_size_large" />            
         
         </LinearLayout>        
     
@@ -55,10 +63,9 @@
     <ImageView
         android:id="@+id/place_image"
         android:layout_alignParentRight="true"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
         android:adjustViewBounds="true"
-        android:layout_marginRight="10dp"
         android:layout_centerVertical="true"
         android:contentDescription="@string/empty" />
     
