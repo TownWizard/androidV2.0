@@ -2,13 +2,7 @@ package com.townwizard.android.config;
 
 public class Constants {
     // Constants used for passing data between activities
-    public static final String CATEGORY_NAME = "CATEGORY_NAME";
-    public static final String PARTNER_ID = "PARTNER_ID";
-    public static final String PARTNER_NAME = "PARTNER_NAME";
-    public static final String URL = "URL";
-    public static final String IMAGE_URL = "IMAGE_URL";
-    public static final String URL_SITE = "URL_SITE";
-    public static final String URL_SECTION = "URL_SECTION";
+    public static final String URL = "URL";    
     public static final String IMAGE_URI = "IMAGE_URI";
     public static final String SOURCE = "SOURCE";
     public static final String LATITUDE = "LATITUDE";

@@ -15,6 +15,7 @@ import com.townwizard.android.category.CategoriesLoadTask;
 import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.partner.Partner;
 import com.townwizard.android.utils.DownloadImageHelper;
 
 public class CategoriesActivity extends Activity {   
@@ -35,20 +36,18 @@ public class CategoriesActivity extends Activity {
         
         View headerView = inflater.inflate(headerViewId, listView, false);
         listView.addHeaderView(headerView, null, false);        
-        
-        Bundle extras = getIntent().getExtras();                
-        String imageUrl = extras.getString(Constants.IMAGE_URL);
+
+        Partner partner = Config.getConfig(this).getPartner();
+        String imageUrl = partner.getImageUrl();
         if (imageUrl.length() > 0) {
             ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
             new DownloadImageHelper(iv).execute(Config.CONTAINER_SITE + imageUrl);
         }        
 
         CategoriesLoadTask categoryLoader = new CategoriesLoadTask(this);
-        categoryLoader.execute(new String[]{extras.getString(Constants.PARTNER_ID)});
+        categoryLoader.execute(new String[]{Integer.valueOf(partner.getId()).toString()});
         
-        final CategoriesAdapter categoriesAdapter = categoryLoader.getCategoriesAdapter();
-        final String siteUrl = extras.getString(Constants.URL);
-        final String partnerName = extras.getString(Constants.PARTNER_NAME);
+        final CategoriesAdapter categoriesAdapter = categoryLoader.getCategoriesAdapter();                
 
         if(isContainerApp) {
             TextView aboutButton = (TextView) findViewById(R.id.button_about);
@@ -56,12 +55,9 @@ public class CategoriesActivity extends Activity {
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String aboutUsUrl = categoriesAdapter.getAboutUsUrl();
-                            if(aboutUsUrl == null) {
-                                aboutUsUrl = Config.DEFAULT_ABOUT_US_URI;
-                            }
-                            String categoryUrl = getFullCategoryUrl(siteUrl, aboutUsUrl);
-                            startWebActivity(siteUrl, categoryUrl, Constants.ABOUT_US, partnerName);
+                            Config.getConfig(CategoriesActivity.this)
+                                .setCategory(categoriesAdapter.getAboutUsCategory());
+                            startWebActivity();
                         }
                     }
             );
@@ -82,45 +78,28 @@ public class CategoriesActivity extends Activity {
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Category category = (Category) categoriesAdapter.getItem(position);                    
-                    String categoryUrl = getFullCategoryUrl(siteUrl, category.getUrl());
+                    Category category = (Category) categoriesAdapter.getItem(position);
+                    Config.getConfig(CategoriesActivity.this).setCategory(category);
                     if(Category.ViewType.JSON.equals(category.getViewType())) {
-                        startJsonActivity(siteUrl, categoryUrl, category, partnerName);
+                        startJsonActivity(category);
                     } else {
-                        startWebActivity(siteUrl, categoryUrl, category.getName(), partnerName);
+                        startWebActivity();
                     }
                 }
             }
         );
     }
-    
-    private String getFullCategoryUrl(String siteUrl, String url) {
-        return url.startsWith("http") ? url : siteUrl + url;        
-    }
 
-    private void startWebActivity(String siteUrl, String categoryUrl, String name, String partnerName) {
-        Bundle extras = getIntent().getExtras();
+    private void startWebActivity() {
         Intent web = new Intent(this, WebActivity.class);
-        web.putExtra(Constants.URL_SITE, siteUrl);
-        web.putExtra(Constants.URL_SECTION, categoryUrl);
-        web.putExtra(Constants.CATEGORY_NAME, name);
-        web.putExtra(Constants.PARTNER_NAME, partnerName);
-        web.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
-        web.putExtra(Constants.PARTNER_ID, extras.getString(Constants.PARTNER_ID));
         web.putExtra(Constants.FROM_ACTIVITY, getClass());
         startActivity(web);
     }
     
-    private void startJsonActivity(String siteUrl, String categoryUrl, Category category, String partnerName) {        
+    private void startJsonActivity(Category category) {        
         Class<? extends Activity> activityClass = category.getJsonViewActivityClass();
         if(activityClass != null) {
-            Intent i = new Intent(this, activityClass);
-            i.putExtra(Constants.URL_SITE, siteUrl);
-            i.putExtra(Constants.URL_SECTION, categoryUrl);
-            i.putExtra(Constants.CATEGORY_NAME, category.getName());
-            i.putExtra(Constants.PARTNER_NAME, partnerName);
-            startActivity(i);
+            startActivity(new Intent(this, activityClass));
         }
     }
-
 }

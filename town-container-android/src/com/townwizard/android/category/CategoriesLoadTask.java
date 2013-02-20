@@ -70,7 +70,7 @@ public class CategoriesLoadTask extends AsyncTask<String, Category, Void> {
         }
         if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
         
-        if(categoryUrl == null && Config.getConfig(context).isTest()) {
+        if(categoryUrl == null && Config.IS_DEV) {
             categoryUrl = jsObject.getString("url");
             if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
         }

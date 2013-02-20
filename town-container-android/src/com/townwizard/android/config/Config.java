@@ -7,6 +7,9 @@ import java.util.Properties;
 import android.app.Application;
 import android.content.Context;
 
+import com.townwizard.android.category.Category;
+import com.townwizard.android.partner.Partner;
+
 public final class Config extends Application {
     
     public static final String CONTAINER_SITE="http://www.townwizardcontainerapptest.com";
@@ -17,13 +20,16 @@ public final class Config extends Application {
     public static final int SPLASH_TIME = 1000;
     public static final int FB_CHECKIN_DISTANCE_METERS = 2000;
     public static final int FB_CHECKIN_RESULTS_LIMIT = 20;
+    public static final boolean IS_DEV = CONTAINER_SITE.contains("test"); 
     
     private static final String GENERIC_PARTNER_ID = "TownWizard";
     private static final String PARAMS_FILE = "params.txt";
-
-    private boolean test = CONTAINER_SITE.contains("test"); 
+    
     private String partnerId;
     private boolean containerApp;
+    
+    private Partner partner;
+    private Category category;
         
     public static Config getConfig(Context context) {
         return (Config)context.getApplicationContext();
@@ -35,16 +41,28 @@ public final class Config extends Application {
         containerApp = (GENERIC_PARTNER_ID.equals(partnerId));
     }
 
-    public boolean isTest() {
-        return test;
-    }
-    
     public boolean isContainerApp() {
         return containerApp;
     }
     
     public String getPartnerId() {
         return partnerId;
+    }
+    
+    public Partner getPartner() {
+        return partner;
+    }
+    
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
+    
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     private String loadPartnerId() {

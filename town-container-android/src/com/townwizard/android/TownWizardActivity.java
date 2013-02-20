@@ -18,7 +18,7 @@ import android.widget.ListView;
 
 import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.CategoriesLoadTask;
-import com.townwizard.android.config.Constants;
+import com.townwizard.android.config.Config;
 import com.townwizard.android.partner.Partner;
 import com.townwizard.android.partner.PartnersAdapter;
 import com.townwizard.android.partner.SearchPartners;
@@ -120,13 +120,8 @@ public class TownWizardActivity extends ListActivity {
                 CategoriesAdapter categoriesAdapter = categoriesLoader.getCategoriesAdapter();
                 
                 Intent web = new Intent(this, WebActivity.class);
-                web.putExtra(Constants.URL_SITE, item.getUrl());
-                String categoryUrl = getFullCategoryUrl(item.getUrl(), categoriesAdapter.getHomeUrl());
-                web.putExtra(Constants.URL_SECTION, categoryUrl);
-                web.putExtra(Constants.CATEGORY_NAME, Constants.HOME);
-                web.putExtra(Constants.PARTNER_NAME, item.getName());
-                web.putExtra(Constants.PARTNER_ID, Integer.valueOf(item.getId()).toString());
-                web.putExtra(Constants.IMAGE_URL, item.getImageUrl());
+                Config.getConfig(this).setPartner(item);
+                Config.getConfig(this).setCategory(categoriesAdapter.getHomeCategory());
                 startActivity(web);
             } else {
                 Intent browseIntent = new Intent(Intent.ACTION_VIEW,
@@ -142,10 +137,6 @@ public class TownWizardActivity extends ListActivity {
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);        
     }    
     
-    private String getFullCategoryUrl(String siteUrl, String url) {
-        return url.startsWith("http") ? url : siteUrl + url;        
-    }    
-
     public void executeSearch() {
         String searchRequest = null;
         if (mInputEditText.getText().toString().equals("")) {

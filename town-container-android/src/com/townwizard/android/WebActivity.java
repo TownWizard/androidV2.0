@@ -23,6 +23,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import com.townwizard.android.category.Category;
+import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -39,12 +41,11 @@ public class WebActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
 
-        mUrlSite = extras.getString(Constants.URL_SITE);        
-        String categoryName = extras.getString(Constants.CATEGORY_NAME);
+        mUrlSite = Config.getConfig(this).getPartner().getUrl();        
+        Category category = Config.getConfig(this).getCategory();
 
-        if (categoryName.indexOf("Photos") != -1) {
+        if (category.getName().indexOf("Photos") != -1) {
             if (isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
                 setContentView(R.layout.web_with_upload);
@@ -89,10 +90,8 @@ public class WebActivity extends FragmentActivity {
 
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
-        
-        String urlSection = extras.getString(Constants.URL_SECTION);         
-        Log.d("Web Acrivity Url", urlSection);
-        mWebView.loadUrl(urlSection);
+
+        mWebView.loadUrl(getFullCategoryUrl(category));
     }  
 
 
@@ -197,7 +196,6 @@ public class WebActivity extends FragmentActivity {
     }
 
     private void showMap(String url) {
-        Bundle extras = getIntent().getExtras();
         String latlong = url.substring("APP30A:SHOWMAP:".length());
         Log.d("latlong", latlong);
         String latitude = latlong.substring(0, latlong.indexOf(":"));
@@ -205,16 +203,12 @@ public class WebActivity extends FragmentActivity {
         Intent i = new Intent(WebActivity.this, MapViewActivity.class);
         i.putExtra(Constants.LATITUDE, latitude);
         i.putExtra(Constants.LONGITUDE, longitude);
-        i.putExtra(Constants.CATEGORY_NAME, extras.getString(Constants.CATEGORY_NAME));
+        i.putExtra(Constants.FROM_ACTIVITY, getClass());
         startActivity(i);
     }
 
     private void facebookCheckin() {
-        Bundle extras = getIntent().getExtras();
         Intent i = new Intent(WebActivity.this, FacebookPlacesActivity.class);        
-        i.putExtra(Constants.PARTNER_NAME, extras.getString(Constants.PARTNER_NAME));
-        i.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
-        i.putExtra(Constants.CATEGORY_NAME, extras.getString(Constants.CATEGORY_NAME));
         i.putExtra(Constants.FROM_ACTIVITY, getClass());
         startActivity(i);
     }
@@ -246,5 +240,9 @@ public class WebActivity extends FragmentActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    
+    private String getFullCategoryUrl(Category category) {
+        String url = category.getUrl();
+        return url.startsWith("http") ? url : Config.getConfig(this).getPartner().getUrl() + category.getUrl();        
+    }
 }

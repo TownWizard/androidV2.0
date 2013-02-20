@@ -93,6 +93,7 @@ public class FacebookPlacesActivity extends FacebookActivity {
         Intent i = new Intent();
         i.setClass(this, FacebookCheckinActivity.class);
         i.putExtra(Constants.FB_PLACE_ID, place.getId());
+        i.putExtra(Constants.FROM_ACTIVITY, getClass());
         startActivity(i);
     }
 

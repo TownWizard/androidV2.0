@@ -32,11 +32,15 @@ public class Category {
 	private final String url;
 	private final ViewType viewType;
 	
+    public Category(Bitmap image, String name, String url, ViewType viewType) {
+        this.image = image;
+        this.name = handleSpecialChars(name);
+        this.url = url;
+        this.viewType = viewType;
+    }
+    
 	public Category(Bitmap image, String name, String url, String viewType) {
-		this.image = image;
-		this.name = handleSpecialChars(name);
-		this.url = url;
-		this.viewType = ViewType.fromString(viewType);
+	    this(image, name, url, ViewType.fromString(viewType));
 	}
 	
 	public Bitmap getImage(){

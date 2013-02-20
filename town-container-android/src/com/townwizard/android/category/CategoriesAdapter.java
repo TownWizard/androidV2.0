@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.townwizard.android.R;
+import com.townwizard.android.category.Category.ViewType;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 
@@ -100,40 +101,41 @@ public class CategoriesAdapter extends BaseAdapter {
         return getCategoryView((Category)item, convertView, parent);
     }
     
-    public String getAboutUsUrl() {
-        String aboutUsUrl = null;
+    public Category getAboutUsCategory() {
+        Category aboutUs = null;
         List<Category> helpCategories = categories.get(CategorySection.HELP);
         if(helpCategories != null) {
             for(Category c : helpCategories) {
                 if(Constants.ABOUT_US.equals(c.getName())) {
-                    aboutUsUrl = c.getUrl();
+                    aboutUs = c;
                     break;
                 }
             }
         }
-        if(aboutUsUrl == null) {
-            aboutUsUrl = Config.DEFAULT_ABOUT_US_URI;
+        if(aboutUs == null) {
+            aboutUs = new Category(
+                    null, Constants.ABOUT_US, Config.DEFAULT_ABOUT_US_URI, Category.ViewType.WEB);
         }
        
-        return aboutUsUrl;
+        return aboutUs;
     }
     
-    public String getHomeUrl() {
-        String homeUrl = null;
+    public Category getHomeCategory() {
+        Category home = null;
         List<Category> generalCategories = categories.get(CategorySection.GENERAL);
         if(generalCategories != null) {
             for(Category c : generalCategories) {
                 if(Constants.HOME.equals(c.getName())) {
-                    homeUrl = c.getUrl();
+                    home = c;
                     break;
                 }
             }
         }
-        if(homeUrl == null) {
-            homeUrl = Config.DEFAULT_HOME_URI;
+        if(home == null) {
+            home = new Category(null, Constants.HOME, Config.DEFAULT_HOME_URI, ViewType.WEB);
         }
        
-        return homeUrl;        
+        return home;
     }
     
     private View getSectionView(CategorySection section, View convertView, ViewGroup parent) {

@@ -1,7 +1,5 @@
 package com.townwizard.android;
 
-import java.io.Serializable;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +12,7 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 
 public class HeaderFragment extends Fragment {
@@ -23,12 +22,12 @@ public class HeaderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {        
         header = inflater.inflate(R.layout.header, container, false);        
-        FragmentActivity activity = getActivity();
-        Bundle extras = activity.getIntent().getExtras();
+        FragmentActivity activity = getActivity();        
         TextView headerCategoryView = (TextView) header.findViewById(R.id.tv_header_web);
-        headerCategoryView.setText(extras.getString(Constants.CATEGORY_NAME));
+        Config config = Config.getConfig(getActivity());
+        headerCategoryView.setText(config.getCategory().getName());
         TextView headerPartnerView = (TextView) header.findViewById(R.id.header_partner_name);
-        headerPartnerView.setText(extras.getString(Constants.PARTNER_NAME));
+        headerPartnerView.setText(config.getPartner().getName());
         drawBackButton(activity);
         return header;
     }
@@ -47,8 +46,7 @@ public class HeaderFragment extends Fragment {
     private void drawBackBtn (final Activity activity, final WebView webView) {
         LinearLayout backButtonArea = (LinearLayout)header.findViewById(R.id.header_back_button);
         LayoutInflater inflater = LayoutInflater.from(activity);
-        int layout = (webView != null && webView.canGoBack()) ? 
-                R.layout.back_button : R.layout.back_button_root;
+        int layout = getBackButtonLayout(webView);
         View backButton = inflater.inflate(layout, backButtonArea, false);
         backButtonArea.removeAllViews();
         backButtonArea.addView(backButton);
@@ -62,24 +60,32 @@ public class HeaderFragment extends Fragment {
         );
     }
     
+    private int getBackButtonLayout(WebView webView) {
+        if(webView != null) {
+            return (webView.canGoBack() ? R.layout.back_button : R.layout.back_button_root);
+        }
+        return getActivity().getClass().getName().contains("Facebook") ?
+                R.layout.back_button : R.layout.back_button_root;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private Class<? extends Activity> getFromActivityClass() {
+        Bundle extras = getActivity().getIntent().getExtras();
+        if(extras != null) {
+            return (Class<? extends Activity>) extras.getSerializable(Constants.FROM_ACTIVITY);
+        }
+        return null;
+    }
+    
     private void startCategoriesActivity(Activity activity) {
-        Bundle extras = activity.getIntent().getExtras();
-        Intent categories = new Intent(activity, CategoriesActivity.class);        
-        categories.putExtra(Constants.PARTNER_ID, extras.getString(Constants.PARTNER_ID));
-        categories.putExtra(Constants.PARTNER_NAME, extras.getString(Constants.PARTNER_NAME));
-        categories.putExtra(Constants.URL, extras.getString(Constants.URL_SITE));
-        categories.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
-        startActivity(categories);
-    }    
-    
-    
+        startActivity(new Intent(activity, CategoriesActivity.class));
+    }
+
     private void goBack(Activity activity, WebView webView) {
         if(webView != null && webView.canGoBack()) {
             webView.goBack();
         } else {
-            Bundle extras = activity.getIntent().getExtras();
-            Serializable klass = extras.getSerializable(Constants.FROM_ACTIVITY);
-            if(klass != null) {
+            if(getFromActivityClass() != null) {
                 activity.finish();
             } else {
                 startCategoriesActivity(activity);
