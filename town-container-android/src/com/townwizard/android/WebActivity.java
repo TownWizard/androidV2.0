@@ -96,7 +96,10 @@ public class WebActivity extends FragmentActivity {
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
 
-        mWebView.loadUrl(getFullCategoryUrl(category));
+        
+        String categoryUrl = getFullCategoryUrl(category);        
+        Log.d("Category url", categoryUrl);
+        mWebView.loadUrl(categoryUrl);
     }  
 
 
@@ -248,6 +251,14 @@ public class WebActivity extends FragmentActivity {
     
     private String getFullCategoryUrl(Category category) {
         String url = category.getUrl();
-        return url.startsWith("http") ? url : Config.getConfig(this).getPartner().getUrl() + category.getUrl();        
-    }
+        url = url.startsWith("http") ? url : Config.getConfig(this).getPartner().getUrl() + category.getUrl();
+        
+        String categoryName = category.getName();
+        if(Constants.RESTAURANTS.equals(categoryName) || Constants.PLACES.equals(categoryName)) {
+            if(url.contains(("?"))) url += "show_checkin=y";
+            else url += "?show_checkin=y";
+        }
+        
+        return url;
+    }    
 }
