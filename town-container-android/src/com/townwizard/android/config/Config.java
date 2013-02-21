@@ -17,7 +17,7 @@ public final class Config extends Application {
     public static final String SECTION_API=CONTAINER_SITE+"/apiv30/section/partner/";
     public static final String DEFAULT_ABOUT_US_URI = "components/com_shines_v2.1/iphone-about.php";
     public static final String DEFAULT_HOME_URI = "components/com_shines_v2.1/iphone-30a-today.php";
-    public static final int SPLASH_TIME = 1000;
+    public static final int SPLASH_TIME = 500;
     public static final int FB_CHECKIN_DISTANCE_METERS = 2000;
     public static final int FB_CHECKIN_RESULTS_LIMIT = 20;
     public static final boolean IS_DEV = CONTAINER_SITE.contains("test"); 
