@@ -11,10 +11,14 @@ public class Constants {
     public static final String FB_PLACE_ID = "FB_PLACE_ID";
     public static final String OVERRIDE_TRANSITION = "OVERRIDE_TRANSITION";
     
-    // UI strings
+    // Category names
+    public static final String VIDEOS = "Videos";
     public static final String ABOUT_US = "About Us";
     public static final String HOME = "Home";
-    public static final String VIDEOS = "Videos";
+    public static final String RESTAURANTS = "Restaurants";
+    public static final String PLACES = "Places";
+
+    // UI strings
     public static final String CHECK_IN = "CHECK IN";
     public static final String YES = "Yes";
     public static final String NO = "No";
