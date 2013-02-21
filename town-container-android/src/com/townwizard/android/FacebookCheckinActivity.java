@@ -56,6 +56,7 @@ public class FacebookCheckinActivity extends FacebookActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus && friendsAdapter != null) {
                     EditText view = (EditText)v;
+                    //Utils.hideScreenKeyboard(view, FacebookCheckinActivity.this);
                     String searchTxt = view.getText().toString();
                     searchTxt = searchTxt.length() > 0 ? searchTxt : null;
                     friendsAdapter.filterFriends(searchTxt);
@@ -130,21 +131,23 @@ public class FacebookCheckinActivity extends FacebookActivity {
 
         @Override
         public void onCompleted(List<GraphUser> users, Response response) {
-            List<FacebookFriend> friends = new ArrayList<FacebookFriend>(users.size());
-            for(GraphUser u : users) {
-                friends.add(FacebookFriend.fromGraphUser(u));
-            }
-            
-            friendsAdapter.addFriends(friends);
-            
-            for(final FacebookFriend f : friends) {
-                new BitmapDownloaderTask() {
-                    @Override
-                    protected void onPostExecute(Bitmap result) {
-                        f.setImage(result);
-                        friendsAdapter.notifyDataSetChanged();
-                    }
-                }.execute("http://graph.facebook.com/"+f.getId()+"/picture");
+            if(users != null) {
+                List<FacebookFriend> friends = new ArrayList<FacebookFriend>(users.size());
+                for(GraphUser u : users) {
+                    friends.add(FacebookFriend.fromGraphUser(u));
+                }
+                
+                friendsAdapter.addFriends(friends);
+                
+                for(final FacebookFriend f : friends) {
+                    new BitmapDownloaderTask() {
+                        @Override
+                        protected void onPostExecute(Bitmap result) {
+                            f.setImage(result);
+                            friendsAdapter.notifyDataSetChanged();
+                        }
+                    }.execute("http://graph.facebook.com/"+f.getId()+"/picture");
+                }
             }
         }
     }
