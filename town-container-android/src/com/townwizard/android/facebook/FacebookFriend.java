@@ -41,9 +41,6 @@ public class FacebookFriend {
     }
     public void setVisible(boolean visible) {
         this.visible = visible;
-        if(!visible) {
-            setSelected(false);
-        }
     }
     
     @Override
