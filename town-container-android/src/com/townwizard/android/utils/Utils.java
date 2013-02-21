@@ -4,7 +4,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.Display;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public final class Utils {
@@ -43,6 +46,11 @@ public final class Utils {
             text = text.substring(0, allowedLength) + "...";
             v.setText(text);
         }
+    }
+    
+    public static void hideScreenKeyboard(EditText et, Context activity) {        
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
     }
 
 }

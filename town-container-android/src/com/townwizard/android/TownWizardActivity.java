@@ -23,6 +23,7 @@ import com.townwizard.android.partner.Partner;
 import com.townwizard.android.partner.PartnersAdapter;
 import com.townwizard.android.partner.SearchPartners;
 import com.townwizard.android.utils.CurrentLocation;
+import com.townwizard.android.utils.Utils;
 
 public class TownWizardActivity extends ListActivity {
     
@@ -63,7 +64,7 @@ public class TownWizardActivity extends ListActivity {
                     case R.id.bt_clear_edittext: {
                         mInputEditText.setText("");
                         mClearButton.setVisibility(View.INVISIBLE);
-                        hideScreenKeyboard(mInputEditText);
+                        Utils.hideScreenKeyboard(mInputEditText, TownWizardActivity.this);
                         break;
                     }
                     case R.id.search_button: {
@@ -130,12 +131,6 @@ public class TownWizardActivity extends ListActivity {
             }
         }
     }
-    
-    
-    private void hideScreenKeyboard(EditText et) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);        
-    }    
     
     public void executeSearch() {
         String searchRequest = null;
