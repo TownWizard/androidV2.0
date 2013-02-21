@@ -37,6 +37,7 @@ public final class Config extends Application {
     
     @Override
     public void onCreate() {
+        super.onCreate();
         partnerId = loadPartnerId();
         containerApp = (GENERIC_PARTNER_ID.equals(partnerId));
     }
