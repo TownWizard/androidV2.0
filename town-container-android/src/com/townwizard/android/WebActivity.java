@@ -155,7 +155,7 @@ public class WebActivity extends FragmentActivity {
                 view.loadUrl(url);
             } else {
                 if (url.startsWith("mailto:")) {
-                    mailSend(url);
+                    sendMail(url);
                     return true;
                 }
                 if (url.startsWith("tel")) {
@@ -221,22 +221,13 @@ public class WebActivity extends FragmentActivity {
         startActivity(i);
     }
 
-    private void mailSend(String url) {
-        String mt = "mailto:?";
-        String u = url;
-        u = u.substring("mailto:?".length());
-        u = u.replaceAll(":", "%3A");
-        u = u.replaceAll("/", "%2F");
-        u = u.replaceAll(" ", "%20");
-        MailTo mailTo = MailTo.parse(mt + u);
-        Log.d("mailTo", mailTo.toString());
-
+    private void sendMail(String url) {
+        MailTo mailTo = MailTo.parse(url);
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_EMAIL, mailTo.getTo());
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{mailTo.getTo()});
         i.putExtra(Intent.EXTRA_TEXT, mailTo.getBody());
         i.putExtra(Intent.EXTRA_SUBJECT, mailTo.getSubject());
-
         startActivity(i);
     }
 
