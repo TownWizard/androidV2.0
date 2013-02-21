@@ -26,6 +26,7 @@ import android.widget.Button;
 import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.utils.CurrentLocation;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class WebActivity extends FragmentActivity {
@@ -245,11 +246,17 @@ public class WebActivity extends FragmentActivity {
         url = url.startsWith("http") ? url : Config.getConfig(this).getPartner().getUrl() + category.getUrl();
         
         String categoryName = category.getName();
-        if(Constants.RESTAURANTS.equals(categoryName) || Constants.PLACES.equals(categoryName)) {
-            if(url.contains(("?"))) url += "show_checkin=y";
-            else url += "?show_checkin=y";
+        if(Constants.RESTAURANTS.equals(categoryName) || Constants.PLACES.equals(categoryName)) {            
+            url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
+            url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
+            url = addParameterToUrl(url, "show_checkin", "y");
         }
         
         return url;
-    }    
+    }
+    
+    private String addParameterToUrl(String url, String key, String value) {        
+        if(url.contains(("?"))) return url + ("&" + key + "=" + value);
+        return url + ("?" + key + "=" + value);
+    }
 }
