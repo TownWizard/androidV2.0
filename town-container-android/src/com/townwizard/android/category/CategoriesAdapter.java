@@ -102,40 +102,30 @@ public class CategoriesAdapter extends BaseAdapter {
     }
     
     public Category getAboutUsCategory() {
-        Category aboutUs = null;
-        List<Category> helpCategories = categories.get(CategorySection.HELP);
-        if(helpCategories != null) {
-            for(Category c : helpCategories) {
-                if(Constants.ABOUT_US.equals(c.getName())) {
-                    aboutUs = c;
-                    break;
-                }
-            }
-        }
-        if(aboutUs == null) {
-            aboutUs = new Category(
-                    null, Constants.ABOUT_US, Config.DEFAULT_ABOUT_US_URI, Category.ViewType.WEB);
-        }
-       
-        return aboutUs;
+        return getCategoryByName(Constants.ABOUT_US, Config.DEFAULT_ABOUT_US_URI);
     }
     
     public Category getHomeCategory() {
-        Category home = null;
+        return getCategoryByName(Constants.HOME, Config.DEFAULT_HOME_URI);
+    }
+    
+    private Category getCategoryByName(String name, String defaultUrl) {
+        Category category = null;
         List<Category> generalCategories = categories.get(CategorySection.GENERAL);
         if(generalCategories != null) {
             for(Category c : generalCategories) {
-                if(Constants.HOME.equals(c.getName())) {
-                    home = c;
+                if(name.equals(c.getName())) {
+                    category = c;
                     break;
                 }
             }
         }
-        if(home == null) {
-            home = new Category(null, Constants.HOME, Config.DEFAULT_HOME_URI, ViewType.WEB);
-        }
-       
-        return home;
+        if(category == null) {
+            if(defaultUrl != null) {
+                category = new Category(null, name, defaultUrl, ViewType.WEB);
+            }
+        }       
+        return category;
     }
     
     private View getSectionView(CategorySection section, View convertView, ViewGroup parent) {

@@ -41,6 +41,11 @@ public class WebActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        Bundle extras = getIntent().getExtras();
+        if(extras != null && extras.getBoolean(Constants.OVERRIDE_TRANSITION)) {
+            overridePendingTransition(R.anim.slide_from_left, R.anim.slide_from_left);
+        }
 
         mUrlSite = Config.getConfig(this).getPartner().getUrl();        
         Category category = Config.getConfig(this).getCategory();

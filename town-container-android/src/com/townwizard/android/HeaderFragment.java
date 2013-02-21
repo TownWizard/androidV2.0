@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 
@@ -80,10 +81,20 @@ public class HeaderFragment extends Fragment {
     private void startCategoriesActivity(Activity activity) {
         startActivity(new Intent(activity, CategoriesActivity.class));
     }
+    
+    private void goBackToVideos() {
+        Intent web = new Intent(getActivity(), WebActivity.class);
+        web.putExtra(Constants.OVERRIDE_TRANSITION, true);
+        startActivity(web);
+    }
 
     private void goBack(Activity activity, WebView webView) {
         if(webView != null && webView.canGoBack()) {
-            webView.goBack();
+            if(Constants.VIDEOS.equals(getCategory().getName())) {
+                goBackToVideos();
+            } else {
+                webView.goBack();
+            }
         } else {
             if(getFromActivityClass() != null) {
                 activity.finish();
@@ -91,5 +102,9 @@ public class HeaderFragment extends Fragment {
                 startCategoriesActivity(activity);
             }
         }
+    }
+    
+    private Category getCategory() {
+        return Config.getConfig(getActivity()).getCategory();
     }
 }
