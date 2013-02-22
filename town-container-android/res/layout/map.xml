@@ -5,12 +5,23 @@
     android:background="@android:color/white"
     android:orientation="vertical" >
 
+    <!-- Production api key -->
+    <com.google.android.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="0fzoy4QNKYZHn-qr6FoOHuQtM6YExBF2JOMj_Rw"
+        android:clickable="true" />
+    
+    <!-- Development api key.  Replace api key value and use this when working on maps locally 
     <com.google.android.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:apiKey="0fzoy4QNKYZFH_UK29j11Quz-zkxVGw5bUjRArg"
-        android:clickable="true" />
+        android:clickable="true" />    
+    -->
 
 </LinearLayout>
