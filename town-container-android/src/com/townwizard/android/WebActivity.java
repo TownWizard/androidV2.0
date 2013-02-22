@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -15,7 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,7 +29,7 @@ import com.townwizard.android.config.Constants;
 import com.townwizard.android.utils.CurrentLocation;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class WebActivity extends FragmentActivity {
+public class WebActivity extends Activity {
 
     private static final String sUpload = "components/com_shines/iuploadphoto.php";
     private String mUrlSite;
@@ -38,6 +38,7 @@ public class WebActivity extends FragmentActivity {
     private static final int sCAMERA_RESULT = 1;
     private static final int sGALLERY = 2;
     private static Uri sImagePath;
+    private Header header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,9 @@ public class WebActivity extends FragmentActivity {
         } else {
             setContentView(R.layout.web);
         }
+        
+        header = Header.build(this);
+        
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);        
@@ -166,19 +170,20 @@ public class WebActivity extends FragmentActivity {
                     facebookCheckin();
                 }
             }
+            
             return true;
         }
 
         @Override
         public void onPageStarted (WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            HeaderFragment.drawBackButton(WebActivity.this, mWebView);
+            header.drawBackButton(mWebView);
         }
         
         @Override
         public void onPageFinished (WebView view, String url) {
             super.onPageFinished(view, url);
-            HeaderFragment.drawBackButton(WebActivity.this, mWebView);
+            header.drawBackButton(mWebView);
         }        
     }
     
@@ -202,8 +207,8 @@ public class WebActivity extends FragmentActivity {
     private void showMap(String url) {
         String[] urlParts = url.split(":");
         if(urlParts.length == 4) {
-//            String latitude = "42.18794250";
-//            String longitude = "-79.83222961";
+            //String latitude = "42.18794250";
+            //String longitude = "-79.83222961";
             String latitude = urlParts[2];
             String longitude = urlParts[3];
             Intent i = new Intent(WebActivity.this, MapViewActivity.class);
@@ -211,7 +216,7 @@ public class WebActivity extends FragmentActivity {
             i.putExtra(Constants.LONGITUDE, longitude);
             i.putExtra(Constants.FROM_ACTIVITY, getClass());
             startActivity(i);
-        }
+       }
     }
 
     private void facebookCheckin() {

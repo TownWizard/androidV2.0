@@ -2,20 +2,20 @@ package com.townwizard.android;
 
 import java.util.Arrays;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+
 import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-
-public abstract class FacebookActivity extends FragmentActivity {
+public abstract class FacebookActivity extends Activity {
     
     protected Session.StatusCallback statusCallback;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);        
+        super.onCreate(savedInstanceState);
     }
     
     @Override

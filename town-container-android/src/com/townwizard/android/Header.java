@@ -3,49 +3,43 @@ package com.townwizard.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 
-public class HeaderFragment extends Fragment {
+public class Header {
     
-    private View header;
+    private Activity activity;
+    private View headerView;
+
+    public static final Header build(Activity activity) {
+        return new Header(activity);
+    }
     
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {        
-        header = inflater.inflate(R.layout.header, container, false);        
-        FragmentActivity activity = getActivity();        
+    private Header(Activity activity) {
+        this.activity = activity;
+        build();
+    }
+    
+    private void build() {
+        View rootView = activity.getWindow().getDecorView().getRootView(); 
+        View header = rootView.findViewById(R.id.header);
         TextView headerCategoryView = (TextView) header.findViewById(R.id.tv_header_web);
-        Config config = Config.getConfig(getActivity());
+        Config config = Config.getConfig(activity);
         headerCategoryView.setText(config.getCategory().getName());
         TextView headerPartnerView = (TextView) header.findViewById(R.id.header_partner_name);
         headerPartnerView.setText(config.getPartner().getName());
-        drawBackButton(activity);
-        return header;
-    }
-
-    public static final void drawBackButton(FragmentActivity activity) {
-        drawBackButton(activity, null);
+        headerView = header;
+        drawBackButton(null);
     }
     
-    public static final void drawBackButton(FragmentActivity activity, WebView webView) {
-        Fragment header = activity.getSupportFragmentManager().findFragmentById(R.id.header_fragment);
-        if(header != null) {
-            ((HeaderFragment) header).drawBackBtn(activity, webView);
-        }
-    }
-    
-    private void drawBackBtn (final Activity activity, final WebView webView) {
-        LinearLayout backButtonArea = (LinearLayout)header.findViewById(R.id.header_back_button);
+    public void drawBackButton (final WebView webView) {        
+        LinearLayout backButtonArea = (LinearLayout)headerView.findViewById(R.id.header_back_button);
         LayoutInflater inflater = LayoutInflater.from(activity);
         int layout = getBackButtonLayout(webView);
         View backButton = inflater.inflate(layout, backButtonArea, false);
@@ -65,13 +59,14 @@ public class HeaderFragment extends Fragment {
         if(webView != null) {
             return (webView.canGoBack() ? R.layout.back_button : R.layout.back_button_root);
         }
-        return getActivity().getClass().getName().contains("Facebook") ?
+        String activityClassName = activity.getClass().getName(); 
+        return (activityClassName.contains("Facebook") || activityClassName.contains("MapView")) ?
                 R.layout.back_button : R.layout.back_button_root;
     }
     
     @SuppressWarnings("unchecked")
     private Class<? extends Activity> getFromActivityClass() {
-        Bundle extras = getActivity().getIntent().getExtras();
+        Bundle extras = activity.getIntent().getExtras();
         if(extras != null) {
             return (Class<? extends Activity>) extras.getSerializable(Constants.FROM_ACTIVITY);
         }
@@ -79,18 +74,18 @@ public class HeaderFragment extends Fragment {
     }
     
     private void startCategoriesActivity(Activity activity) {
-        startActivity(new Intent(activity, CategoriesActivity.class));
+        activity.startActivity(new Intent(activity, CategoriesActivity.class));
     }
     
     private void goBackToVideos() {
-        Intent web = new Intent(getActivity(), WebActivity.class);
+        Intent web = new Intent(activity, WebActivity.class);
         web.putExtra(Constants.OVERRIDE_TRANSITION, true);
-        startActivity(web);
+        activity.startActivity(web);
     }
 
     private void goBack(Activity activity, WebView webView) {
         if(webView != null && webView.canGoBack()) {
-            if(Constants.VIDEOS.equals(getCategory().getName())) {
+            if(Constants.VIDEOS.equals(Config.getConfig(activity).getCategory().getName())) {
                 goBackToVideos();
             } else {
                 webView.goBack();
@@ -102,9 +97,5 @@ public class HeaderFragment extends Fragment {
                 startCategoriesActivity(activity);
             }
         }
-    }
-    
-    private Category getCategory() {
-        return Config.getConfig(getActivity()).getCategory();
     }
 }

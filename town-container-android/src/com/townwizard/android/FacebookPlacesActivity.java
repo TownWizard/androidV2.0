@@ -37,8 +37,10 @@ public class FacebookPlacesActivity extends FacebookActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        statusCallback = new SessionStatusCallback();        
-        setContentView(R.layout.facebook_places);        
+        statusCallback = new SessionStatusCallback();
+        setContentView(R.layout.facebook_places);
+        
+        Header.build(this);
 
         Session session = checkLogin(savedInstanceState);
         if(session.isOpened()) {

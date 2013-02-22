@@ -4,8 +4,10 @@
     android:layout_height="fill_parent"
     android:background="@android:color/white"
     android:orientation="vertical" >
+    
+    <include layout="@layout/header"/>
 
-    <!-- Production api key -->
+    <!-- Production api key --> 
     <com.google.android.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapview"
@@ -14,7 +16,7 @@
         android:apiKey="0fzoy4QNKYZHn-qr6FoOHuQtM6YExBF2JOMj_Rw"
         android:clickable="true" />
     
-    <!-- Development api key.  Replace api key value and use this when working on maps locally 
+    <!-- Development api key.  Replace api key value and use this when working on maps locally  
     <com.google.android.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapview"

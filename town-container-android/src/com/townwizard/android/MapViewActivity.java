@@ -19,10 +19,13 @@ import com.townwizard.android.utils.CurrentLocation;
 
 public class MapViewActivity extends MapActivity {
     
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+        
+        Header.build(this);
         
         Bundle extras = getIntent().getExtras();
         double latitude = Double.parseDouble(extras.getString(Constants.LATITUDE));        

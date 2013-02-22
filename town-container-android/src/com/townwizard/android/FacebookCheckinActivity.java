@@ -37,6 +37,8 @@ public class FacebookCheckinActivity extends FacebookActivity {
         super.onCreate(savedInstanceState);
         statusCallback = new SessionStatusCallback();
         setContentView(R.layout.facebook_checkin);
+        
+        Header.build(this);
 
         ImageButton postButton = (ImageButton) findViewById(R.id.facebook_status_post);
         postButton.setOnClickListener(new View.OnClickListener() {

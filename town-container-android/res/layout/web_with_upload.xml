@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/header_fragment"/>
+    <include layout="@layout/header"/>
 
     <RelativeLayout
         android:layout_width="fill_parent"
