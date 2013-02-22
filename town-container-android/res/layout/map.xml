@@ -5,41 +5,12 @@
     android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/iv_header_map"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            />
-
-        <TextView
-            android:id="@+id/tv_header_map"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dip"
-            android:gravity="left|center_horizontal"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="2.0"
-            android:text=""
-            android:textColor="@android:color/white"
-            android:textSize="15dip" />
-    </RelativeLayout>
-
     <com.google.android.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="0-0iFsklMNI0H_3tIgG-hy-uLxyhBKYDvyqbfzQ"
+        android:apiKey="0fzoy4QNKYZFH_UK29j11Quz-zkxVGw5bUjRArg"
         android:clickable="true" />
 
 </LinearLayout>

@@ -154,21 +154,16 @@ public class WebActivity extends FragmentActivity {
             Log.d("URL", url);
             if (url.startsWith("http")) {
                 view.loadUrl(url);
-            } else {
-                if (url.startsWith("mailto:")) {
-                    sendMail(url);
-                    return true;
-                }
-                if (url.startsWith("tel")) {
-                    Intent dialIntent = new Intent(Intent.ACTION_DIAL,
-                            Uri.parse(url));
-                    startActivity(dialIntent);
-                } else if (url.startsWith("APP30A:")) {
-                    if (url.indexOf("SHOWMAP") != -1) {
-                        showMap(url);
-                    } else if (url.indexOf("FBCHECKIN") != -1) {
-                        facebookCheckin();
-                    }
+            } else if (url.startsWith("mailto:")) {
+                sendMail(url);
+            } else if (url.startsWith("tel")) {
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                startActivity(dialIntent);
+            } else if (url.startsWith("APP30A:")) {
+                if(url.contains("SHOWMAP")) {            
+                    showMap(url);
+                } else if (url.contains("FBCHECKIN")) {
+                    facebookCheckin();
                 }
             }
             return true;
@@ -205,15 +200,18 @@ public class WebActivity extends FragmentActivity {
     }
 
     private void showMap(String url) {
-        String latlong = url.substring("APP30A:SHOWMAP:".length());
-        Log.d("latlong", latlong);
-        String latitude = latlong.substring(0, latlong.indexOf(":"));
-        String longitude = latlong.substring(latlong.indexOf(":") + 1);
-        Intent i = new Intent(WebActivity.this, MapViewActivity.class);
-        i.putExtra(Constants.LATITUDE, latitude);
-        i.putExtra(Constants.LONGITUDE, longitude);
-        i.putExtra(Constants.FROM_ACTIVITY, getClass());
-        startActivity(i);
+        String[] urlParts = url.split(":");
+        if(urlParts.length == 4) {
+//            String latitude = "42.18794250";
+//            String longitude = "-79.83222961";
+            String latitude = urlParts[2];
+            String longitude = urlParts[3];
+            Intent i = new Intent(WebActivity.this, MapViewActivity.class);
+            i.putExtra(Constants.LATITUDE, latitude);
+            i.putExtra(Constants.LONGITUDE, longitude);
+            i.putExtra(Constants.FROM_ACTIVITY, getClass());
+            startActivity(i);
+        }
     }
 
     private void facebookCheckin() {
@@ -249,7 +247,6 @@ public class WebActivity extends FragmentActivity {
         if(Constants.RESTAURANTS.equals(categoryName) || Constants.PLACES.equals(categoryName)) {            
             url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
             url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
-            url = addParameterToUrl(url, "show_checkin", "y");
         }
         
         return url;
