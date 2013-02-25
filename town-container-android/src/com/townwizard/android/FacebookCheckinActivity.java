@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -89,10 +90,11 @@ public class FacebookCheckinActivity extends FacebookActivity {
         if(response.getError() == null) {
             JSONObject state = response.getGraphObject().getInnerJSONObject();
             if(state.has("id")) {
+                Resources res = getResources();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setTitle(Constants.CHECK_IN);
-                alertDialog.setMessage(Constants.CHECKIN_SUCCESS);
-                alertDialog.setPositiveButton(Constants.CONTINUE, new DialogInterface.OnClickListener() {
+                alertDialog.setTitle(res.getString(R.string.check_in));
+                alertDialog.setMessage(res.getString(R.string.checkin_success));
+                alertDialog.setPositiveButton(res.getString(R.string.cont), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

@@ -1,6 +1,5 @@
 position tw logo background on categories screen correctly
 simulate go button and post button pressed state
-center text on dialogs
-see if UI constants can be moved to strings.xml
 navigate to the places web page after checkin
 Hide soft keyboard on focuse out of the friend filter
+Load place images asynchronously

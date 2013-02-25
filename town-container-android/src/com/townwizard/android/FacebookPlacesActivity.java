@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,17 +70,18 @@ public class FacebookPlacesActivity extends FacebookActivity {
             new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Resources res = getResources();
                     final FacebookPlace place = (FacebookPlace) placesAdapter.getItem(position);
                     AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(FacebookPlacesActivity.this);
-                    myAlertDialog.setTitle(Constants.CHECK_IN);
-                    myAlertDialog.setMessage(Constants.CHECKIN_CONFIRM + " '" + place.getName() + "'");
-                    myAlertDialog.setPositiveButton(Constants.YES,
+                    myAlertDialog.setTitle(res.getString(R.string.check_in));
+                    myAlertDialog.setMessage(res.getString(R.string.checkin_confirm) + " '" + place.getName() + "'");
+                    myAlertDialog.setPositiveButton(res.getString(R.string.yes),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface arg0, int arg1) {
                                     startFacebookCheckinActivity(place);
                                 }
                             });
-                    myAlertDialog.setNegativeButton(Constants.NO, 
+                    myAlertDialog.setNegativeButton(res.getString(R.string.no), 
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int arg1) {
                                     dialog.cancel();
@@ -200,30 +202,3 @@ public class FacebookPlacesActivity extends FacebookActivity {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

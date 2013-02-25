@@ -21,12 +21,4 @@ public class Constants {
     public static final String ADVERTISE_WITH_US = "Advertise with Us";
     public static final String CONTACT_US = "Contact Us";
     public static final String POWERED_BY_TW = "powered by townwizard";
-
-    // UI strings
-    public static final String CHECK_IN = "CHECK IN";
-    public static final String YES = "Yes";
-    public static final String NO = "No";
-    public static final String CHECKIN_CONFIRM = "Do you want to check in to";
-    public static final String CHECKIN_SUCCESS = "You've successfully checked in";
-    public static final String CONTINUE = "Continue";
 }
