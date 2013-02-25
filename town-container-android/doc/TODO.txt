@@ -1,6 +1,5 @@
 position tw logo background on categories screen correctly
 simulate go button and post button pressed state
-update partners file against the new apiv3
 center text on dialogs
 see if UI constants can be moved to strings.xml
 navigate to the places web page after checkin
