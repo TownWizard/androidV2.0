@@ -18,7 +18,13 @@ public class Constants {
     public static final String RESTAURANTS = "Restaurants";
     public static final String PLACES = "Places";
     public static final String HELP_AND_SUPPORT = "Help & Support";
+    public static final String HELP_AND_SUPPORT_AMP = "Help & amp; Support";
     public static final String ADVERTISE_WITH_US = "Advertise with Us";
     public static final String CONTACT_US = "Contact Us";
+    public static final String PHOTOS = "Photos";
+    public static final String WEATHER = "Weather";
+    public static final String EVENTS = "Events";
+    //public static final String HELP_AND_SUPPORT = "Help & amp; Support";
+    
     public static final String POWERED_BY_TW = "powered by townwizard";
 }

@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.townwizard.android.R;
+import com.townwizard.android.config.Constants;
 
 public class Category {
     
@@ -98,17 +99,17 @@ public class Category {
     
     private static Map<String, Integer> categoryToResource = new HashMap<String, Integer>();
     static {
-        categoryToResource.put("Home", R.drawable.home);
-        categoryToResource.put("Events", R.drawable.events);
-        categoryToResource.put("Restaurants", R.drawable.restaurants);
-        categoryToResource.put("Places", R.drawable.places);
-        categoryToResource.put("Photos", R.drawable.photos);
-        categoryToResource.put("Videos", R.drawable.videos);
-        categoryToResource.put("Help & amp; Support", R.drawable.help);
-        categoryToResource.put("Advertise with Us", R.drawable.advertise);
-        categoryToResource.put("About Us", R.drawable.about);
-        categoryToResource.put("Contact Us", R.drawable.contact);
-        categoryToResource.put("Weather", R.drawable.weather);
+        categoryToResource.put(Constants.HOME, R.drawable.home);
+        categoryToResource.put(Constants.EVENTS, R.drawable.events);
+        categoryToResource.put(Constants.RESTAURANTS, R.drawable.restaurants);
+        categoryToResource.put(Constants.PLACES, R.drawable.places);
+        categoryToResource.put(Constants.PHOTOS, R.drawable.photos);
+        categoryToResource.put(Constants.VIDEOS, R.drawable.videos);
+        categoryToResource.put(Constants.HELP_AND_SUPPORT_AMP, R.drawable.help);
+        categoryToResource.put(Constants.ADVERTISE_WITH_US, R.drawable.advertise);
+        categoryToResource.put(Constants.ABOUT_US, R.drawable.about);
+        categoryToResource.put(Constants.CONTACT_US, R.drawable.contact);
+        categoryToResource.put(Constants.WEATHER, R.drawable.weather);
     }
     
     private static final Map<String, Class<? extends Activity>> IMPLEMENTED_JSON_VIEWS = 
