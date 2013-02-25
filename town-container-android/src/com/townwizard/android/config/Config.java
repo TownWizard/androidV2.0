@@ -12,7 +12,7 @@ import com.townwizard.android.partner.Partner;
 
 public final class Config extends Application {
     
-    public static final String CONTAINER_SITE="http://www.townwizardcontainerapp.com";
+    public static final String CONTAINER_SITE="http://www.townwizardcontainerapptest.com";
     public static final String PARTNER_API=CONTAINER_SITE+"/apiv30/partner/";
     public static final String SECTION_API=CONTAINER_SITE+"/apiv30/section/partner/";
     public static final String DEFAULT_ABOUT_US_URI = "components/com_shines_v2.1/iphone-about.php";
