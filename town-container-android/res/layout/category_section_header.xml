@@ -8,7 +8,7 @@
         android:id="@+id/category_section_title"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:textColor="@android:color/black"
+        android:textColor="#cccccc"
         android:textSize="@dimen/text_size_medium"
         android:background="@android:color/white"  
         android:paddingLeft="10dp"
