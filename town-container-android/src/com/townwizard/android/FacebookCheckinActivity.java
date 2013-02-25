@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -98,12 +99,18 @@ public class FacebookCheckinActivity extends FacebookActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
-                        finish();
+                        goBackToPlaces();
                     }
                 });
-                alertDialog.show();
+                alertDialog.show();                
             }
         }
+    }
+    
+    private void goBackToPlaces() {
+        Intent web = new Intent(this, WebActivity.class);
+        web.putExtra(Constants.OVERRIDE_TRANSITION, true);
+        startActivity(web);
     }
     
     private void showFriends() {
