@@ -15,18 +15,6 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/empty" />
 
-        <ImageView            
-            android:layout_alignBottom="@+id/iv_categories_header"
-            android:layout_alignParentRight="true"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/powered_by_tw"
-            android:scaleType="fitXY"
-            android:drawingCacheQuality="high"
-            android:contentDescription="@string/empty" />
-
     </RelativeLayout>
 
     <LinearLayout

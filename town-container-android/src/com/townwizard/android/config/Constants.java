@@ -17,6 +17,10 @@ public class Constants {
     public static final String HOME = "Home";
     public static final String RESTAURANTS = "Restaurants";
     public static final String PLACES = "Places";
+    public static final String HELP_AND_SUPPORT = "Help & Support";
+    public static final String ADVERTISE_WITH_US = "Advertise with Us";
+    public static final String CONTACT_US = "Contact Us";
+    public static final String POWERED_BY_TW = "powered by townwizard";
 
     // UI strings
     public static final String CHECK_IN = "CHECK IN";

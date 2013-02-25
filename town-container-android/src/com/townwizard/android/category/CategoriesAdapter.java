@@ -168,14 +168,14 @@ public class CategoriesAdapter extends BaseAdapter {
     private static final Map<String, CategorySection> CATEGORY_TO_SECTION = 
             new HashMap<String, CategorySection>();
     static {        
-        CATEGORY_TO_SECTION.put("Help & Support", CategorySection.HELP);
-        CATEGORY_TO_SECTION.put("Advertise with Us", CategorySection.HELP);
+        CATEGORY_TO_SECTION.put(Constants.HELP_AND_SUPPORT, CategorySection.HELP);
+        CATEGORY_TO_SECTION.put(Constants.ADVERTISE_WITH_US, CategorySection.HELP);
         CATEGORY_TO_SECTION.put(Constants.ABOUT_US, CategorySection.HELP);
-        CATEGORY_TO_SECTION.put("Contact Us", CategorySection.HELP);
+        CATEGORY_TO_SECTION.put(Constants.CONTACT_US, CategorySection.HELP);
     }
 
     private static enum CategorySection {
-        GENERAL ("Sections"),
+        GENERAL (Constants.POWERED_BY_TW),
         HELP ("");        
         
         private final String name;
