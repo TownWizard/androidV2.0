@@ -6,8 +6,8 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Display;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public final class Utils {
@@ -48,9 +48,9 @@ public final class Utils {
         }
     }
     
-    public static void hideScreenKeyboard(EditText et, Context activity) {        
+    public static void hideScreenKeyboard(View input, Context activity) {        
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
     }
 
 }

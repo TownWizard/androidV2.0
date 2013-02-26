@@ -6,13 +6,16 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -59,11 +62,8 @@ public class FacebookCheckinActivity extends FacebookActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(!hasFocus && friendsAdapter != null) {
-                    EditText view = (EditText)v;
-                    //Utils.hideScreenKeyboard(view, FacebookCheckinActivity.this);
-                    String searchTxt = view.getText().toString();
-                    searchTxt = searchTxt.length() > 0 ? searchTxt : null;
-                    friendsAdapter.filterFriends(searchTxt);
+                    Utils.hideScreenKeyboard(v, FacebookCheckinActivity.this);
+                    filterFriends(v);
                 }
             }
             
@@ -75,6 +75,24 @@ public class FacebookCheckinActivity extends FacebookActivity {
         }
     }
     
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        View searchFriendsView = findViewById(R.id.search_friends);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm.isActive(searchFriendsView)) {
+            Utils.hideScreenKeyboard(searchFriendsView, FacebookCheckinActivity.this);
+            filterFriends(searchFriendsView);
+            searchFriendsView.clearFocus();
+        }
+        return true;
+    }
+
+    private void filterFriends(View input) {
+        EditText view = (EditText)input;
+        String searchTxt = view.getText().toString();
+        searchTxt = searchTxt.length() > 0 ? searchTxt : null;
+        friendsAdapter.filterFriends(searchTxt);        
+    }
     
     private void postCheckin(String placeId, String msg, List<FacebookFriend> taggedFriends) {
         String message = (msg != null) ? msg.trim() : "";
