@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,14 +26,14 @@ import com.townwizard.android.partner.SearchPartners;
 import com.townwizard.android.utils.CurrentLocation;
 import com.townwizard.android.utils.Utils;
 
+/**
+ * Activity for searching partners by name and displaying them in a list
+ */
 public class TownWizardActivity extends ListActivity {
-    
-    private ImageButton mSearchButton;
-    private ImageButton mClearButton;
+
     private PartnersAdapter mListAdapter;
     private EditText mInputEditText;
     private int mOffset = 0;
-    private View.OnClickListener mOnClickListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,27 +44,25 @@ public class TownWizardActivity extends ListActivity {
         mListAdapter = new PartnersAdapter(getApplicationContext(), R.id.name);
         setListAdapter(mListAdapter);
 
-        mInputEditText = (EditText) findViewById(R.id.et_input);
-        mSearchButton = (ImageButton) findViewById(R.id.bt_search);        
-        mClearButton = (ImageButton) findViewById(R.id.bt_clear_edittext);
-        ImageButton searchButton = (ImageButton) findViewById(R.id.search_button);
-        mClearButton.setVisibility(View.INVISIBLE);
+        mInputEditText = (EditText) findViewById(R.id.search_text_input);
+        final ImageButton goButton = (ImageButton) findViewById(R.id.go_button);
+        final ImageButton clearButton = (ImageButton) findViewById(R.id.clear_text_button);
+        final ImageButton searchButton = (ImageButton) findViewById(R.id.search_button);
+        clearButton.setVisibility(View.INVISIBLE);
         
-
-        mOnClickListener = new View.OnClickListener() {
-
+        OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.bt_search: {
+                    case R.id.go_button: {
                         mListAdapter.clearSearchList();
                         mOffset = 0;
                         executeSearch();
                         break;
                     }
-                    case R.id.bt_clear_edittext: {
+                    case R.id.clear_text_button: {
                         mInputEditText.setText("");
-                        mClearButton.setVisibility(View.INVISIBLE);
+                        clearButton.setVisibility(View.INVISIBLE);
                         Utils.hideScreenKeyboard(mInputEditText, TownWizardActivity.this);
                         break;
                     }
@@ -78,8 +77,8 @@ public class TownWizardActivity extends ListActivity {
             }
         };
 
-        mSearchButton.setOnClickListener(mOnClickListener);        
-        mClearButton.setOnClickListener(mOnClickListener);
+        goButton.setOnClickListener(mOnClickListener);        
+        clearButton.setOnClickListener(mOnClickListener);
         searchButton.setOnClickListener(mOnClickListener);
 
         mInputEditText.addTextChangedListener(new TextWatcher() {
@@ -87,9 +86,9 @@ public class TownWizardActivity extends ListActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    mClearButton.setVisibility(View.VISIBLE);
+                    clearButton.setVisibility(View.VISIBLE);
                 } else {
-                    mClearButton.setVisibility(View.INVISIBLE);
+                    clearButton.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -141,8 +140,9 @@ public class TownWizardActivity extends ListActivity {
             searchRequest = "q=" + mInputEditText.getText().toString();
 
         }
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mInputEditText.getWindowToken(), 0);
+        
+        Utils.hideScreenKeyboard(mInputEditText, this);
+
         String[] params = { searchRequest, Integer.toString(mOffset) };
         try {
             mOffset = new SearchPartners(this, mListAdapter).execute(params).get();

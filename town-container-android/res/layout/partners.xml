@@ -44,7 +44,7 @@
                 android:layout_weight=".85">
 
                 <EditText
-                    android:id="@+id/et_input"
+                    android:id="@+id/search_text_input"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/search_bar"
@@ -67,7 +67,7 @@
                     android:contentDescription="@string/empty" />
                     
                 <ImageButton
-                    android:id="@+id/bt_clear_edittext"
+                    android:id="@+id/clear_text_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bt_clear_input_edittext"
@@ -84,7 +84,7 @@
                 android:layout_weight=".15">
                   
               <ImageButton
-                  android:id="@+id/bt_search"
+                  android:id="@+id/go_button"
                   android:layout_width="40dip"
                   android:layout_height="40dip"
                   android:layout_gravity="top|center_horizontal"

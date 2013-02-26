@@ -63,12 +63,10 @@ public class CategoriesActivity extends Activity {
     }
     
     private void buildAboutAndChangeButtons(final CategoriesAdapter categoriesAdapter) {
-        final TextView aboutButton = (TextView) findViewById(R.id.button_about);
-        final TextView changeButton = (TextView) findViewById(R.id.button_change);
         OnClickListener listener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v == aboutButton) {
+                if(v.getId() == R.id.button_about) {
                     Config.getConfig(CategoriesActivity.this).setCategory(
                             categoriesAdapter.getAboutUsCategory());
                     startWebActivity();
@@ -77,6 +75,9 @@ public class CategoriesActivity extends Activity {
                 }
             }
         };
+        
+        TextView aboutButton = (TextView) findViewById(R.id.button_about);
+        TextView changeButton = (TextView) findViewById(R.id.button_change);
         aboutButton.setOnClickListener(listener);
         changeButton.setOnClickListener(listener);
     }
