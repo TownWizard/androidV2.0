@@ -36,10 +36,14 @@ public class CategoriesActivity extends Activity {
         Partner partner = config.getPartner();
         
         loadPartnerImage(partner);
-        CategoriesAdapter categoriesAdapter = loadCategories(partner);
+        
+        CategoriesAdapter categoriesAdapter = 
+                CategoriesLoadTask.loadCategories(this, Integer.valueOf(partner.getId()).toString());
+        
         if(isContainerApp) {
             buildAboutAndChangeButtons(categoriesAdapter);
         }
+        
         buildCategoriesList(isContainerApp, categoriesAdapter);
     }
     
@@ -56,12 +60,6 @@ public class CategoriesActivity extends Activity {
                 }                
             }.execute(Config.CONTAINER_SITE + imageUrl);
         }
-    }
-    
-    private CategoriesAdapter loadCategories(Partner partner) {
-        CategoriesLoadTask categoryLoader = new CategoriesLoadTask(this);
-        categoryLoader.execute(new String[]{Integer.valueOf(partner.getId()).toString()});        
-        return categoryLoader.getCategoriesAdapter();        
     }
     
     private void buildAboutAndChangeButtons(final CategoriesAdapter categoriesAdapter) {

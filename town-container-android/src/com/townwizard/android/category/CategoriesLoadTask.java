@@ -19,15 +19,17 @@ public class CategoriesLoadTask extends AsyncTask<String, Category, Void> {
     private CategoriesAdapter categoriesAdapter;
     private Context context;    
 
-    public CategoriesLoadTask(Context context) {
+    private CategoriesLoadTask(Context context) {
         this.context = context;
         this.categoriesAdapter = new CategoriesAdapter(context);
     }
     
-    public CategoriesAdapter getCategoriesAdapter () {
-        return categoriesAdapter;
+    public static final CategoriesAdapter loadCategories(Context context, String partnerId) {
+        CategoriesLoadTask categoryLoader = new CategoriesLoadTask(context);
+        categoryLoader.execute(new String[]{partnerId});        
+        return categoryLoader.categoriesAdapter;
     }
-
+    
     @Override
     protected void onProgressUpdate(Category ... values) {
     	super.onProgressUpdate(values);

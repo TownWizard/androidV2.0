@@ -116,9 +116,8 @@ public class TownWizardActivity extends ListActivity {
             executeSearch();
         } else {
             if (item.getAndroidAppId().length() == 0) {
-                CategoriesLoadTask categoriesLoader = new CategoriesLoadTask(this);
-                categoriesLoader.execute(new String[] {Integer.valueOf(item.getId()).toString()});
-                CategoriesAdapter categoriesAdapter = categoriesLoader.getCategoriesAdapter();
+                CategoriesAdapter categoriesAdapter = 
+                        CategoriesLoadTask.loadCategories(this, Integer.valueOf(item.getId()).toString());
                 
                 Intent web = new Intent(this, WebActivity.class);
                 Config.getConfig(this).setPartner(item);
