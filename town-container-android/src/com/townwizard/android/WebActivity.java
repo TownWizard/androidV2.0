@@ -34,7 +34,6 @@ public class WebActivity extends Activity {
     private static final String sUpload = "components/com_shines/iuploadphoto.php";
     private String mUrlSite;
     private WebView mWebView;
-    private Button mUploadButton;
     private static final int sCAMERA_RESULT = 1;
     private static final int sGALLERY = 2;
     private static Uri sImagePath;
@@ -52,13 +51,13 @@ public class WebActivity extends Activity {
         mUrlSite = Config.getConfig(this).getPartner().getUrl();        
         Category category = Config.getConfig(this).getCategory();
 
-        if (category.getName().indexOf("Photos") != -1) {
+        if (category.getName().contains(Constants.PHOTOS)) {
             if (isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
                 setContentView(R.layout.web_with_upload);
-                mUploadButton = (Button) findViewById(R.id.bt_upload);
-
-                mUploadButton.setOnClickListener(new View.OnClickListener() {
+                
+                Button uploadButton = (Button) findViewById(R.id.bt_upload);
+                uploadButton.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
@@ -141,7 +140,7 @@ public class WebActivity extends Activity {
         }
     }
 
-    public static boolean isUploadScriptExist(String URLName) {
+    private boolean isUploadScriptExist(String URLName) {
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(URLName).openConnection();
             con.setRequestMethod("HEAD");
