@@ -35,17 +35,40 @@ public class CategoriesActivity extends Activity {
         boolean isContainerApp = config.isContainerApp(); 
         Partner partner = config.getPartner();
         
-        loadPartnerImage(partner);
-        
         CategoriesAdapter categoriesAdapter = 
                 CategoriesLoadTask.loadCategories(this, Integer.valueOf(partner.getId()).toString());
+        
+        buildCategoriesList(isContainerApp, categoriesAdapter);
+        
+        loadPartnerImage(partner);
         
         if(isContainerApp) {
             buildAboutAndChangeButtons(categoriesAdapter);
         }
-        
-        buildCategoriesList(isContainerApp, categoriesAdapter);
     }
+    
+    private void buildCategoriesList(boolean isContainerApp, final CategoriesAdapter categoriesAdapter) {
+        int headerViewId = isContainerApp ? R.layout.category_list_header_c :
+            R.layout.category_list_header_p;        
+        ListView listView = (ListView) findViewById(R.id.category_list);
+        View headerView = LayoutInflater.from(this).inflate(headerViewId, listView, false);
+        listView.addHeaderView(headerView, null, false);
+        listView.setAdapter(categoriesAdapter);
+        listView.setOnItemClickListener(
+            new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Category category = (Category) categoriesAdapter.getItem(position);
+                    Config.getConfig(CategoriesActivity.this).setCategory(category);
+                    if(Category.ViewType.JSON.equals(category.getViewType())) {
+                        startJsonActivity(category);
+                    } else {
+                        startWebActivity();
+                    }
+                }
+            }
+        );
+    }    
     
     private void loadPartnerImage(Partner partner) {
         String imageUrl = partner.getImageUrl();
@@ -80,29 +103,6 @@ public class CategoriesActivity extends Activity {
         TextView changeButton = (TextView) findViewById(R.id.button_change);
         aboutButton.setOnClickListener(listener);
         changeButton.setOnClickListener(listener);
-    }
-    
-    private void buildCategoriesList(boolean isContainerApp, final CategoriesAdapter categoriesAdapter) {
-        int headerViewId = isContainerApp ? R.layout.category_list_header_c :
-            R.layout.category_list_header_p;        
-        ListView listView = (ListView) findViewById(R.id.category_list);
-        View headerView = LayoutInflater.from(this).inflate(headerViewId, listView, false);
-        listView.addHeaderView(headerView, null, false);
-        listView.setAdapter(categoriesAdapter);
-        listView.setOnItemClickListener(
-            new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Category category = (Category) categoriesAdapter.getItem(position);
-                    Config.getConfig(CategoriesActivity.this).setCategory(category);
-                    if(Category.ViewType.JSON.equals(category.getViewType())) {
-                        startJsonActivity(category);
-                    } else {
-                        startWebActivity();
-                    }
-                }
-            }
-        );
     }
 
     private void startWebActivity() {
