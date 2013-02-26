@@ -1,2 +1,2 @@
-androidV2.0
+TownWizard Android Application v2.0
 ===========

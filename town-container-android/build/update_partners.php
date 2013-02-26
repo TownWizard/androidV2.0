@@ -2,7 +2,7 @@
 
 <?php
 
-define("PARTNERS_SITE", 'http://www.townwizardcontainerapp.com/apiv21/partner');
+define("PARTNERS_SITE", 'http://www.townwizardcontainerapp.com/apiv30/partner');
 define("PARTNERS_FILE", 'partners/partners.json');
 define("MAX_PARTNER_ID", 130);
 

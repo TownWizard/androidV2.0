@@ -11,7 +11,8 @@ define("SRC_DIR_BKP", '_src');
 $resources = array(
 		'AndroidManifest.xml',
 		'assets/params.txt',
-		'res/values/strings.xml'
+		'res/values/strings.xml',
+		'res/layout/header_fragment.xml'
 );
 
 function loadPartners() {

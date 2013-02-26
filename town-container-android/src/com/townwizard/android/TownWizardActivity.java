@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,21 +19,21 @@ import android.widget.ListView;
 
 import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.CategoriesLoadTask;
-import com.townwizard.android.config.Constants;
+import com.townwizard.android.config.Config;
 import com.townwizard.android.partner.Partner;
 import com.townwizard.android.partner.PartnersAdapter;
 import com.townwizard.android.partner.SearchPartners;
 import com.townwizard.android.utils.CurrentLocation;
+import com.townwizard.android.utils.Utils;
 
+/**
+ * Activity for searching partners by name and displaying them in a list
+ */
 public class TownWizardActivity extends ListActivity {
-    /** Called when the activity is first created. */
-    private ImageButton mSearchButton;
-    
-    private ImageButton mClearButton;
+
     private PartnersAdapter mListAdapter;
     private EditText mInputEditText;
     private int mOffset = 0;
-    private View.OnClickListener mOnClickListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,27 +44,26 @@ public class TownWizardActivity extends ListActivity {
         mListAdapter = new PartnersAdapter(getApplicationContext(), R.id.name);
         setListAdapter(mListAdapter);
 
-        mInputEditText = (EditText) findViewById(R.id.et_input);
-        mSearchButton = (ImageButton) findViewById(R.id.bt_search);        
-        mClearButton = (ImageButton) findViewById(R.id.bt_clear_edittext);
-        ImageButton searchButton = (ImageButton) findViewById(R.id.search_button);
-        mClearButton.setVisibility(View.INVISIBLE);
+        mInputEditText = (EditText) findViewById(R.id.search_text_input);
+        final ImageButton goButton = (ImageButton) findViewById(R.id.go_button);
+        final ImageButton clearButton = (ImageButton) findViewById(R.id.clear_text_button);
+        final ImageButton searchButton = (ImageButton) findViewById(R.id.search_button);
+        clearButton.setVisibility(View.INVISIBLE);
         
-
-        mOnClickListener = new View.OnClickListener() {
-
+        OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.bt_search: {
+                    case R.id.go_button: {
                         mListAdapter.clearSearchList();
                         mOffset = 0;
                         executeSearch();
                         break;
                     }
-                    case R.id.bt_clear_edittext: {
+                    case R.id.clear_text_button: {
                         mInputEditText.setText("");
-                        mClearButton.setVisibility(View.INVISIBLE);
+                        clearButton.setVisibility(View.INVISIBLE);
+                        Utils.hideScreenKeyboard(mInputEditText, TownWizardActivity.this);
                         break;
                     }
                     case R.id.search_button: {
@@ -77,8 +77,8 @@ public class TownWizardActivity extends ListActivity {
             }
         };
 
-        mSearchButton.setOnClickListener(mOnClickListener);        
-        mClearButton.setOnClickListener(mOnClickListener);
+        goButton.setOnClickListener(mOnClickListener);        
+        clearButton.setOnClickListener(mOnClickListener);
         searchButton.setOnClickListener(mOnClickListener);
 
         mInputEditText.addTextChangedListener(new TextWatcher() {
@@ -86,9 +86,9 @@ public class TownWizardActivity extends ListActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    mClearButton.setVisibility(View.VISIBLE);
+                    clearButton.setVisibility(View.VISIBLE);
                 } else {
-                    mClearButton.setVisibility(View.INVISIBLE);
+                    clearButton.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -115,18 +115,12 @@ public class TownWizardActivity extends ListActivity {
             executeSearch();
         } else {
             if (item.getAndroidAppId().length() == 0) {
-                CategoriesLoadTask categoriesLoader = new CategoriesLoadTask(this);
-                categoriesLoader.execute(new String[] {Integer.valueOf(item.getId()).toString()});
-                CategoriesAdapter categoriesAdapter = categoriesLoader.getCategoriesAdapter();
+                CategoriesAdapter categoriesAdapter = 
+                        CategoriesLoadTask.loadCategories(this, Integer.valueOf(item.getId()).toString());
                 
                 Intent web = new Intent(this, WebActivity.class);
-                web.putExtra(Constants.URL_SITE, item.getUrl());
-                String categoryUrl = getFullCategoryUrl(item.getUrl(), categoriesAdapter.getHomeUrl());
-                web.putExtra(Constants.URL_SECTION, categoryUrl);
-                web.putExtra(Constants.CATEGORY_NAME, Constants.HOME);
-                web.putExtra(Constants.PARTNER_NAME, item.getName());
-                web.putExtra(Constants.PARTNER_ID, Integer.valueOf(item.getId()).toString());
-                web.putExtra(Constants.IMAGE_URL, item.getImageUrl());
+                Config.getConfig(this).setPartner(item);
+                Config.getConfig(this).setCategory(categoriesAdapter.getHomeCategory());
                 startActivity(web);
             } else {
                 Intent browseIntent = new Intent(Intent.ACTION_VIEW,
@@ -136,22 +130,19 @@ public class TownWizardActivity extends ListActivity {
         }
     }
     
-    private String getFullCategoryUrl(String siteUrl, String url) {
-        return url.startsWith("http") ? url : siteUrl + url;        
-    }    
-
     public void executeSearch() {
         String searchRequest = null;
         if (mInputEditText.getText().toString().equals("")) {
-            searchRequest = "lat=" + CurrentLocation.sLatitude + "&lon=" + CurrentLocation.sLongitude;
-            Log.d("Latitude", Double.toString(CurrentLocation.sLatitude));
-            Log.d("Longitude", Double.toString(CurrentLocation.sLongitude));
+            searchRequest = "lat=" + CurrentLocation.latitude() + "&lon=" + CurrentLocation.longitude();
+            Log.d("Latitude", Double.toString(CurrentLocation.latitude()));
+            Log.d("Longitude", Double.toString(CurrentLocation.longitude()));
         } else {
             searchRequest = "q=" + mInputEditText.getText().toString();
 
         }
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mInputEditText.getWindowToken(), 0);
+        
+        Utils.hideScreenKeyboard(mInputEditText, this);
+
         String[] params = { searchRequest, Integer.toString(mOffset) };
         try {
             mOffset = new SearchPartners(this, mListAdapter).execute(params).get();

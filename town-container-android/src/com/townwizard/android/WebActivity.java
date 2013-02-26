@@ -1,7 +1,6 @@
 package com.townwizard.android;
 
 import java.io.File;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -19,41 +18,46 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.townwizard.android.category.Category;
+import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.utils.CurrentLocation;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class WebActivity extends Activity {
 
     private static final String sUpload = "components/com_shines/iuploadphoto.php";
     private String mUrlSite;
-    private WebView mWebView;    
-    private TextView mTextView;
-    private Button mUploadButton;
+    private WebView mWebView;
     private static final int sCAMERA_RESULT = 1;
     private static final int sGALLERY = 2;
     private static Uri sImagePath;
+    private Header header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         Bundle extras = getIntent().getExtras();
-        mUrlSite = extras.getString(Constants.URL_SITE);        
-        String categoryName = extras.getString(Constants.CATEGORY_NAME);
-        if (categoryName.indexOf("Photos") != -1) {
+        if(extras != null && extras.getBoolean(Constants.OVERRIDE_TRANSITION)) {
+            overridePendingTransition(R.anim.slide_from_left, R.anim.slide_from_left);
+        }
+
+        mUrlSite = Config.getConfig(this).getPartner().getUrl();        
+        Category category = Config.getConfig(this).getCategory();
+
+        if (category.getName().contains(Constants.PHOTOS)) {
             if (isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
                 setContentView(R.layout.web_with_upload);
-                mUploadButton = (Button) findViewById(R.id.bt_upload);
-
-                mUploadButton.setOnClickListener(new View.OnClickListener() {
+                
+                Button uploadButton = (Button) findViewById(R.id.bt_upload);
+                uploadButton.setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
@@ -86,19 +90,20 @@ public class WebActivity extends Activity {
         } else {
             setContentView(R.layout.web);
         }
+        
+        header = Header.build(this);
+        
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);        
-        mTextView = (TextView) findViewById(R.id.tv_header_web);
-        mTextView.setText(extras.getString(Constants.CATEGORY_NAME));
-        TextView partnerNameView = (TextView) findViewById(R.id.header_partner_name);
-        partnerNameView.setText(extras.getString(Constants.PARTNER_NAME));
+
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
+
         
-        String urlSection = extras.getString(Constants.URL_SECTION);         
-        Log.d("Web Acrivity Url", urlSection);
-        mWebView.loadUrl(urlSection);
+        String categoryUrl = getFullCategoryUrl(category);        
+        Log.d("Category url", categoryUrl);
+        mWebView.loadUrl(categoryUrl);
     }  
 
 
@@ -135,7 +140,7 @@ public class WebActivity extends Activity {
         }
     }
 
-    public static boolean isUploadScriptExist(String URLName) {
+    private boolean isUploadScriptExist(String URLName) {
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(URLName).openConnection();
             con.setRequestMethod("HEAD");
@@ -152,39 +157,35 @@ public class WebActivity extends Activity {
             Log.d("URL", url);
             if (url.startsWith("http")) {
                 view.loadUrl(url);
-            } else {
-                if (url.startsWith("mailto:")) {
-                    mailSend(url);
-                    return true;
-                }
-                if (url.startsWith("tel")) {
-                    Intent dialIntent = new Intent(Intent.ACTION_DIAL,
-                            Uri.parse(url));
-                    startActivity(dialIntent);
-                } else if (url.startsWith("APP30A:")) {
-                    if (url.indexOf("SHOWMAP") != -1) {
-                        showMap(url);
-                    } else if (url.indexOf("FBCHECKIN") != -1) {
-                        facebookCheckin();
-                    }
+            } else if (url.startsWith("mailto:")) {
+                sendMail(url);
+            } else if (url.startsWith("tel")) {
+                Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                startActivity(dialIntent);
+            } else if (url.startsWith("APP30A:")) {
+                if(url.contains("SHOWMAP")) {            
+                    showMap(url);
+                } else if (url.contains("FBCHECKIN")) {
+                    facebookCheckin();
                 }
             }
+            
             return true;
         }
 
         @Override
         public void onPageStarted (WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            drawBackButton();
+            header.drawBackButton(mWebView);
         }
         
         @Override
         public void onPageFinished (WebView view, String url) {
             super.onPageFinished(view, url);
-            drawBackButton();
+            header.drawBackButton(mWebView);
         }        
     }
-
+    
     private void startCameraIntent() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File photo = new File(Environment.getExternalStorageDirectory(),
@@ -203,83 +204,36 @@ public class WebActivity extends Activity {
     }
 
     private void showMap(String url) {
-        String latlong = url.substring("APP30A:SHOWMAP:".length());
-        Log.d("latlong", latlong);
-        String latitude = latlong.substring(0, latlong.indexOf(":"));
-        String longitude = latlong.substring(latlong.indexOf(":") + 1);
-        Intent i = new Intent(WebActivity.this, MapViewActivity.class);
-        i.putExtra(Constants.LATITUDE, latitude);
-        i.putExtra(Constants.LONGITUDE, longitude);
-        i.putExtra(Constants.CATEGORY_NAME, mTextView.getText().toString());
-        startActivity(i);
+        String[] urlParts = url.split(":");
+        if(urlParts.length == 4) {
+            //String latitude = "42.18794250";
+            //String longitude = "-79.83222961";
+            String latitude = urlParts[2];
+            String longitude = urlParts[3];
+            Intent i = new Intent(WebActivity.this, MapViewActivity.class);
+            i.putExtra(Constants.LATITUDE, latitude);
+            i.putExtra(Constants.LONGITUDE, longitude);
+            i.putExtra(Constants.FROM_ACTIVITY, getClass());
+            startActivity(i);
+       }
     }
 
     private void facebookCheckin() {
-        Intent i = new Intent(WebActivity.this, FacebookPlaceActivity.class);
-        i.putExtra(Constants.CATEGORY_NAME, mTextView.getText().toString());
+        Intent i = new Intent(WebActivity.this, FacebookPlacesActivity.class);        
+        i.putExtra(Constants.FROM_ACTIVITY, getClass());
         startActivity(i);
     }
 
-    private void mailSend(String url) {
-        String mt = "mailto:?";
-        String u = url;
-        u = u.substring("mailto:?".length());
-        u = u.replaceAll(":", "%3A");
-        u = u.replaceAll("/", "%2F");
-        u = u.replaceAll(" ", "%20");
-        MailTo mailTo = MailTo.parse(mt + u);
-        Log.d("mailTo", mailTo.toString());
-
+    private void sendMail(String url) {
+        MailTo mailTo = MailTo.parse(url);
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_EMAIL, mailTo.getTo());
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{mailTo.getTo()});
         i.putExtra(Intent.EXTRA_TEXT, mailTo.getBody());
         i.putExtra(Intent.EXTRA_SUBJECT, mailTo.getSubject());
-
         startActivity(i);
     }
-    
-    private void drawBackButton() {
-        LinearLayout backButtonArea = (LinearLayout)findViewById(R.id.header_back_button);
-        backButtonArea.removeAllViews();
-        LayoutInflater inflater = LayoutInflater.from(this);
-        int layout = mWebView.canGoBack() ? R.layout.back_button : R.layout.back_button_root;
-        View backButton = inflater.inflate(layout, backButtonArea, false);
-        backButtonArea.addView(backButton);
-        backButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        goBack();
-                    }
-                }
-        );        
-    }
-    
-    private void goBack() {
-        if(mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
-            Bundle extras = getIntent().getExtras();
-            Serializable klass = extras.getSerializable(Constants.FROM_ACTIVITY);
-            if(CategoriesActivity.class.equals(klass)) {
-                finish();
-            } else {
-                startCategoriesActivity();
-            }
-        }
-    }
-    
-    private void startCategoriesActivity() {
-        Bundle extras = getIntent().getExtras();
-        Intent categories = new Intent(this, CategoriesActivity.class);        
-        categories.putExtra(Constants.PARTNER_ID, extras.getString(Constants.PARTNER_ID));
-        categories.putExtra(Constants.PARTNER_NAME, extras.getString(Constants.PARTNER_NAME));
-        categories.putExtra(Constants.URL, extras.getString(Constants.URL_SITE));
-        categories.putExtra(Constants.IMAGE_URL, extras.getString(Constants.IMAGE_URL));
-        startActivity(categories);
-    }    
-    
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
@@ -288,5 +242,22 @@ public class WebActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    
+    private String getFullCategoryUrl(Category category) {
+        String url = category.getUrl();
+        url = url.startsWith("http") ? url : Config.getConfig(this).getPartner().getUrl() + category.getUrl();
+        
+        String categoryName = category.getName();
+        if(Constants.RESTAURANTS.equals(categoryName) || Constants.PLACES.equals(categoryName)) {            
+            url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
+            url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
+        }
+        
+        return url;
+    }
+    
+    private String addParameterToUrl(String url, String key, String value) {        
+        if(url.contains(("?"))) return url + ("&" + key + "=" + value);
+        return url + ("?" + key + "=" + value);
+    }
 }

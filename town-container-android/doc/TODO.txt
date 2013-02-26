@@ -1,2 +1,4 @@
 position tw logo background on categories screen correctly
-simulate go button pressed state
+simulate go button and post button pressed state
+Hide soft keyboard on focuse out of the friend filter
+Load place images asynchronously

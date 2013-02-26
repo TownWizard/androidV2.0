@@ -8,41 +8,39 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.CategoriesLoadTask;
 import com.townwizard.android.config.Config;
-import com.townwizard.android.config.Constants;
 import com.townwizard.android.partner.Partner;
 import com.townwizard.android.utils.CurrentLocation;
 import com.townwizard.android.utils.ServerConnector;
 
-public class SplashScreen extends Activity{
+/**
+ * Application entry activity.  Shows a splash screen, and starts geolocation, then
+ * redirects to the home page.
+ */
+public class SplashScreen extends Activity {
 
     private Handler handler;
-    private Runnable runnable;
-    private boolean isTownWizard;
-    private Partner partner;
+    private Runnable runnable;    
     private CategoriesAdapter categoriesAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String partnerId = Config.getConfig(this).getPartnerId();
-        isTownWizard = Config.getConfig(this).isContainerApp();
-
-        if (!isTownWizard) {
-            partner = loadPartner(partnerId);
-            CategoriesLoadTask categoriesLoader = new CategoriesLoadTask(this);
-            categoriesLoader.execute(new String[] {partnerId});
-            categoriesAdapter = categoriesLoader.getCategoriesAdapter();
+        setContentView(R.layout.splash);
+        
+        new CurrentLocation(this).getLocation();
+        
+        Config config = Config.getConfig(this);        
+        if (!config.isContainerApp()) {
+            String partnerId = config.getPartnerId();
+            Config.getConfig(this).setPartner(loadPartner(partnerId));
+            categoriesAdapter = CategoriesLoadTask.loadCategories(this, partnerId);
         }
         
-        setContentView(R.layout.splash);
-        new CurrentLocation(this).getLocation();
-
         handler = new Handler();
         runnable = new Runnable() {
             @Override
@@ -65,11 +63,7 @@ public class SplashScreen extends Activity{
     private Partner loadPartner(String partnerId) {
         try {
             URL url = new URL(Config.PARTNER_API + partnerId);
-            Log.d("Search URL = ", url.toString());
-
             String response = ServerConnector.getServerResponse(url);
-            Log.d("JSON = ", response);
-
             JSONObject mMainJsonObject = new JSONObject(response);
             int status = mMainJsonObject.getInt("status");
 
@@ -84,9 +78,7 @@ public class SplashScreen extends Activity{
                     siteUrl += "/";
                 }
                 
-                Partner p = new Partner(name, siteUrl, androidAppId, id, imageUrl);
-                Log.d("partner", p.toString());
-                return p;
+                return new Partner(name, siteUrl, androidAppId, id, imageUrl);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,31 +87,13 @@ public class SplashScreen extends Activity{
     }    
     
     private void startNextActivity() {
-        if (isTownWizard) {
-            startTownWizardActivity();
+        if (Config.getConfig(this).isContainerApp()) {
+            startActivity(new Intent(this, TownWizardActivity.class));
         } else {
-            startWebActivity(categoriesAdapter);
+            Intent web = new Intent(this, WebActivity.class);
+            Config.getConfig(this).setCategory(categoriesAdapter.getHomeCategory());
+            startActivity(web);
         }
         finish();
     }    
-    
-    private void startTownWizardActivity() {        
-        startActivity(new Intent(this, TownWizardActivity.class));        
-    }
-    
-    private void startWebActivity(CategoriesAdapter categoriesAdapter) {
-        Intent web = new Intent(this, WebActivity.class);
-        web.putExtra(Constants.URL_SITE, partner.getUrl());
-        String categoryUrl = getFullCategoryUrl(partner.getUrl(), categoriesAdapter.getHomeUrl());
-        web.putExtra(Constants.URL_SECTION, categoryUrl);
-        web.putExtra(Constants.CATEGORY_NAME, Constants.HOME);
-        web.putExtra(Constants.PARTNER_NAME, partner.getName());
-        web.putExtra(Constants.PARTNER_ID, Integer.valueOf(partner.getId()).toString());
-        web.putExtra(Constants.IMAGE_URL, partner.getImageUrl());
-        startActivity(web);
-    }
-    
-    private String getFullCategoryUrl(String siteUrl, String url) {
-        return url.startsWith("http") ? url : siteUrl + url;        
-    }
 }

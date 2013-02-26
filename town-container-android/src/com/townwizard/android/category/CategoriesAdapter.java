@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.townwizard.android.R;
+import com.townwizard.android.category.Category.ViewType;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 
@@ -100,40 +101,31 @@ public class CategoriesAdapter extends BaseAdapter {
         return getCategoryView((Category)item, convertView, parent);
     }
     
-    public String getAboutUsUrl() {
-        String aboutUsUrl = null;
-        List<Category> helpCategories = categories.get(CategorySection.HELP);
-        if(helpCategories != null) {
-            for(Category c : helpCategories) {
-                if(Constants.ABOUT_US.equals(c.getName())) {
-                    aboutUsUrl = c.getUrl();
-                    break;
-                }
-            }
-        }
-        if(aboutUsUrl == null) {
-            aboutUsUrl = Config.DEFAULT_ABOUT_US_URI;
-        }
-       
-        return aboutUsUrl;
+    public Category getAboutUsCategory() {
+        return getCategoryByName(Constants.ABOUT_US, Config.DEFAULT_ABOUT_US_URI);
     }
     
-    public String getHomeUrl() {
-        String homeUrl = null;
+    public Category getHomeCategory() {
+        return getCategoryByName(Constants.HOME, Config.DEFAULT_HOME_URI);
+    }
+    
+    private Category getCategoryByName(String name, String defaultUrl) {
+        Category category = null;
         List<Category> generalCategories = categories.get(CategorySection.GENERAL);
         if(generalCategories != null) {
             for(Category c : generalCategories) {
-                if(Constants.HOME.equals(c.getName())) {
-                    homeUrl = c.getUrl();
+                if(name.equals(c.getName())) {
+                    category = c;
                     break;
                 }
             }
         }
-        if(homeUrl == null) {
-            homeUrl = Config.DEFAULT_HOME_URI;
-        }
-       
-        return homeUrl;        
+        if(category == null) {
+            if(defaultUrl != null) {
+                category = new Category(null, name, defaultUrl, ViewType.WEB);
+            }
+        }       
+        return category;
     }
     
     private View getSectionView(CategorySection section, View convertView, ViewGroup parent) {
@@ -150,8 +142,8 @@ public class CategoriesAdapter extends BaseAdapter {
     private View getCategoryView(Category category, View convertView, ViewGroup parent) {
         View view = convertView;
         if(view == null) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-            view = inflater.inflate(R.layout.category, parent, false);
+            LayoutInflater inflater = LayoutInflater.from(context);
+                view = inflater.inflate(R.layout.category, parent, false);
         }
         ImageView imageView = (ImageView) view.findViewById(R.id.section_image);
         TextView textView = (TextView) view.findViewById(R.id.section_text);        
@@ -176,14 +168,14 @@ public class CategoriesAdapter extends BaseAdapter {
     private static final Map<String, CategorySection> CATEGORY_TO_SECTION = 
             new HashMap<String, CategorySection>();
     static {        
-        CATEGORY_TO_SECTION.put("Help & Support", CategorySection.HELP);
-        CATEGORY_TO_SECTION.put("Advertise with Us", CategorySection.HELP);
+        CATEGORY_TO_SECTION.put(Constants.HELP_AND_SUPPORT, CategorySection.HELP);
+        CATEGORY_TO_SECTION.put(Constants.ADVERTISE_WITH_US, CategorySection.HELP);
         CATEGORY_TO_SECTION.put(Constants.ABOUT_US, CategorySection.HELP);
-        CATEGORY_TO_SECTION.put("Contact Us", CategorySection.HELP);
+        CATEGORY_TO_SECTION.put(Constants.CONTACT_US, CategorySection.HELP);
     }
 
     private static enum CategorySection {
-        GENERAL ("Sections"),
+        GENERAL (Constants.POWERED_BY_TW),
         HELP ("");        
         
         private final String name;

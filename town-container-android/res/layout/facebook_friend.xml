@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+    
+    <ImageView
+        android:id="@+id/friend_image"
+        android:src="@drawable/fb_generic"
+        android:layout_width="39dp"
+        android:layout_height="39dp"
+        android:contentDescription="@string/empty"
+        android:layout_centerVertical="true" 
+        android:background="@android:color/white"        
+        android:padding="2dp" />
+  
+    <TextView
+        android:id="@+id/friend_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"      
+        android:textColor="#555555" 
+        android:textSize="@dimen/text_size_xlarger"
+        android:textStyle="bold"
+        android:layout_toRightOf="@+id/friend_image"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"/>
+   
+    <ImageView
+        android:id="@+id/friend_selected"
+        android:src="@drawable/plus_button"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/empty" 
+        android:visibility="invisible" />
+        
+</RelativeLayout>
