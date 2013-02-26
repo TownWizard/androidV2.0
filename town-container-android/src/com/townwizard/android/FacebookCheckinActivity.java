@@ -3,14 +3,14 @@ package com.townwizard.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -95,41 +95,63 @@ public class FacebookCheckinActivity extends FacebookActivity {
     }
     
     private void postCheckin(String placeId, String msg, List<FacebookFriend> taggedFriends) {
-        String message = (msg != null) ? msg.trim() : "";
-
-        GraphObject params = GraphObject.Factory.create();
-        params.setProperty("place", placeId);
-        params.setProperty("message", message);
-        if(taggedFriends != null && !taggedFriends.isEmpty()) {
-            params.setProperty("tags", Utils.join(taggedFriends));
-        }
+        final ProgressDialog dialog = ProgressDialog.show(
+                this, null, getResources().getString(R.string.checkin_wait), true);
         
-        Request request = Request.newPostRequest(Session.getActiveSession(), "me/feed", params, null);
-        Response response = Request.executeAndWait(request);
-        if(response.getError() == null) {
-            JSONObject state = response.getGraphObject().getInnerJSONObject();
-            if(state.has("id")) {
-                Resources res = getResources();
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                alertDialog.setTitle(res.getString(R.string.check_in));
-                alertDialog.setMessage(res.getString(R.string.checkin_success));
-                alertDialog.setPositiveButton(res.getString(R.string.cont), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        goBackToPlaces();
-                    }
-                });
-                alertDialog.show();                
+        String tags = (taggedFriends != null && !taggedFriends.isEmpty()) ? Utils.join(taggedFriends) : "";
+
+        new AsyncTask<String, Void, Response>() {            
+            @Override
+            protected Response doInBackground(String... prms) {
+                String placeId = prms[0];
+                String msg = prms[1];
+                String tags = prms[2];                
+                String message = (msg != null) ? msg.trim() : "";                
+                GraphObject params = GraphObject.Factory.create();
+                params.setProperty("place", placeId);
+                params.setProperty("message", message);
+                params.setProperty("tags", tags);
+                Request request = Request.newPostRequest(Session.getActiveSession(), "me/feed", params, null);
+                Response response = Request.executeAndWait(request);
+                return response;
             }
-        }
-    }
-    
-    private void goBackToPlaces() {
-        Intent web = new Intent(this, WebActivity.class);
-        web.putExtra(Constants.OVERRIDE_TRANSITION, true);
-        startActivity(web);
-    }
+            
+            @Override
+            protected void onPostExecute(Response response) {        
+                dialog.dismiss();
+                boolean success = (response.getError() == null && 
+                        response.getGraphObject().getInnerJSONObject().has("id"));
+                showAlert(success);
+            }
+            
+            private void showAlert(final boolean success) {                
+                Resources res = getResources();
+                String msg = success ? res.getString(R.string.checkin_success) : 
+                    res.getString(R.string.checkin_failure);
+                
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(FacebookCheckinActivity.this);
+                alertDialog.setTitle(res.getString(R.string.check_in));
+                alertDialog.setMessage(msg);
+                alertDialog.setPositiveButton(res.getString(R.string.cont),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                if(success) {
+                                    goBackToPlaces();
+                                }
+                            }
+                        });
+                alertDialog.show();
+            }
+            
+            private void goBackToPlaces() {
+                Intent web = new Intent(FacebookCheckinActivity.this, WebActivity.class);
+                web.putExtra(Constants.OVERRIDE_TRANSITION, true);
+                startActivity(web);
+            }            
+        }.execute(placeId, msg, tags);
+    }    
     
     private void showFriends() {
         friendsAdapter = new FacebookFriendsAdapter(this);

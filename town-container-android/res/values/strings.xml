@@ -25,5 +25,7 @@
     <string name="cont">Continue</string>
     <string name="checkin_confirm">Do you want to check in to</string>
     <string name="checkin_success">You\'ve successfully checked in</string>
+    <string name="checkin_failure">There was a problem with the check in. Please, try again</string>
+    <string name="checkin_wait">Please wait&#8230;</string>
     <string name="empty"></string>
 </resources>
