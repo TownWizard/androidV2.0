@@ -2,9 +2,11 @@ package com.townwizard.android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -16,8 +18,11 @@ import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.partner.Partner;
-import com.townwizard.android.utils.DownloadImageHelper;
+import com.townwizard.android.utils.BitmapDownloaderTask;
 
+/**
+ * Displays the menu (list of categories) screen.
+ */
 public class CategoriesActivity extends Activity {   
     
     @Override
@@ -26,53 +31,64 @@ public class CategoriesActivity extends Activity {
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_from_left);
         setContentView(R.layout.categories);
         
-        ListView listView = (ListView) findViewById(R.id.category_list);
-        LayoutInflater inflater = LayoutInflater.from(this);
+        Config config = Config.getConfig(this);
+        boolean isContainerApp = config.isContainerApp(); 
+        Partner partner = config.getPartner();
         
-        boolean isContainerApp = Config.getConfig(this).isContainerApp(); 
-        
-        int headerViewId = isContainerApp ? R.layout.category_list_header_c :
-            R.layout.category_list_header_p;
-        
-        View headerView = inflater.inflate(headerViewId, listView, false);
-        listView.addHeaderView(headerView, null, false);        
-
-        Partner partner = Config.getConfig(this).getPartner();
+        loadPartnerImage(partner);
+        CategoriesAdapter categoriesAdapter = loadCategories(partner);
+        if(isContainerApp) {
+            buildAboutAndChangeButtons(categoriesAdapter);
+        }
+        buildCategoriesList(isContainerApp, categoriesAdapter);
+    }
+    
+    private void loadPartnerImage(Partner partner) {
         String imageUrl = partner.getImageUrl();
         if (imageUrl.length() > 0) {
-            ImageView iv = (ImageView) findViewById(R.id.iv_categories_header);
-            new DownloadImageHelper(iv).execute(Config.CONTAINER_SITE + imageUrl);
-        }        
-
-        CategoriesLoadTask categoryLoader = new CategoriesLoadTask(this);
-        categoryLoader.execute(new String[]{Integer.valueOf(partner.getId()).toString()});
-        
-        final CategoriesAdapter categoriesAdapter = categoryLoader.getCategoriesAdapter();                
-
-        if(isContainerApp) {
-            TextView aboutButton = (TextView) findViewById(R.id.button_about);
-            aboutButton.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Config.getConfig(CategoriesActivity.this)
-                                .setCategory(categoriesAdapter.getAboutUsCategory());
-                            startWebActivity();
-                        }
+            final ImageView iv = (ImageView) findViewById(R.id.categories_header);
+            new BitmapDownloaderTask() {
+                @Override
+                protected void onPostExecute(Bitmap result) {
+                    if (result != null) {
+                        iv.setImageBitmap(result);                        
                     }
-            );
-            
-            TextView changeButton = (TextView) findViewById(R.id.button_change);
-            changeButton.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            startActivity(new Intent(CategoriesActivity.this, TownWizardActivity.class));
-                        }
-                    }
-            );        
+                }                
+            }.execute(Config.CONTAINER_SITE + imageUrl);
         }
-        
+    }
+    
+    private CategoriesAdapter loadCategories(Partner partner) {
+        CategoriesLoadTask categoryLoader = new CategoriesLoadTask(this);
+        categoryLoader.execute(new String[]{Integer.valueOf(partner.getId()).toString()});        
+        return categoryLoader.getCategoriesAdapter();        
+    }
+    
+    private void buildAboutAndChangeButtons(final CategoriesAdapter categoriesAdapter) {
+        final TextView aboutButton = (TextView) findViewById(R.id.button_about);
+        final TextView changeButton = (TextView) findViewById(R.id.button_change);
+        OnClickListener listener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v == aboutButton) {
+                    Config.getConfig(CategoriesActivity.this).setCategory(
+                            categoriesAdapter.getAboutUsCategory());
+                    startWebActivity();
+                } else {
+                    startActivity(new Intent(CategoriesActivity.this, TownWizardActivity.class));
+                }
+            }
+        };
+        aboutButton.setOnClickListener(listener);
+        changeButton.setOnClickListener(listener);
+    }
+    
+    private void buildCategoriesList(boolean isContainerApp, final CategoriesAdapter categoriesAdapter) {
+        int headerViewId = isContainerApp ? R.layout.category_list_header_c :
+            R.layout.category_list_header_p;        
+        ListView listView = (ListView) findViewById(R.id.category_list);
+        View headerView = LayoutInflater.from(this).inflate(headerViewId, listView, false);
+        listView.addHeaderView(headerView, null, false);
         listView.setAdapter(categoriesAdapter);
         listView.setOnItemClickListener(
             new AdapterView.OnItemClickListener() {
@@ -102,4 +118,5 @@ public class CategoriesActivity extends Activity {
             startActivity(new Intent(this, activityClass));
         }
     }
+
 }
