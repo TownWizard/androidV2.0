@@ -1,5 +1,6 @@
 package com.townwizard.android.config;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -9,6 +10,7 @@ import android.content.Context;
 
 import com.townwizard.android.category.Category;
 import com.townwizard.android.partner.Partner;
+import com.townwizard.android.utils.Utils;
 
 public final class Config extends Application {
     
@@ -25,6 +27,8 @@ public final class Config extends Application {
     
     private static final String GENERIC_PARTNER_ID = "TownWizard";
     private static final String PARAMS_FILE = "params.txt";
+    private static final String PARTNER_CACHE_FILE = "partner";
+    private static final String CATEGORY_CACHE_FILE = "category";
     
     private String partnerId;
     private boolean containerApp;
@@ -52,6 +56,9 @@ public final class Config extends Application {
     }
     
     public Partner getPartner() {
+        if(partner == null) {
+            restoreApplicationData();
+        }
         return partner;
     }
     
@@ -60,12 +67,24 @@ public final class Config extends Application {
     }
     
     public Category getCategory() {
+        if(category == null) {
+            restoreApplicationData();
+        }
         return category;
     }
 
     public void setCategory(Category category) {
         this.category = category;
     }
+    
+    public void cacheApplicationData() {
+        if(partner != null) {
+            Utils.serialize(partner, getPartnerCachFile());
+        }
+        if(category != null) {
+            Utils.serialize(category, getCategoryCachFile());
+        }
+    }    
 
     private String loadPartnerId() {
         InputStream is = null;
@@ -80,5 +99,32 @@ public final class Config extends Application {
             if(is != null) try { is.close(); } catch(IOException e) { e.printStackTrace(); }
         }
         return null;
-    } 
+    }
+    
+    private void restoreApplicationData() {
+        File pFile = getPartnerCachFile();
+        File cFile = getCategoryCachFile();
+        
+        try {
+            if(pFile.exists()) {
+                setPartner((Partner)Utils.deserialize(pFile));
+            }
+            if(cFile.exists()) {
+                setCategory((Category)Utils.deserialize(cFile));
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        pFile.delete();
+        cFile.delete();
+    }
+
+    private File getPartnerCachFile() {        
+        return new File(getCacheDir(), PARTNER_CACHE_FILE);
+    }
+    
+    private File getCategoryCachFile() {
+        return new File(getCacheDir(), CATEGORY_CACHE_FILE);
+    }
 }

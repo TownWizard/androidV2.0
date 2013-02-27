@@ -1,5 +1,10 @@
 package com.townwizard.android.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,6 +56,35 @@ public final class Utils {
     public static void hideScreenKeyboard(View input, Context activity) {        
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+    }
+
+    public static void serialize(Object o, File f) {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(new FileOutputStream(f));
+            out.writeObject(o);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(out != null) {
+                try {out.close();} catch(Exception e) {e.printStackTrace();}
+            }
+        }
+    }
+    
+    public static Object deserialize(File f) {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream(f));
+            return in.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(in != null) {
+                try {in.close();} catch(Exception e) {e.printStackTrace();}
+            }
+        }
+        return null;
     }
 
 }
