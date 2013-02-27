@@ -71,6 +71,8 @@ public class MapViewActivity extends MapActivity {
 
         @Override
         protected boolean onTap(int index) {
+            Config.getConfig(MapViewActivity.this).cacheApplicationData();
+            
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(getDirectionUrl()));
             intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");            
             MapViewActivity.this.startActivity(intent);

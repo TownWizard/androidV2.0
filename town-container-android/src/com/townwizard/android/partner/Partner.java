@@ -1,7 +1,9 @@
 package com.townwizard.android.partner;
 
-public class Partner {
-	
+public class Partner implements java.io.Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private final String name;
 	private final String url;
 	private final String androidAppId;

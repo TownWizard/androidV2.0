@@ -14,8 +14,10 @@ import android.graphics.BitmapFactory;
 import com.townwizard.android.R;
 import com.townwizard.android.config.Constants;
 
-public class Category {
-    
+public class Category implements java.io.Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     public static enum ViewType {
         WEB,
         JSON,
@@ -28,10 +30,10 @@ public class Category {
         }
     }
 	
-    private final Bitmap image;
+    transient private final Bitmap image;
 	private final String name;
 	private final String url;
-	private final ViewType viewType;
+	transient private final ViewType viewType;
 	
     public Category(Bitmap image, String name, String url, ViewType viewType) {
         this.image = image;
