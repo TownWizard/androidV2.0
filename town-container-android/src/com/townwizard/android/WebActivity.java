@@ -19,8 +19,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.WebBackForwardList;
-import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
