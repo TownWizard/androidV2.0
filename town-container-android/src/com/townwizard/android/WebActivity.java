@@ -19,6 +19,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebBackForwardList;
+import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -91,16 +93,15 @@ public class WebActivity extends Activity {
             setContentView(R.layout.web);
         }
         
-        header = Header.build(this);
-        
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);        
 
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
-
         
+        header = Header.build(this, mWebView);
+
         String categoryUrl = getFullCategoryUrl(category);        
         Log.d("Category url", categoryUrl);
         mWebView.loadUrl(categoryUrl);
@@ -139,6 +140,11 @@ public class WebActivity extends Activity {
             }
         }
     }
+    
+    @Override
+    public void onBackPressed() {
+        header.goBack();
+    }
 
     private boolean isUploadScriptExist(String URLName) {
         try {
@@ -176,14 +182,14 @@ public class WebActivity extends Activity {
         @Override
         public void onPageStarted (WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            header.drawBackButton(mWebView);
+            header.drawBackButton();
         }
         
         @Override
         public void onPageFinished (WebView view, String url) {
             super.onPageFinished(view, url);
-            header.drawBackButton(mWebView);
-        }        
+            header.drawBackButton();
+        }
     }
     
     private void startCameraIntent() {
