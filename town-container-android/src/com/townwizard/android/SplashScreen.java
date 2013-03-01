@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.CategoriesLoadTask;
 import com.townwizard.android.config.Config;
@@ -58,6 +59,18 @@ public class SplashScreen extends Activity {
             startNextActivity();
         }
         return true;
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
     
     private Partner loadPartner(String partnerId) {

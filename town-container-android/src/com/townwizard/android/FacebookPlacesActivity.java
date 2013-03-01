@@ -26,6 +26,7 @@ import com.facebook.SessionState;
 import com.facebook.model.GraphMultiResult;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphObjectList;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.facebook.FacebookPlace;
@@ -47,6 +48,18 @@ public class FacebookPlacesActivity extends FacebookActivity {
         if(session.isOpened()) {
             showPlaces();
         }
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
    
     private void showPlaces() {

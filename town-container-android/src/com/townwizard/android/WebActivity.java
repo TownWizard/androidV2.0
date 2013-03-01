@@ -23,6 +23,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
@@ -103,7 +104,19 @@ public class WebActivity extends Activity {
         String categoryUrl = getFullCategoryUrl(category);        
         Log.d("Category url", categoryUrl);
         mWebView.loadUrl(categoryUrl);
-    }  
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
 
 
     @Override

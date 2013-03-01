@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.R;
 import com.townwizard.android.config.Constants;
 
@@ -90,6 +91,18 @@ public class UploadPhotoActivity extends Activity {
             mCancelButton.setOnClickListener(mOnClickListener);
             mUploadButton.setOnClickListener(mOnClickListener);
         }
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
 
     private void uploadPhoto() {
