@@ -1,5 +1,7 @@
 package com.townwizard.android;
 
+import java.util.Stack;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,9 +16,10 @@ import com.townwizard.android.config.Constants;
 
 public class Header {
     
+    private View headerView;
     private Activity activity;
     private WebView webView;
-    private View headerView;
+    private Stack<String> webViewBreadCrumb;
 
     public static final Header build(Activity activity) {
         return build(activity, null);
@@ -28,7 +31,11 @@ public class Header {
     
     private Header(Activity activity, WebView webView) {
         this.activity = activity;
-        this.webView = webView;
+        if(webView != null) {
+            this.webView = webView;
+            webViewBreadCrumb = new Stack<String>();
+        }
+        
         build();
     }
     
@@ -62,12 +69,8 @@ public class Header {
     }
     
     public void goBack() {
-        if(webView != null && webView.canGoBack()) {
-            if(Constants.VIDEOS.equals(Config.getConfig(activity).getCategory().getName())) {
-                goBackToVideos();
-            } else {
-                webView.goBack();
-            }
+        if(webView != null && canWebViewGoBack()) {
+            webView.loadUrl(webViewBreadCrumb.pop());
         } else {
             if(getFromActivityClass() != null) {
                 activity.finish();
@@ -75,11 +78,27 @@ public class Header {
                 startCategoriesActivity(activity);
             }
         }
-    }    
+    }
+    
+    public void addToBreadCrumb(String currentUrl, String nextUrl) {
+        if(validForBreadCrumb(nextUrl)) {
+            if(!webViewBreadCrumb.contains(currentUrl)) {
+                webViewBreadCrumb.push(currentUrl);
+            }
+        }
+    }
+    
+    private boolean canWebViewGoBack() {
+        return !webViewBreadCrumb.isEmpty();
+    }
+    
+    private boolean validForBreadCrumb(String url) {
+        return !url.contains(Constants.TW_DB_API);
+    }
     
     private int getBackButtonLayout() {
         if(webView != null) {
-            return (webView.canGoBack() ? R.layout.back_button : R.layout.back_button_root);
+            return (canWebViewGoBack() ? R.layout.back_button : R.layout.back_button_root);
         }
         String activityClassName = activity.getClass().getName(); 
         return (activityClassName.contains("Facebook") || activityClassName.contains("MapView")) ?
@@ -97,11 +116,5 @@ public class Header {
     
     private void startCategoriesActivity(Activity activity) {
         activity.startActivity(new Intent(activity, CategoriesActivity.class));
-    }
-    
-    private void goBackToVideos() {
-        Intent web = new Intent(activity, WebActivity.class);
-        web.putExtra(Constants.OVERRIDE_TRANSITION, true);
-        activity.startActivity(web);
-    }
+    }    
 }

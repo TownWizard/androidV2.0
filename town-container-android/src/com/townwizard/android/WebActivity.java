@@ -157,9 +157,9 @@ public class WebActivity extends Activity {
 
     private class TownWizardWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.d("URL", url);
-            if (url.startsWith("http")) {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {            
+            if (url.startsWith("http")) {                
+                header.addToBreadCrumb(view.getUrl(), url);                
                 view.loadUrl(url);
             } else if (url.startsWith("mailto:")) {
                 sendMail(url);
@@ -180,13 +180,14 @@ public class WebActivity extends Activity {
         @Override
         public void onPageStarted (WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+            view.clearHistory();
             header.drawBackButton();
         }
         
         @Override
         public void onPageFinished (WebView view, String url) {
             super.onPageFinished(view, url);
-            header.drawBackButton();
+            header.drawBackButton();            
         }
     }
     
