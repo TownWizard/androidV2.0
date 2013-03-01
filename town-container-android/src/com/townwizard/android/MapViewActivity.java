@@ -47,25 +47,18 @@ public class MapViewActivity extends MapActivity {
         mapView.invalidate();
     }
     
-    
     @Override
     public void onStart() {
         super.onStart();
         if(CurrentLocation.location() == null) {
             new CurrentLocation(this).getLocation();
         }
+        EasyTracker.getInstance().activityStart(this);
     }
 
-    
     @Override
     protected boolean isRouteDisplayed() {
         return false;
-    }
-    
-    @Override
-    public void onStart() {
-        super.onStart();
-        EasyTracker.getInstance().activityStart(this);
     }
     
     @Override
