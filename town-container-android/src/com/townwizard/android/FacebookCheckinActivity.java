@@ -27,6 +27,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.facebook.FacebookFriend;
 import com.townwizard.android.facebook.FacebookFriendsAdapter;
@@ -73,6 +74,18 @@ public class FacebookCheckinActivity extends FacebookActivity {
         if(session.isOpened()) {
             showFriends();
         }
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
     
     @Override
