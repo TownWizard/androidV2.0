@@ -42,32 +42,24 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
 	int offset = Integer.parseInt(params[1]);
 	try {
 	    mUrl = new URL(Config.PARTNER_API + "?" + searchRequest + OFFSET + offset);
-	    Log.d("Search URL = ", mUrl.toString());
+	    Log.d("Partner search URL = ", mUrl.toString());
 	} catch (MalformedURLException e) {
 	    e.printStackTrace();
 	}
 	try {
 	    String response = ServerConnector.getServerResponse(mUrl);
-	    Log.d("JSON = ", response);
-
 	    JSONObject mMainJsonObject = new JSONObject(response);
 	    mStatus = mMainJsonObject.getInt("status");
 
 	    if (mStatus == 1) {
-		Log.d("mOffset", Integer.toString(offset));
-
 		JSONArray jsArr = mMainJsonObject.getJSONArray("data");
 		for (int i = 0; i < jsArr.length(); i++) {
 		    JSONObject jsObject = jsArr.getJSONObject(i);
-		    // Log.d("JSONd in array = ", jsObject.toString());
 		    int partnerId = jsObject.getInt("id");
 		    String name = jsObject.getString("name");
 		    String url = jsObject.getString("website_url");
 		    String androidAppId = jsObject.getString("android_app_id");
 		    String imageUrl = jsObject.getString("image");
-		    Log.d("partner_id", Integer.toString(partnerId));
-		    Log.d("name", name);
-		    Log.d("url", url);
 
 		    if (url.charAt(url.length() - 1) != '/') {
 			url += "/";
