@@ -45,6 +45,15 @@ public class MapViewActivity extends MapActivity {
         mc.setZoom(Config.MAP_ZOOM_DEFAULT);
         mapView.invalidate();
     }
+    
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(CurrentLocation.location() == null) {
+            new CurrentLocation(this).getLocation();
+        }
+    }
 
     
     @Override

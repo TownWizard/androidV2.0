@@ -91,16 +91,15 @@ public class WebActivity extends Activity {
             setContentView(R.layout.web);
         }
         
-        header = Header.build(this);
-        
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
         mWebView.getSettings().setJavaScriptEnabled(true);        
 
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
-
         
+        header = Header.build(this, mWebView);
+
         String categoryUrl = getFullCategoryUrl(category);        
         Log.d("Category url", categoryUrl);
         mWebView.loadUrl(categoryUrl);
@@ -139,6 +138,11 @@ public class WebActivity extends Activity {
             }
         }
     }
+    
+    @Override
+    public void onBackPressed() {
+        header.goBack();
+    }
 
     private boolean isUploadScriptExist(String URLName) {
         try {
@@ -153,19 +157,21 @@ public class WebActivity extends Activity {
 
     private class TownWizardWebViewClient extends WebViewClient {
         @Override
+        @SuppressLint("DefaultLocale")
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.d("URL", url);
-            if (url.startsWith("http")) {
+            String upperUrl = url.toUpperCase();
+            if (upperUrl.startsWith("HTTP")) {                
+                header.addToBreadCrumb(view.getUrl(), url);                
                 view.loadUrl(url);
-            } else if (url.startsWith("mailto:")) {
+            } else if (upperUrl.startsWith("MAILTO:")) {
                 sendMail(url);
-            } else if (url.startsWith("tel")) {
+            } else if (upperUrl.startsWith("TEL")) {
                 Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                 startActivity(dialIntent);
-            } else if (url.startsWith("APP30A:")) {
-                if(url.contains("SHOWMAP")) {            
+            } else if (upperUrl.startsWith("APP30A:")) {
+                if(upperUrl.contains("SHOWMAP")) {            
                     showMap(url);
-                } else if (url.contains("FBCHECKIN")) {
+                } else if (upperUrl.contains("FBCHECKIN")) {
                     facebookCheckin();
                 }
             }
@@ -176,14 +182,15 @@ public class WebActivity extends Activity {
         @Override
         public void onPageStarted (WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            header.drawBackButton(mWebView);
+            view.clearHistory();
+            header.drawBackButton();
         }
         
         @Override
         public void onPageFinished (WebView view, String url) {
             super.onPageFinished(view, url);
-            header.drawBackButton(mWebView);
-        }        
+            header.drawBackButton();            
+        }
     }
     
     private void startCameraIntent() {

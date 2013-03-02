@@ -49,6 +49,7 @@ public class GetLocationTask extends AsyncTask<Void, String, Void> {
 		mLocationListeners = new ArrayList<GpsNetworkLocationListener>();
 
 		initLocationListeners();
+		Log.d(TAG, "Started init location...");
 	}
 
 	@Override
@@ -100,8 +101,15 @@ public class GetLocationTask extends AsyncTask<Void, String, Void> {
 			Log.e(TAG, "Can not access network provider.", ex);
 		}
 
-		if (!mGpsEnabled && !mNetworkEnabled)
+		if (!mGpsEnabled && !mNetworkEnabled) {
+		    if(!mGpsEnabled) {
+		        Log.d(TAG, "GPS location not enabled");
+		    }
+		    if(!mNetworkEnabled) {
+		        Log.d(TAG, "Network location not enabled");
+		    }
 			return;
+		}
 
 		if (mGpsEnabled) {
 			GpsNetworkLocationListener gpsListener = new GpsNetworkLocationListener();
@@ -135,16 +143,24 @@ public class GetLocationTask extends AsyncTask<Void, String, Void> {
 
 		// if there are both values use the latest one
 		if (gpsLocation != null && networkLocation != null) {
-			if (gpsLocation.getTime() > networkLocation.getTime())
+			if (gpsLocation.getTime() > networkLocation.getTime()) {
 				mLocation = gpsLocation;
-			else
+				Log.d(TAG, "GPS location set");
+			}
+			else {
 				mLocation = networkLocation;
+				Log.d(TAG, "Network location set");
+			}
 		} else if (gpsLocation != null) {
 			mLocation = gpsLocation;
+			Log.d(TAG, "GPS location set");
 		} else if (networkLocation != null) {
 			mLocation = networkLocation;
-		} else
+			Log.d(TAG, "Network location set");
+		} else {
 			mLocation = null;
+			Log.d(TAG, "Location is null");
+		}
 	}
 
 	private class GpsNetworkLocationListener implements LocationListener {

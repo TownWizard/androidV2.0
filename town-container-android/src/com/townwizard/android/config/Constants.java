@@ -24,7 +24,7 @@ public class Constants {
     public static final String PHOTOS = "Photos";
     public static final String WEATHER = "Weather";
     public static final String EVENTS = "Events";
-    //public static final String HELP_AND_SUPPORT = "Help & amp; Support";
     
     public static final String POWERED_BY_TW = "powered by townwizard";
+    public static final String TW_DB_API = "townwizard-db-api";
 }
