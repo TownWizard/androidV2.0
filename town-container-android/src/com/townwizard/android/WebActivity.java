@@ -157,19 +157,21 @@ public class WebActivity extends Activity {
 
     private class TownWizardWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {            
-            if (url.startsWith("http")) {                
+        @SuppressLint("DefaultLocale")
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            String upperUrl = url.toUpperCase();
+            if (upperUrl.startsWith("HTTP")) {                
                 header.addToBreadCrumb(view.getUrl(), url);                
                 view.loadUrl(url);
-            } else if (url.startsWith("mailto:")) {
+            } else if (upperUrl.startsWith("MAILTO:")) {
                 sendMail(url);
-            } else if (url.startsWith("tel")) {
+            } else if (upperUrl.startsWith("TEL")) {
                 Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                 startActivity(dialIntent);
-            } else if (url.startsWith("APP30A:")) {
-                if(url.contains("SHOWMAP")) {            
+            } else if (upperUrl.startsWith("APP30A:")) {
+                if(upperUrl.contains("SHOWMAP")) {            
                     showMap(url);
-                } else if (url.contains("FBCHECKIN")) {
+                } else if (upperUrl.contains("FBCHECKIN")) {
                     facebookCheckin();
                 }
             }
