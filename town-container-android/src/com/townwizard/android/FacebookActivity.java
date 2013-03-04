@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
+import com.facebook.SessionLoginBehavior;
 
 public abstract class FacebookActivity extends Activity {
     
@@ -43,14 +44,17 @@ public abstract class FacebookActivity extends Activity {
         Session.saveSession(session, outState);
     }
     
-    protected Session checkLogin(Bundle savedInstanceState) {
+    protected Session checkLogin(Bundle savedInstanceState, boolean forPublish) {
         Session session = Session.getActiveSession();
         if(session != null && session.isOpened()) return session;
         
-        if (session == null) {
-            if (savedInstanceState != null) {
-                session = Session.restoreSession(this, null, statusCallback, savedInstanceState);
-            }
+        if (session == null) {            
+            session = Session.restoreSession(this, null, statusCallback, savedInstanceState);
+        }
+        
+        if(session != null && session.isClosed()) {
+            session.closeAndClearTokenInformation();
+            session = null;
         }
         
         if (session == null) {
@@ -60,11 +64,15 @@ public abstract class FacebookActivity extends Activity {
         
         if (!session.isOpened()) {
             Session.OpenRequest openRequest = new Session.OpenRequest(this);
-            openRequest.setDefaultAudience(SessionDefaultAudience.FRIENDS);
-            openRequest.setPermissions(Arrays.asList(new String[]{"friends_status", "publish_stream"}));
+            openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
             openRequest.setCallback(statusCallback);
-            //session.openForRead(openRequest);
-            session.openForPublish(openRequest);
+            if(forPublish) {
+                openRequest.setDefaultAudience(SessionDefaultAudience.FRIENDS);
+                openRequest.setPermissions(Arrays.asList(new String[]{"friends_status", "publish_stream"}));
+                session.openForPublish(openRequest);
+            } else {            
+                session.openForRead(openRequest);
+            }
         }
         
         return session;

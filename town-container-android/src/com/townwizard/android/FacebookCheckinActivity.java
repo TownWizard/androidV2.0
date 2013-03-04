@@ -69,7 +69,7 @@ public class FacebookCheckinActivity extends FacebookActivity {
             
         });
         
-        Session session = checkLogin(savedInstanceState);
+        Session session = checkLogin(savedInstanceState, true);
         if(session.isOpened()) {
             showFriends();
         }
