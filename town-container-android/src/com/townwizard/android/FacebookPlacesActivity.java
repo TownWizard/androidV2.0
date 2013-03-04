@@ -43,7 +43,7 @@ public class FacebookPlacesActivity extends FacebookActivity {
         
         Header.build(this);
 
-        Session session = checkLogin(savedInstanceState);
+        Session session = checkLogin(savedInstanceState, false);
         if(session.isOpened()) {
             showPlaces();
         }
