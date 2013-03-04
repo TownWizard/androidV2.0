@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.CategoriesLoadTask;
 import com.townwizard.android.config.Config;
@@ -104,6 +105,18 @@ public class TownWizardActivity extends ListActivity {
         });
         
         executeSearch();
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
 
     @Override
