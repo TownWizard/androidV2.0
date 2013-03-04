@@ -26,5 +26,7 @@ public class Constants {
     public static final String EVENTS = "Events";
     
     public static final String POWERED_BY_TW = "powered by townwizard";
+    
     public static final String TW_DB_API = "townwizard-db-api";
+    public static final String YOUTUBE = "m.youtube.com";
 }
