@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
@@ -46,19 +47,24 @@ public class MapViewActivity extends MapActivity {
         mapView.invalidate();
     }
     
-    
     @Override
     public void onStart() {
         super.onStart();
         if(CurrentLocation.location() == null) {
             new CurrentLocation(this).getLocation();
         }
+        EasyTracker.getInstance().activityStart(this);
     }
 
-    
     @Override
     protected boolean isRouteDisplayed() {
         return false;
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
         
     private class MapItemizedOverlay extends ItemizedOverlay<OverlayItem> {

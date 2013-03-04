@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.CategoriesLoadTask;
 import com.townwizard.android.category.Category;
@@ -45,6 +46,18 @@ public class CategoriesActivity extends Activity {
         if(isContainerApp) {
             buildAboutAndChangeButtons(categoriesAdapter);
         }
+    }
+    
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
     
     private void buildCategoriesList(boolean isContainerApp, final CategoriesAdapter categoriesAdapter) {
