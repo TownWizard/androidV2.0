@@ -1,5 +1,7 @@
 package com.townwizard.android;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import android.app.Activity;
@@ -93,7 +95,10 @@ public class Header {
     }
     
     private boolean validForBreadCrumb(String url) {
-        return !url.contains(Constants.TW_DB_API);
+        for(String s : BREADCRUMB_EXCLUDES) {
+            if(url.contains(s)) return false;
+        }
+        return true;
     }
     
     private int getBackButtonLayout() {
@@ -103,6 +108,12 @@ public class Header {
         String activityClassName = activity.getClass().getName(); 
         return (activityClassName.contains("Facebook") || activityClassName.contains("MapView")) ?
                 R.layout.back_button : R.layout.back_button_root;
+    }
+    
+    private static final List<String> BREADCRUMB_EXCLUDES = new ArrayList<String>();
+    static {
+        BREADCRUMB_EXCLUDES.add(Constants.TW_DB_API);
+        BREADCRUMB_EXCLUDES.add(Constants.YOUTUBE);
     }
     
     @SuppressWarnings("unchecked")
