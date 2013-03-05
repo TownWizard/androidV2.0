@@ -44,19 +44,18 @@ public abstract class FacebookActivity extends Activity {
         Session.saveSession(session, outState);
     }
     
-    protected Session checkLogin(Bundle savedInstanceState, boolean forPublish) {
+    protected Session checkLogin(Bundle savedInstanceState) {
         Session session = Session.getActiveSession();
-        if(session != null && session.isOpened()) return session;
         
         if (session == null) {            
             session = Session.restoreSession(this, null, statusCallback, savedInstanceState);
         }
         
-        if(session != null && session.isClosed()) {
+        if(session != null && (session.isClosed() || session.getPermissions().isEmpty())) {
             session.closeAndClearTokenInformation();
             session = null;
         }
-        
+
         if (session == null) {
             session = new Session(this);
             Session.setActiveSession(session);
@@ -66,16 +65,19 @@ public abstract class FacebookActivity extends Activity {
             Session.OpenRequest openRequest = new Session.OpenRequest(this);
             openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
             openRequest.setCallback(statusCallback);
-            if(forPublish) {
-                openRequest.setDefaultAudience(SessionDefaultAudience.FRIENDS);
-                openRequest.setPermissions(Arrays.asList(new String[]{"friends_status", "publish_stream"}));
-                session.openForPublish(openRequest);
-            } else {            
-                session.openForRead(openRequest);
-            }
+            openRequest.setDefaultAudience(SessionDefaultAudience.FRIENDS);
+            openRequest.setPermissions(Arrays.asList(new String[]{"publish_stream"}));
+            session.openForPublish(openRequest);
         }
         
         return session;
-    }    
+    }
+    
+    protected void clearSession() {
+        Session session = Session.getActiveSession();
+        if(session != null) {
+            session.closeAndClearTokenInformation();
+        }
+    }
 
 }
