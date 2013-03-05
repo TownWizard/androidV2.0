@@ -17,15 +17,14 @@ import android.widget.TextView;
 
 import com.townwizard.android.R;
 
-
 public class FacebookFriendsAdapter extends BaseAdapter {
 
     private Context context;
     private List<FacebookFriend> allFriends = new ArrayList<FacebookFriend>();
     private List<FacebookFriend> friends = new ArrayList<FacebookFriend>();
     
-    public FacebookFriendsAdapter(Context context) {
-        this.context = context;
+    public FacebookFriendsAdapter(Context context) {        
+        this.context = context;        
     }
     
     public void addFriends(List<FacebookFriend> friends) {
@@ -41,9 +40,14 @@ public class FacebookFriendsAdapter extends BaseAdapter {
             }
             
         });
+        
         this.allFriends = friends;
         filterFriends(null);
-        notifyDataSetChanged();
+        notifyDataSetChanged();        
+    }
+    
+    public List<FacebookFriend> getAllFriends () {
+        return allFriends;
     }
     
     @SuppressLint("DefaultLocale")
@@ -85,7 +89,6 @@ public class FacebookFriendsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        
         View view = convertView;
         
         if(view == null) {
@@ -101,12 +104,11 @@ public class FacebookFriendsAdapter extends BaseAdapter {
         nameView.setText(friend.getName());
         if(friend.getImage() != null) {
             imageView.setImageBitmap(friend.getImage());
-        }
-
+        } 
+        
         ImageView plusButton = (ImageView) view.findViewById(R.id.friend_selected);
         plusButton.setVisibility(friend.isSelected() ? View.VISIBLE : View.INVISIBLE);
 
         return view;
     }
-
 }
