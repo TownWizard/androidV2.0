@@ -20,6 +20,7 @@ import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.partner.Partner;
 import com.townwizard.android.utils.BitmapDownloaderTask;
+import com.townwizard.android.utils.Utils;
 
 /**
  * Displays the menu (list of categories) screen.
@@ -91,7 +92,7 @@ public class CategoriesActivity extends Activity {
                 @Override
                 protected void onPostExecute(Bitmap result) {
                     if (result != null) {
-                        iv.setImageBitmap(result);                        
+                        Utils.setScaledToScreenBitmap(iv, result);
                     }
                 }                
             }.execute(Config.CONTAINER_SITE + imageUrl);
