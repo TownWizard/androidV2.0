@@ -10,9 +10,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public final class Utils {
@@ -36,6 +38,20 @@ public final class Utils {
     public static String join(List<?> list) {
         return join(list, null, null);
     }
+    
+    
+    public static void setScaledToScreenBitmap(ImageView v, Bitmap image) {
+        Activity a = (Activity)v.getContext();
+        Display d = a.getWindowManager().getDefaultDisplay();
+        double displayWidth = d.getWidth();
+        double imageWidth = image.getWidth();
+        double imageHeight = image.getHeight();
+        double imageRatio = imageWidth / imageHeight;
+        double scaledViewHeight = displayWidth / imageRatio;
+        Bitmap bm = Bitmap.createScaledBitmap(image, (int)displayWidth, (int)scaledViewHeight, true);
+        v.setImageBitmap(bm);
+    }
+    
     
     public static void eclipsize(TextView v, double percentOfScreenWidth, double fontHeightToWidthRatio) {
         Activity a = (Activity)v.getContext();

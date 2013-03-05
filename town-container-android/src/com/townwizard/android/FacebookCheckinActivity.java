@@ -1,7 +1,12 @@
 package com.townwizard.android;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -10,8 +15,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -31,13 +40,13 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.facebook.FacebookFriend;
 import com.townwizard.android.facebook.FacebookFriendsAdapter;
-import com.townwizard.android.utils.BitmapDownloaderTask;
 import com.townwizard.android.utils.Utils;
 
 public class FacebookCheckinActivity extends FacebookActivity {
     
     private FacebookFriendsAdapter friendsAdapter;
-
+    private static Handler handler;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +83,8 @@ public class FacebookCheckinActivity extends FacebookActivity {
         if(session.isOpened()) {
             showFriends();
         }
+        
+        handler = new FacebookCheckingHandler(friendsAdapter);
     }
     
     @Override
@@ -185,7 +196,7 @@ public class FacebookCheckinActivity extends FacebookActivity {
         );
     }
     
-    private static class FriendListCallback implements Request.GraphUserListCallback {        
+    private class FriendListCallback implements Request.GraphUserListCallback {        
         
         private FacebookFriendsAdapter friendsAdapter;
         
@@ -201,21 +212,51 @@ public class FacebookCheckinActivity extends FacebookActivity {
                     friends.add(FacebookFriend.fromGraphUser(u));
                 }
                 
-                friendsAdapter.addFriends(friends);
+                friendsAdapter.addFriends(friends);                
                 
-                for(final FacebookFriend f : friends) {
-                    new BitmapDownloaderTask() {
-                        @Override
-                        protected void onPostExecute(Bitmap result) {
-                            f.setImage(result);
-                            friendsAdapter.notifyDataSetChanged();
-                        }
-                    }.execute("http://graph.facebook.com/"+f.getId()+"/picture");
-                }
+                ExecutorService imageDownloaders = Executors.newFixedThreadPool(20);
+                
+                for(FacebookFriend f : friendsAdapter.getAllFriends()) {
+                    imageDownloaders.submit(new FriendImageDownloader(f));
+                }                
             }
         }
-    }
+    }  
+    
+    private class FriendImageDownloader implements Runnable {
 
+        private FacebookFriend friend;
+
+        private FriendImageDownloader(FacebookFriend friend) {
+            this.friend = friend;
+        }
+
+        @Override
+        public void run() {
+            Bitmap image = downloadBitmap("http://graph.facebook.com/" + friend.getId() + "/picture");
+            if (image != null) {
+                friend.setImage(image);
+                handler.sendEmptyMessage(0);
+            }
+        }
+
+        private Bitmap downloadBitmap(String urlStr) {
+            InputStream in = null;
+            try {
+                URL url = new URL(urlStr);
+                URLConnection conn = url.openConnection();
+                conn.setUseCaches(true);
+                in = conn.getInputStream();
+                return BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Image download", e.getMessage());
+            } finally {
+                try { if (in != null) in.close(); } catch (Exception e) { e.printStackTrace(); }
+            }
+            return null;
+        }
+    }    
+    
     private class SessionStatusCallback implements Session.StatusCallback {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
@@ -224,4 +265,18 @@ public class FacebookCheckinActivity extends FacebookActivity {
             }
         }
     }
+    
+    private static class FacebookCheckingHandler extends Handler {
+        
+        private FacebookFriendsAdapter friendsAdapter;
+        
+        private FacebookCheckingHandler(FacebookFriendsAdapter friendsAdapter) {
+            this.friendsAdapter = friendsAdapter;
+        }
+
+        @Override
+        public void handleMessage(Message m) {
+            friendsAdapter.notifyDataSetChanged();
+        }        
+    }    
 }
