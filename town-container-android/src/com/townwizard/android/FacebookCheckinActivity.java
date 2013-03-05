@@ -145,6 +145,9 @@ public class FacebookCheckinActivity extends FacebookActivity {
                 dialog.dismiss();
                 boolean success = (response.getError() == null && 
                         response.getGraphObject().getInnerJSONObject().has("id"));
+                if(!success) {
+                    Log.w("Checkin failure", response.toString());
+                }
                 showAlert(success);
             }
             
