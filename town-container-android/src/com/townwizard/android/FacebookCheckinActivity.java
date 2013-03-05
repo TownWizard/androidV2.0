@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.facebook.FacebookRequestError;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -79,7 +80,7 @@ public class FacebookCheckinActivity extends FacebookActivity {
             
         });
         
-        Session session = checkLogin(savedInstanceState, true);
+        Session session = checkLogin(savedInstanceState);
         if(session.isOpened()) {
             showFriends();
         }
@@ -145,26 +146,47 @@ public class FacebookCheckinActivity extends FacebookActivity {
                 dialog.dismiss();
                 boolean success = (response.getError() == null && 
                         response.getGraphObject().getInnerJSONObject().has("id"));
-                if(!success) {
+                
+                if(!success) {                    
                     Log.w("Checkin failure", response.toString());
                 }
-                showAlert(success);
+
+                Resources res = getResources();
+                String message = null;
+                boolean navigateAway = false;
+                if(success) {
+                    message = res.getString(R.string.checkin_success);
+                    navigateAway = true;
+                } else {
+                    FacebookRequestError error = response.getError();
+                    if(error != null) {
+                        String errorMessage = error.getErrorMessage();
+                        if(errorMessage != null) {
+                            message = "Facebook error:\n" + errorMessage;
+                        } else {
+                            message = res.getString(R.string.checkin_failure); 
+                        }
+                    }
+                    if("OAuthException".equals(response.getError().getErrorType())) {
+                        clearSession();
+                        navigateAway = true;
+                    }
+                }
+
+                showAlert(message, navigateAway);
             }
             
-            private void showAlert(final boolean success) {                
+            private void showAlert(final String message, final boolean navigateAway) {
                 Resources res = getResources();
-                String msg = success ? res.getString(R.string.checkin_success) : 
-                    res.getString(R.string.checkin_failure);
-                
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(FacebookCheckinActivity.this);
                 alertDialog.setTitle(res.getString(R.string.check_in));
-                alertDialog.setMessage(msg);
+                alertDialog.setMessage(message);
                 alertDialog.setPositiveButton(res.getString(R.string.cont),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
-                                if(success) {
+                                if(navigateAway) {
                                     goBackToPlaces();
                                 }
                             }
@@ -279,7 +301,9 @@ public class FacebookCheckinActivity extends FacebookActivity {
 
         @Override
         public void handleMessage(Message m) {
-            friendsAdapter.notifyDataSetChanged();
+            if(friendsAdapter != null) {
+                friendsAdapter.notifyDataSetChanged();
+            }
         }        
     }    
 }
