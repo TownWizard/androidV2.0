@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="applicationId">318928931561066</string>
-    <string name="app_name">Town Wizard</string>
+    <string name="app_name">TownWizard</string>
     <string name="enter_ZIP">Enter ZIP or name of town</string>
     <string name="update_your_status">Update your status</string>
     <string name="search_for_friends">Search friends to tag</string>
