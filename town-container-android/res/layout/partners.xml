@@ -6,10 +6,10 @@
     android:background="@color/search_list_bg_color">
 
     <ImageView
+        android:id="@+id/partners_header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:src="@drawable/search_header" 
         android:contentDescription="@string/empty"/>
 
     <LinearLayout
