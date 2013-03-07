@@ -5,6 +5,8 @@ import java.util.concurrent.ExecutionException;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -41,6 +44,10 @@ public class TownWizardActivity extends ListActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.partners);
+        
+        ImageView headerImageView = (ImageView)findViewById(R.id.partners_header);
+        Bitmap headerImage = BitmapFactory.decodeResource(getResources(), R.drawable.search_header);
+        Utils.setScaledToScreenBitmap(headerImageView, headerImage);
 
         mListAdapter = new PartnersAdapter(getApplicationContext(), R.id.name);
         setListAdapter(mListAdapter);
