@@ -43,6 +43,8 @@ public class FacebookPlacesActivity extends FacebookActivity {
         setContentView(R.layout.facebook_places);
         
         Header.build(this);
+        
+        Utils.checkConnectivity(this);
 
         Session session = checkLogin(savedInstanceState);
         if(session.isOpened()) {

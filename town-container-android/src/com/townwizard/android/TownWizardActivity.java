@@ -48,6 +48,8 @@ public class TownWizardActivity extends ListActivity {
         ImageView headerImageView = (ImageView)findViewById(R.id.partners_header);
         Bitmap headerImage = BitmapFactory.decodeResource(getResources(), R.drawable.search_header);
         Utils.setScaledToScreenBitmap(headerImageView, headerImage);
+        
+        Utils.checkConnectivity(this);
 
         mListAdapter = new PartnersAdapter(getApplicationContext(), R.id.name);
         setListAdapter(mListAdapter);
@@ -151,6 +153,7 @@ public class TownWizardActivity extends ListActivity {
     }
     
     public void executeSearch() {
+        if(!Utils.isOnline(this)) return;
         String searchRequest = null;
         if (mInputEditText.getText().toString().equals("")) {
             searchRequest = "lat=" + CurrentLocation.latitude() + "&lon=" + CurrentLocation.longitude();

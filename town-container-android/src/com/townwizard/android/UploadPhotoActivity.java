@@ -12,6 +12,7 @@ import java.net.URL;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.R;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.utils.Utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,6 +49,9 @@ public class UploadPhotoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_view);
+        
+        Utils.checkConnectivity(this);
+        
         mImageView = (ImageView) findViewById(R.id.iv_upload_photo);
         mCancelButton = (Button) findViewById(R.id.bt_cancel_upload);
         mUploadButton = (Button) findViewById(R.id.bt_upload);

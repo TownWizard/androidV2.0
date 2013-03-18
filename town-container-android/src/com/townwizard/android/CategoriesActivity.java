@@ -33,19 +33,23 @@ public class CategoriesActivity extends Activity {
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_from_left);
         setContentView(R.layout.categories);
         
+        Utils.checkConnectivity(this);
+        
         Config config = Config.getConfig(this);
         boolean isContainerApp = config.isContainerApp(); 
         Partner partner = config.getPartner();
         
-        CategoriesAdapter categoriesAdapter = 
-                CategoriesLoadTask.loadCategories(this, Integer.valueOf(partner.getId()).toString());
-        
-        buildCategoriesList(isContainerApp, categoriesAdapter);
-        
-        loadPartnerImage(partner);
-        
-        if(isContainerApp) {
-            buildAboutAndChangeButtons(categoriesAdapter);
+        if(partner != null) {
+            CategoriesAdapter categoriesAdapter = 
+                    CategoriesLoadTask.loadCategories(this, Integer.valueOf(partner.getId()).toString());
+            
+            buildCategoriesList(isContainerApp, categoriesAdapter);
+            
+            loadPartnerImage(partner);
+            
+            if(isContainerApp) {
+                buildAboutAndChangeButtons(categoriesAdapter);
+            }
         }
     }
     
@@ -53,6 +57,7 @@ public class CategoriesActivity extends Activity {
     public void onStart() {
         super.onStart();
         EasyTracker.getInstance().activityStart(this);
+        loadPartnerImage(Config.getConfig(this).getPartner());
     }
     
     @Override
@@ -85,9 +90,13 @@ public class CategoriesActivity extends Activity {
     }    
     
     private void loadPartnerImage(Partner partner) {
+        if(partner == null) return;
+        if(!Utils.isOnline(this)) return;
+        final ImageView iv = (ImageView) findViewById(R.id.categories_header);
+        if(iv.getDrawable() != null) return;
+        
         String imageUrl = partner.getImageUrl();
-        if (imageUrl.length() > 0) {
-            final ImageView iv = (ImageView) findViewById(R.id.categories_header);
+        if (imageUrl.length() > 0) {            
             new BitmapDownloaderTask() {
                 @Override
                 protected void onPostExecute(Bitmap result) {

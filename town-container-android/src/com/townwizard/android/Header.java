@@ -13,8 +13,10 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.partner.Partner;
 
 public class Header {
     
@@ -46,9 +48,15 @@ public class Header {
         View header = rootView.findViewById(R.id.header);
         TextView headerCategoryView = (TextView) header.findViewById(R.id.tv_header_web);
         Config config = Config.getConfig(activity);
-        headerCategoryView.setText(config.getCategory().getName());
+        Category c = config.getCategory();
+        if(c != null) {
+            headerCategoryView.setText(c.getName());
+        }
         TextView headerPartnerView = (TextView) header.findViewById(R.id.header_partner_name);
-        headerPartnerView.setText(config.getPartner().getName());
+        Partner p = config.getPartner();
+        if(p != null) {
+            headerPartnerView.setText(p.getName());
+        }
         headerView = header;
         drawBackButton();
     }

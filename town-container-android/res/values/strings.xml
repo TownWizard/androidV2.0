@@ -27,5 +27,8 @@
     <string name="checkin_success">You\'ve successfully checked in</string>
     <string name="checkin_failure">There was a problem with the check in. Please, try again</string>
     <string name="checkin_wait">Please wait&#8230;</string>
+    <string name="no_connection">No connection available!</string>
+    <string name="please_connect">Please connect to cellular network or Wi-Fi</string>
+    <string name="open_settings">Open settings</string>
     <string name="empty"></string>
 </resources>
