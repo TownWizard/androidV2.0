@@ -55,6 +55,8 @@ public class FacebookCheckinActivity extends FacebookActivity {
         setContentView(R.layout.facebook_checkin);
         
         Header.build(this);
+        
+        Utils.checkConnectivity(this);
 
         ImageButton postButton = (ImageButton) findViewById(R.id.facebook_status_post);
         postButton.setOnClickListener(new View.OnClickListener() {

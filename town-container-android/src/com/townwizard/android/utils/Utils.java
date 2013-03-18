@@ -9,13 +9,21 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.townwizard.android.R;
 
 public final class Utils {
     
@@ -102,5 +110,40 @@ public final class Utils {
         }
         return null;
     }
+    
+    public static boolean checkConnectivity(final Activity activity) {
+        boolean online = isOnline(activity);
+        if(!online) {
+            Resources res = activity.getResources();
+            AlertDialog.Builder myAlertDialog = new AlertDialog.Builder(activity);
+            myAlertDialog.setTitle(res.getString(R.string.no_connection));
+            myAlertDialog.setMessage(res.getString(R.string.please_connect));
+            myAlertDialog.setNegativeButton(res.getString(R.string.open_settings),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            activity.startActivityForResult(
+                                    new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS), 0);
+                        }
+                    });
+            myAlertDialog.setPositiveButton(res.getString(R.string.cancel), 
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int arg1) {
+                            dialog.cancel();
+                        }
+                    });
+            myAlertDialog.show();
+        }
+        return online;
+    }
+    
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm =
+            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
+    }    
 
 }

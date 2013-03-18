@@ -3,13 +3,17 @@ package com.townwizard.android.config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
+
+import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.Context;
 
 import com.townwizard.android.category.Category;
 import com.townwizard.android.partner.Partner;
+import com.townwizard.android.utils.ServerConnector;
 import com.townwizard.android.utils.Utils;
 
 public final class Config extends Application {
@@ -59,6 +63,9 @@ public final class Config extends Application {
         if(partner == null) {
             restoreApplicationData();
         }
+        if(partner == null) {
+            loadPartnerForPartnerApp();
+        }
         return partner;
     }
     
@@ -84,7 +91,35 @@ public final class Config extends Application {
         if(category != null) {
             Utils.serialize(category, getCategoryCachFile());
         }
-    }    
+    }
+    
+    public void loadPartnerForPartnerApp() {
+        if(isContainerApp()) return;
+        if(!Utils.isOnline(getApplicationContext())) return;
+        
+        try {
+            URL url = new URL(Config.PARTNER_API + partnerId);
+            String response = ServerConnector.getServerResponse(url);
+            JSONObject mMainJsonObject = new JSONObject(response);
+            int status = mMainJsonObject.getInt("status");
+
+            if (status == 1) {
+                JSONObject jsObj = mMainJsonObject.getJSONObject("data");
+                int id = jsObj.getInt("id");
+                String name = jsObj.getString("name");                
+                String androidAppId = jsObj.getString("android_app_id");
+                String imageUrl = jsObj.getString("image");
+                String siteUrl = jsObj.getString("website_url");                
+                if (siteUrl.charAt(siteUrl.length() - 1) != '/') {
+                    siteUrl += "/";
+                }
+                
+                setPartner(new Partner(name, siteUrl, androidAppId, id, imageUrl));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private String loadPartnerId() {
         InputStream is = null;
@@ -127,4 +162,5 @@ public final class Config extends Application {
     private File getCategoryCachFile() {
         return new File(getCacheDir(), CATEGORY_CACHE_FILE);
     }
+    
 }

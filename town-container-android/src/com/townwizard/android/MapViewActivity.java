@@ -17,6 +17,7 @@ import com.google.android.maps.OverlayItem;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.utils.CurrentLocation;
+import com.townwizard.android.utils.Utils;
 
 public class MapViewActivity extends MapActivity {
     
@@ -27,6 +28,8 @@ public class MapViewActivity extends MapActivity {
         setContentView(R.layout.map);
         
         Header.build(this);
+        
+        Utils.checkConnectivity(this);
         
         Bundle extras = getIntent().getExtras();
         double latitude = Double.parseDouble(extras.getString(Constants.LATITUDE));        

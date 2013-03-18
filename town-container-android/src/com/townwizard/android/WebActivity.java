@@ -24,10 +24,13 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.townwizard.android.category.CategoriesAdapter;
 import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.partner.Partner;
 import com.townwizard.android.utils.CurrentLocation;
+import com.townwizard.android.utils.Utils;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class WebActivity extends Activity {
@@ -42,24 +45,26 @@ public class WebActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);        
         
         Bundle extras = getIntent().getExtras();
         if(extras != null && extras.getBoolean(Constants.OVERRIDE_TRANSITION)) {
             overridePendingTransition(R.anim.slide_from_left, R.anim.slide_from_left);
         }
-
-        mUrlSite = Config.getConfig(this).getPartner().getUrl();        
+        
+        boolean online = Utils.checkConnectivity(this);
+        Partner partner = Config.getConfig(this).getPartner();
         Category category = Config.getConfig(this).getCategory();
-
-        if (category.getName().contains(Constants.PHOTOS)) {
-            if (isUploadScriptExist(mUrlSite + sUpload)) {
+        boolean contentViewSet = false;
+        
+        if(partner != null && category != null) {
+            mUrlSite = partner.getUrl();
+            if (category.getName().contains(Constants.PHOTOS) && isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
                 setContentView(R.layout.web_with_upload);
-                
+                contentViewSet = true;
                 Button uploadButton = (Button) findViewById(R.id.bt_upload);
-                uploadButton.setOnClickListener(new View.OnClickListener() {
-
+                uploadButton.setOnClickListener(new View.OnClickListener() {        
                     @Override
                     public void onClick(View v) {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(WebActivity.this);
@@ -84,32 +89,43 @@ public class WebActivity extends Activity {
                         alertDialog.show();
                     }
                 });
-            } else {
-                setContentView(R.layout.web);
             }
-
-        } else {
-            setContentView(R.layout.web);
         }
         
+        if(!contentViewSet) {
+            setContentView(R.layout.web);
+        }
+
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.setWebViewClient(new TownWizardWebViewClient());
-        mWebView.getSettings().setJavaScriptEnabled(true);        
-
+        mWebView.getSettings().setJavaScriptEnabled(true);           
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
         
         header = Header.build(this, mWebView);
-
-        String categoryUrl = getFullCategoryUrl(category);        
-        Log.d("Category url", categoryUrl);
-        mWebView.loadUrl(categoryUrl);
+    
+        if(category != null && online) {
+            String categoryUrl = getFullCategoryUrl(category);        
+            Log.d("Category url", categoryUrl);
+            mWebView.loadUrl(categoryUrl);
+        }
     }
     
     @Override
     public void onStart() {
         super.onStart();
         EasyTracker.getInstance().activityStart(this);
+        
+        if(mWebView.getUrl() == null && Utils.isOnline(this)) {
+            Category c = Config.getConfig(this).getCategory();
+            if(c == null) {
+                c = new CategoriesAdapter(this).getHomeCategory();
+            }
+            if(c != null) {
+                String categoryUrl = getFullCategoryUrl(c);
+                mWebView.loadUrl(categoryUrl);
+            }
+        }
     }
     
     @Override
@@ -117,8 +133,7 @@ public class WebActivity extends Activity {
         super.onStop();
         EasyTracker.getInstance().activityStop(this);
     }
-
-
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Intent uploadPhoto = new Intent(this, UploadPhotoActivity.class);
@@ -265,7 +280,12 @@ public class WebActivity extends Activity {
     
     private String getFullCategoryUrl(Category category) {
         String url = category.getUrl();
-        url = url.startsWith("http") ? url : Config.getConfig(this).getPartner().getUrl() + category.getUrl();
+        if(!url.startsWith("http")) {
+            Partner partner = Config.getConfig(this).getPartner();
+            if(partner != null) {
+                url = partner.getUrl() + url;
+            }
+        }
         
         String categoryName = category.getName();
         if(Constants.RESTAURANTS.equals(categoryName) || Constants.PLACES.equals(categoryName)) {            
