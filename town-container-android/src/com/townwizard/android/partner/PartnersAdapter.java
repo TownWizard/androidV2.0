@@ -15,7 +15,7 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 	
     private LayoutInflater layoutInflater;
 
-	public PartnersAdapter(Context context, int textViewResourceId) {
+    public PartnersAdapter(Context context, int textViewResourceId) {
 		super(context, textViewResourceId);
 		layoutInflater = LayoutInflater.from(context);
 	}

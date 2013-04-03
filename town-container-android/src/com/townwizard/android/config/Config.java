@@ -27,7 +27,10 @@ public final class Config extends Application {
     public static final int FB_CHECKIN_DISTANCE_METERS = 2000;
     public static final int FB_CHECKIN_RESULTS_LIMIT = 20;
     public static final int MAP_ZOOM_DEFAULT = 15;
-    public static final boolean IS_DEV = CONTAINER_SITE.contains("test"); 
+    public static final boolean IS_DEV = CONTAINER_SITE.contains("test");
+    
+    public static final String CONTENT_PARTNER_NAME = "TownWizardApps";
+    public static final String CONTENT_PARTNER_DISPLAY = "What's Happening Nearby?";
     
     private static final String GENERIC_PARTNER_ID = "TownWizard";
     private static final String PARAMS_FILE = "params.txt";

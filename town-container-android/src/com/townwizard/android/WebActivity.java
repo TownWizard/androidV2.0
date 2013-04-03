@@ -290,6 +290,7 @@ public class WebActivity extends Activity {
         String categoryName = category.getName();
         if(Constants.RESTAURANTS.equals(categoryName) ||
            Constants.PLACES.equals(categoryName) ||
+           Constants.DIRECTORY.equals(categoryName) ||
            Constants.EVENTS.equals(categoryName)) {            
             url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
             url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
