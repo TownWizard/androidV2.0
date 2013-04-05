@@ -103,6 +103,8 @@
         android:background="@color/search_list_bg_color"        
         android:divider="@drawable/shadow"
         android:dividerHeight="2dip"
-        android:scrollbars="none" >
+        android:scrollbars="none" 
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent">
     </ListView>
 </LinearLayout>

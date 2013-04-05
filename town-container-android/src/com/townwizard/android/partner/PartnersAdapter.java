@@ -32,7 +32,9 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {	        
-	    View view = layoutInflater.inflate(R.layout.partner, null);
+	    View view = position != 0 ? 
+	            layoutInflater.inflate(R.layout.partner, null) :
+	            layoutInflater.inflate(R.layout.partner_first, null);    
 	    
 	    Partner partner = getItem(position);
 	    TextView tv = (TextView) view.findViewById(R.id.name);
