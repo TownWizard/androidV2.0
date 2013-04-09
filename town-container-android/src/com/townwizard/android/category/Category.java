@@ -102,6 +102,7 @@ public class Category implements java.io.Serializable {
     private static Map<String, Integer> categoryToResource = new HashMap<String, Integer>();
     static {
         categoryToResource.put(Constants.HOME, R.drawable.home);
+        categoryToResource.put(Constants.NEWS, R.drawable.home);
         categoryToResource.put(Constants.EVENTS, R.drawable.events);
         categoryToResource.put(Constants.RESTAURANTS, R.drawable.restaurants);
         categoryToResource.put(Constants.PLACES, R.drawable.places);

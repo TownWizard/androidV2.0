@@ -24,9 +24,13 @@ public class CategoriesLoadTask extends AsyncTask<String, Category, Void> {
         this.categoriesAdapter = new CategoriesAdapter(context);
     }
     
-    public static final CategoriesAdapter loadCategories(Context context, String partnerId) {
+    public static final CategoriesAdapter loadCategories(Context context, String partnerId, boolean async) {
         CategoriesLoadTask categoryLoader = new CategoriesLoadTask(context);
-        categoryLoader.execute(new String[]{partnerId});        
+        if(async) {
+            categoryLoader.execute(new String[]{partnerId});
+        } else {
+            categoryLoader.loadCategories(partnerId);
+        }
         return categoryLoader.categoriesAdapter;
     }
     
@@ -38,8 +42,27 @@ public class CategoriesLoadTask extends AsyncTask<String, Category, Void> {
 
     @Override
     protected Void doInBackground(String ... params) {
+        doLoadCategories(params[0], new LoadedCategoryHandler() {
+            @Override
+            public void handleCategory(Category c) {
+                publishProgress(c);
+            }
+        });
+        return null;
+    }
+    
+    private void loadCategories(String partnerId) {
+        doLoadCategories(partnerId, new LoadedCategoryHandler() {
+            @Override
+            public void handleCategory(Category c) {
+                categoriesAdapter.addItem(c);
+            }
+        });        
+    }   
+    
+    private void doLoadCategories(String partnerId, LoadedCategoryHandler handler) {        
         try {
-            String mId = params[0];
+            String mId = partnerId;
             URL url = new URL(Config.SECTION_API + URLEncoder.encode(mId, "UTF-8"));        
             String response = ServerConnector.getServerResponse(url);
 
@@ -55,14 +78,13 @@ public class CategoriesLoadTask extends AsyncTask<String, Category, Void> {
                         String categoryUrl = getCategoryUrl(jsObject);                        
                         String viewType = getViewType(jsObject);
                         Bitmap image = Category.getImageFromResourceByName(context, name);
-                        publishProgress(new Category(image, name, categoryUrl, viewType));
+                        handler.handleCategory(new Category(image, name, categoryUrl, viewType));
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return null;
+        }        
     }
     
     private String getCategoryUrl(JSONObject jsObject) throws JSONException {
@@ -81,6 +103,10 @@ public class CategoriesLoadTask extends AsyncTask<String, Category, Void> {
     
     private String getViewType(JSONObject jsObject) throws JSONException {
         return jsObject.has("android_ui_type") ? jsObject.getString("android_ui_type") : null;
+    }
+    
+    private static interface LoadedCategoryHandler {
+        void handleCategory(Category c);
     }
 
 }
