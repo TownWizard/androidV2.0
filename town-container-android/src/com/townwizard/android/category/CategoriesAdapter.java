@@ -25,7 +25,7 @@ public class CategoriesAdapter extends BaseAdapter {
         
     private Map<CategorySection, List<Category>> categories = 
             new EnumMap<CategorySection, List<Category>>(CategorySection.class);
-    private List<Object> categoryList = new ArrayList<Object>();
+    private List<Object> categoryList = new ArrayList<Object>();    
     
     public CategoriesAdapter(Context context) {
         this.context = context;    
@@ -106,6 +106,12 @@ public class CategoriesAdapter extends BaseAdapter {
     }
     
     public Category getHomeCategory() {
+        for(String cName : new String[]{Constants.HOME, Constants.NEWS, Constants.EVENTS}) {
+            Category c = getCategoryByName(cName, null);
+            if(c != null && c.getName() != null) {
+                return c;
+            }
+        }
         return getCategoryByName(Constants.HOME, Config.DEFAULT_HOME_URI);
     }
     

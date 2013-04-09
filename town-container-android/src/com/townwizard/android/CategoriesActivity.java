@@ -41,7 +41,7 @@ public class CategoriesActivity extends Activity {
         
         if(partner != null) {
             CategoriesAdapter categoriesAdapter = 
-                    CategoriesLoadTask.loadCategories(this, Integer.valueOf(partner.getId()).toString());
+                    CategoriesLoadTask.loadCategories(this, Integer.valueOf(partner.getId()).toString(), true);
             
             buildCategoriesList(isContainerApp, categoriesAdapter);
             

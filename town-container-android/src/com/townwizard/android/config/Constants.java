@@ -15,6 +15,7 @@ public class Constants {
     public static final String VIDEOS = "Videos";
     public static final String ABOUT_US = "About Us";
     public static final String HOME = "Home";
+    public static final String NEWS = "News";
     public static final String RESTAURANTS = "Restaurants";
     public static final String PLACES = "Places";
     public static final String DIRECTORY = "Directory";

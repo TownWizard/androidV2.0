@@ -35,7 +35,7 @@ public class SplashScreen extends Activity {
         
         if (!config.isContainerApp()) {
             if(Utils.isOnline(this)) {
-                categoriesAdapter = CategoriesLoadTask.loadCategories(this, config.getPartnerId());
+                categoriesAdapter = CategoriesLoadTask.loadCategories(this, config.getPartnerId(), true);
             }
         }
         
