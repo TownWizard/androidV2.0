@@ -280,20 +280,32 @@ public class WebActivity extends Activity {
     
     private String getFullCategoryUrl(Category category) {
         String url = category.getUrl();
+        String categoryName = category.getName();
+        Partner partner = Config.getConfig(this).getPartner();
+        
         if(!url.startsWith("http")) {
-            Partner partner = Config.getConfig(this).getPartner();
             if(partner != null) {
                 url = partner.getUrl() + url;
             }
         }
         
-        String categoryName = category.getName();
-        if(Constants.RESTAURANTS.equals(categoryName) ||
-           Constants.PLACES.equals(categoryName) ||
-           Constants.DIRECTORY.equals(categoryName) ||
-           Constants.EVENTS.equals(categoryName)) {            
-            url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
-            url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
+        boolean zipSet = false;
+        if(partner != null && Config.CONTENT_PARTNER_DISPLAY.equals(partner.getName())) {
+            String zip = Config.getConfig(this).getZip();
+            if(zip != null) {
+                url = addParameterToUrl(url, "zip", zip);
+                zipSet = true;
+            }
+        }
+        
+        if(!zipSet) {
+            if(Constants.RESTAURANTS.equals(categoryName) ||
+               Constants.PLACES.equals(categoryName) ||
+               Constants.DIRECTORY.equals(categoryName) ||
+               Constants.EVENTS.equals(categoryName)) {            
+                url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
+                url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
+            }
         }
         
         return url;

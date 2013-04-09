@@ -42,6 +42,7 @@ public final class Config extends Application {
     
     private Partner partner;
     private Category category;
+    private String zip;
         
     public static Config getConfig(Context context) {
         return (Config)context.getApplicationContext();
@@ -85,6 +86,14 @@ public final class Config extends Application {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+    
+    public String getZip() {
+        return zip;
+    }
+    
+    public void setZip(String zip) {
+        this.zip = zip;
     }
     
     public void cacheApplicationData() {

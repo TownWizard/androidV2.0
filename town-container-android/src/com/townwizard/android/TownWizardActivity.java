@@ -1,5 +1,6 @@
 package com.townwizard.android;
 
+
 import java.util.concurrent.ExecutionException;
 
 import android.app.ListActivity;
@@ -11,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -152,29 +152,41 @@ public class TownWizardActivity extends ListActivity {
         }
     }
     
-    public void executeSearch() {
+    private void executeSearch() {
         if(!Utils.isOnline(this)) return;
-        String searchRequest = null;
-        if (mInputEditText.getText().toString().equals("")) {
-            searchRequest = "lat=" + CurrentLocation.latitude() + "&lon=" + CurrentLocation.longitude();
-            Log.d("Latitude", Double.toString(CurrentLocation.latitude()));
-            Log.d("Longitude", Double.toString(CurrentLocation.longitude()));
-        } else {
-            searchRequest = "q=" + mInputEditText.getText().toString();
 
-        }
+        String input = mInputEditText.getText().toString();
+        saveSearchZip(input);
         
+        String searchRequest = null;
+        if (input == null || input.length() == 0) {
+            searchRequest = "lat=" + CurrentLocation.latitude() + "&lon=" + CurrentLocation.longitude();
+        } else {
+            searchRequest = "q=" + input;
+        }
+
         Utils.hideScreenKeyboard(mInputEditText, this);
 
         String[] params = { searchRequest, Integer.toString(mOffset) };
         try {
             mOffset = new SearchPartners(this, mListAdapter).execute(params).get();
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+    
+    private void saveSearchZip(String searchRequest) {
+        if(isZip(searchRequest)) {
+            Config.getConfig(this).setZip(searchRequest.split("-")[0]);
+        } else {
+            Config.getConfig(this).setZip(null);
+        }
+    }
+    
+    private boolean isZip(String s) {
+        return s.matches("^\\d{5}(-\\d{4})?$");
     }
 
 }
