@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,8 +21,11 @@ import android.net.NetworkInfo;
 import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ZoomButtonsController;
 
 import com.townwizard.android.R;
 
@@ -80,6 +84,31 @@ public final class Utils {
     public static void hideScreenKeyboard(View input, Context activity) {        
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+    }
+    
+    public static void makeZoomControlsInvisible(WebView wv) {        
+        boolean controlVisibilitySet = false;
+        //this should work on Android 2.2
+        try {
+            Method m = wv.getClass().getMethod("getZoomButtonsController");
+            ZoomButtonsController zoomControll = (ZoomButtonsController)m.invoke(wv, (Object[])null);
+            zoomControll.getContainer().setVisibility(View.GONE);
+            controlVisibilitySet = true;
+        } catch(Exception e) {
+            //e.printStackTrace();
+            controlVisibilitySet = false;
+        }
+        
+        //and this should work on Android 4
+        if(!controlVisibilitySet) {
+            WebSettings settings = wv.getSettings();
+            try {
+                Method m = settings.getClass().getMethod("setDisplayZoomControls", boolean.class);                
+                m.invoke(settings, new Object[]{false});
+            } catch(Exception e) {
+                //e.printStackTrace();
+            }
+        }        
     }
 
     public static void serialize(Object o, File f) {
