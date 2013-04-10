@@ -101,7 +101,10 @@ public class WebActivity extends Activity {
         mWebView.getSettings().setJavaScriptEnabled(true);           
         mWebView.getSettings().setLoadWithOverviewMode(true);
         mWebView.getSettings().setUseWideViewPort(true);
-        
+        mWebView.getSettings().setSupportZoom(true);
+        mWebView.getSettings().setBuiltInZoomControls(true);
+        Utils.makeZoomControlsInvisible(mWebView);
+
         header = Header.build(this, mWebView);
     
         if(category != null && online) {
