@@ -25,6 +25,10 @@ public class Constants {
     public static final String PHOTOS = "Photos";
     public static final String WEATHER = "Weather";
     public static final String EVENTS = "Events";
+    public static final String FACEBOOK = "Facebook";
+    public static final String GOOGLE_PLUS = "Google +";
+    public static final String TWITTER = "Twitter";
+    public static final String SHOPPING = "Shopping";
     
     public static final String POWERED_BY_TW = "powered by townwizard";
     
