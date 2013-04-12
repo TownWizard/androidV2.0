@@ -102,7 +102,7 @@ public class Category implements java.io.Serializable {
     private static Map<String, Integer> categoryToResource = new HashMap<String, Integer>();
     static {
         categoryToResource.put(Constants.HOME, R.drawable.home);
-        categoryToResource.put(Constants.NEWS, R.drawable.home);
+        categoryToResource.put(Constants.NEWS, R.drawable.news);
         categoryToResource.put(Constants.EVENTS, R.drawable.events);
         categoryToResource.put(Constants.RESTAURANTS, R.drawable.restaurants);
         categoryToResource.put(Constants.PLACES, R.drawable.places);
@@ -113,6 +113,10 @@ public class Category implements java.io.Serializable {
         categoryToResource.put(Constants.ABOUT_US, R.drawable.about);
         categoryToResource.put(Constants.CONTACT_US, R.drawable.contact);
         categoryToResource.put(Constants.WEATHER, R.drawable.weather);
+        categoryToResource.put(Constants.FACEBOOK, R.drawable.facebook);
+        categoryToResource.put(Constants.GOOGLE_PLUS, R.drawable.google_plus);
+        categoryToResource.put(Constants.TWITTER, R.drawable.twitter);
+        categoryToResource.put(Constants.SHOPPING, R.drawable.shopping);
     }
     
     private static final Map<String, Class<? extends Activity>> IMPLEMENTED_JSON_VIEWS = 
