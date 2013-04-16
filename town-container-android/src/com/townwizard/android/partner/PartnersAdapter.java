@@ -32,7 +32,7 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {	        
-	    View view = position != 0 ? 
+	    View view = position > 2 ? 
 	            layoutInflater.inflate(R.layout.partner, null) :
 	            layoutInflater.inflate(R.layout.partner_first, null);    
 	    

@@ -290,7 +290,10 @@ public class WebActivity extends Activity {
         }
         
         boolean zipSet = false;
-        if(partner != null && Config.CONTENT_PARTNER_DISPLAY.equals(partner.getName())) {
+        if(partner != null && (
+                Constants.CONTENT_PARTNER_EVENTS.equals(partner.getName()) ||
+                Constants.CONTENT_PARTNER_PLACES.equals(partner.getName()) ||
+                Constants.CONTENT_PARTNER_RESTAURANTS.equals(partner.getName()))) {
             String zip = Config.getConfig(this).getZip();
             if(zip != null) {
                 url = addParameterToUrl(url, "zip", zip);

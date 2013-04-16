@@ -130,26 +130,30 @@ public class TownWizardActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Partner item = (Partner) getListAdapter().getItem(position);
-
-        if (item.getName().equals("Load more")) {
+        Partner partner = (Partner) getListAdapter().getItem(position);
+        String pName = partner.getName();
+        if (pName.equals("Load more")) {
             mListAdapter.removeItem(mListAdapter.getCount() - 1);
             executeSearch();
         } else {
-            if (item.getAndroidAppId().length() == 0) {
-                CategoriesAdapter categoriesAdapter = 
-                        CategoriesLoadTask.loadCategories(this, Integer.valueOf(item.getId()).toString(), false);
-                
-                Intent web = new Intent(this, WebActivity.class);
-                Config.getConfig(this).setPartner(item);
-                Config.getConfig(this).setCategory(categoriesAdapter.getHomeCategory());
-                startActivity(web);
+            if (partner.getAndroidAppId().length() == 0) {
+                startWebActivityWithHome(partner);
             } else {
                 Intent browseIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://play.google.com/store/apps/details?id=" + item.getAndroidAppId()));
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + partner.getAndroidAppId()));
                 startActivity(browseIntent);
             }
         }
+    }
+    
+    public void startWebActivityWithHome(Partner partner) {
+        CategoriesAdapter categoriesAdapter = 
+                CategoriesLoadTask.loadCategories(this, Integer.valueOf(partner.getId()).toString(), false);
+        
+        Intent web = new Intent(this, WebActivity.class);
+        Config.getConfig(this).setPartner(partner);
+        Config.getConfig(this).setCategory(categoriesAdapter.getHomeCategory());
+        startActivity(web);        
     }
     
     private void executeSearch() {

@@ -30,7 +30,7 @@ public final class Config extends Application {
     public static final boolean IS_DEV = CONTAINER_SITE.contains("test");
     
     public static final String CONTENT_PARTNER_NAME = "TownWizardApps";
-    public static final String CONTENT_PARTNER_DISPLAY = "What's Happening Nearby?";
+    public static final String CONTENT_PARTNER_ZIP_CODE_URL = "twcontent/auto-zip.php";    
     
     private static final String GENERIC_PARTNER_ID = "TownWizard";
     private static final String PARAMS_FILE = "params.txt";

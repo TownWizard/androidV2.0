@@ -1,5 +1,6 @@
 package com.townwizard.android;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -17,6 +18,8 @@ import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.partner.Partner;
+import com.townwizard.android.utils.CurrentLocation;
+import com.townwizard.android.utils.ServerConnector;
 
 public class Header {
     
@@ -52,10 +55,10 @@ public class Header {
         if(c != null) {
             headerCategoryView.setText(c.getName());
         }
-        TextView headerPartnerView = (TextView) header.findViewById(R.id.header_partner_name);
-        Partner p = config.getPartner();
-        if(p != null) {
-            headerPartnerView.setText(p.getName());
+        TextView headerPartnerView = (TextView) header.findViewById(R.id.header_partner_name);        
+        String partnerName = getPartnerName();
+        if(partnerName != null) {
+            headerPartnerView.setText(partnerName);
         }
         headerView = header;
         drawBackButton();
@@ -116,6 +119,59 @@ public class Header {
         String activityClassName = activity.getClass().getName(); 
         return (activityClassName.contains("Facebook") || activityClassName.contains("MapView")) ?
                 R.layout.back_button : R.layout.back_button_root;
+    }
+    
+    private String getPartnerName() {
+        Partner partner = Config.getConfig(activity).getPartner();
+        if(partner != null) {
+            String pName = partner.getName();
+            if(Constants.CONTENT_PARTNER_EVENTS.equals(pName) ||
+               Constants.CONTENT_PARTNER_PLACES.equals(pName) ||
+               Constants.CONTENT_PARTNER_RESTAURANTS.equals(pName)) {
+                String zip = Config.getConfig(activity).getZip();
+                if(zip == null) {
+                    String zipCodeUrl = 
+                            partner.getUrl() +
+                            Config.CONTENT_PARTNER_ZIP_CODE_URL + 
+                            "?lat=" + CurrentLocation.latitude() +
+                            "&lon=" + CurrentLocation.longitude();
+                    try {
+                        String zipFromUrl = ServerConnector.getServerResponse(new URL(zipCodeUrl));
+                        if(zipFromUrl != null && !"".equals(zipFromUrl)) {
+                            Config.getConfig(activity).setZip(zipFromUrl);
+                            zip = zipFromUrl;
+                        }
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                
+                if(zip != null) {
+                    Category c = Config.getConfig(activity).getCategory();
+                    if(c != null) {
+                        String cName = c.getName();
+                        String newPartnerName = null;
+                        if(Constants.EVENTS.equals(cName)) {
+                            newPartnerName = Constants.CONTENT_PARTNER_EVENTS_DISPLAY;
+                        } else if(Constants.RESTAURANTS.equals(cName)) {
+                            newPartnerName = Constants.CONTENT_PARTNER_RESTAURANTS_DISPLAY;
+                        } else if(Constants.DIRECTORY.equals(cName)) {
+                            newPartnerName = Constants.CONTENT_PARTNER_PLACES_DISPLAY;
+                        }
+                        if(newPartnerName != null) {
+                            newPartnerName += " " + zip;
+                            pName = newPartnerName;
+                        }
+                    } else {
+                        pName = Constants.CONTENT_PARTNER_EVENTS;
+                    }
+                } else {
+                    pName = Constants.CONTENT_PARTNER_EVENTS;
+                }
+            }
+            return pName;
+        }
+        return null;
     }
     
     private static final List<String> BREADCRUMB_EXCLUDES = new ArrayList<String>();

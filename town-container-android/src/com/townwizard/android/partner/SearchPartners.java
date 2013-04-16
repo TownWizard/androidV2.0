@@ -9,14 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.townwizard.android.R;
+import com.townwizard.android.TownWizardActivity;
 import com.townwizard.android.config.Config;
+import com.townwizard.android.config.Constants;
 import com.townwizard.android.utils.ServerConnector;
 
 public class SearchPartners extends AsyncTask<String, Partner, Integer> {
@@ -26,9 +24,9 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     
     private int status = 0;
     private PartnersAdapter partnersAdapter;
-    private Context context;
+    private TownWizardActivity context;
 
-    public SearchPartners(Context context, PartnersAdapter partnersAdapter) {
+    public SearchPartners(TownWizardActivity context, PartnersAdapter partnersAdapter) {
     	this.partnersAdapter = partnersAdapter;
     	this.context = context;
     }
@@ -46,12 +44,16 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
         int nextOffset = offset;
         try {
             if(offset == 0) {
-                URL partnerSearchUrl = getTownWizardPartnerUrl();          
+                URL partnerSearchUrl = getTownWizardPartnerUrl();                
                 JSONObject mainJsonObject = getPartnersJson(partnerSearchUrl);
                 List<Partner> partners = convertToPartnerList(mainJsonObject);
                 if(!partners.isEmpty()) {
-                    Partner p = partners.get(0);
-                    publishProgress(new Partner(Config.CONTENT_PARTNER_DISPLAY,
+                    Partner p = partners.get(0);                    
+                    publishProgress(new Partner(Constants.CONTENT_PARTNER_EVENTS,
+                            p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));
+                    publishProgress(new Partner(Constants.CONTENT_PARTNER_RESTAURANTS,
+                            p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));
+                    publishProgress(new Partner(Constants.CONTENT_PARTNER_PLACES,
                             p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));
                 }
                 
@@ -79,6 +81,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
         if (status != STATUS_FOUND) {
+            /*
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
             String title = context.getResources().getString(R.string.whoops);
             String message = context.getResources().getString(R.string.partners_not_found);
@@ -91,6 +94,9 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
                 }
             });
             alertDialog.show();
+            */
+            Partner partner = (Partner) context.getListAdapter().getItem(0);
+            context.startWebActivityWithHome(partner);
         }
     }
     
