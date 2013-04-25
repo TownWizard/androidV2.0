@@ -18,10 +18,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.category.CategoriesAdapter;
@@ -55,6 +58,13 @@ public class WebActivity extends Activity {
         boolean online = Utils.checkConnectivity(this);
         Partner partner = Config.getConfig(this).getPartner();
         Category category = Config.getConfig(this).getCategory();
+        
+        String categoryUrl = null;
+        if(category != null && online) {
+            categoryUrl = getFullCategoryUrl(category);        
+            Log.d("Category url", categoryUrl);            
+        }        
+        
         boolean contentViewSet = false;
         
         if(partner != null && category != null) {
@@ -91,9 +101,25 @@ public class WebActivity extends Activity {
                 });
             }
         }
-        
+
         if(!contentViewSet) {
-            setContentView(R.layout.web);
+            if(categoryUrl != null && categoryUrl.contains(Config.CONTENT_PARTNER_CONTENT_FOLDER)) {
+                setContentView(R.layout.web_with_banner);
+                ImageView ownThisTownBanner = (ImageView)findViewById(R.id.own_this_town);
+                if(ownThisTownBanner != null) {
+                    ownThisTownBanner.setOnTouchListener(new OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Intent i = new Intent(Intent.ACTION_DIAL, null);
+                            i.setData(Uri.parse("tel:" + Config.TOWNWIZARD_PHONE));
+                            startActivity(i);
+                            return true;
+                        }                        
+                    });
+                }
+            } else {
+                setContentView(R.layout.web);
+            }
         }
 
         mWebView = (WebView) findViewById(R.id.webview);
@@ -105,8 +131,6 @@ public class WebActivity extends Activity {
         header = Header.build(this, mWebView);
     
         if(category != null && online) {
-            String categoryUrl = getFullCategoryUrl(category);        
-            Log.d("Category url", categoryUrl);
             mWebView.loadUrl(categoryUrl);
         }
     }

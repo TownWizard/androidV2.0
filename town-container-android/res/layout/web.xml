@@ -5,10 +5,6 @@
     android:orientation="vertical">
 
     <include layout="@layout/header"/>
+    <include layout="@layout/webview"/>
     
-    <WebView
-        android:id="@+id/webview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-
 </LinearLayout>
