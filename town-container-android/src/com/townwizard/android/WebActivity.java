@@ -191,7 +191,9 @@ public class WebActivity extends Activity {
         @SuppressLint("DefaultLocale")
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             String upperUrl = url.toUpperCase();
-            if (upperUrl.startsWith("HTTP")) {                
+            if (upperUrl.contains("YOUTUBE.COM/WATCH")) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); 
+            } else if (upperUrl.startsWith("HTTP")) {            
                 header.addToBreadCrumb(view.getUrl(), url);                
                 view.loadUrl(url);
             } else if (upperUrl.startsWith("MAILTO:")) {
