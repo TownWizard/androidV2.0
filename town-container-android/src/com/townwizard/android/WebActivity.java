@@ -129,10 +129,6 @@ public class WebActivity extends Activity {
         mWebView.getSettings().setUseWideViewPort(true);
         
         header = Header.build(this, mWebView);
-    
-        if(category != null && online) {
-            mWebView.loadUrl(categoryUrl);
-        }
     }
     
     @Override
