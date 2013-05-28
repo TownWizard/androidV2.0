@@ -14,10 +14,12 @@ import android.widget.TextView;
 public class PartnersAdapter extends ArrayAdapter<Partner> {
 	
     private LayoutInflater layoutInflater;
+    private boolean showMagicWands = true;
 
     public PartnersAdapter(Context context, int textViewResourceId) {
 		super(context, textViewResourceId);
 		layoutInflater = LayoutInflater.from(context);
+		
 	}
 
 	public void clearSearchList() {
@@ -29,10 +31,14 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 		remove(getItem(position));
 		notifyDataSetChanged();
 	}
+	
+	public void setShowMagicWands(boolean show) {
+	    showMagicWands = show;
+	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {	        
-	    View view = position > 2 ? 
+	    View view = (position > 2 || !showMagicWands) ? 
 	            layoutInflater.inflate(R.layout.partner, null) :
 	            layoutInflater.inflate(R.layout.partner_first, null);    
 	    

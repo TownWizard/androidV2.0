@@ -40,13 +40,21 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     @Override
     protected Integer doInBackground(String... params) {
         String searchRequest = params[0];
+        boolean isTermSearch = searchRequest.contains("q=");
         int offset = Integer.parseInt(params[1]);
         int nextOffset = offset;
         try {
-            if(offset == 0) {
-                URL partnerSearchUrl = getTownWizardPartnerUrl();                
-                JSONObject mainJsonObject = getPartnersJson(partnerSearchUrl);
-                List<Partner> partners = convertToPartnerList(mainJsonObject);
+            URL partnerSearchUrl = getPartnerSearchUrl(searchRequest, offset);          
+            JSONObject mainJsonObject = getPartnersJson(partnerSearchUrl);
+            status = mainJsonObject.getInt("status");
+            
+            boolean disableMagicWands = (isTermSearch && status == STATUS_FOUND) || (offset > 0);
+            partnersAdapter.setShowMagicWands(!disableMagicWands);
+            
+            if(!disableMagicWands) {
+                URL twPartnerSearchUrl = getTownWizardPartnerUrl();
+                JSONObject twPartnerJsonObject = getPartnersJson(twPartnerSearchUrl);
+                List<Partner> partners = convertToPartnerList(twPartnerJsonObject);
                 if(!partners.isEmpty()) {
                     Partner p = partners.get(0);                    
                     publishProgress(new Partner(Constants.CONTENT_PARTNER_EVENTS,
@@ -56,12 +64,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
                     publishProgress(new Partner(Constants.CONTENT_PARTNER_PLACES,
                             p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));
                 }
-                
             }
-            
-            URL partnerSearchUrl = getPartnerSearchUrl(searchRequest, offset);          
-            JSONObject mainJsonObject = getPartnersJson(partnerSearchUrl);
-            status = mainJsonObject.getInt("status");
             
             if (status == STATUS_FOUND) {
                 List<Partner> partners = convertToPartnerList(mainJsonObject);
@@ -70,7 +73,8 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
                 if(nextOffset != 0) {
                     publishProgress(new Partner("Load more", "", "", -1, ""));
                 }
-            }
+            } 
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
