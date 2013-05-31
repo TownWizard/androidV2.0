@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.townwizard.android.TownWizardActivity;
+import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
 import com.townwizard.android.utils.ServerConnector;
@@ -24,6 +25,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     
     private int status = 0;
     private PartnersAdapter partnersAdapter;
+    private List<Partner> partners = new ArrayList<Partner>();
     private TownWizardActivity context;
 
     public SearchPartners(TownWizardActivity context, PartnersAdapter partnersAdapter) {
@@ -34,7 +36,8 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     @Override
     protected void onProgressUpdate(Partner... values) {
     	super.onProgressUpdate(values);
-    	partnersAdapter.addPartner(values[0]);
+    	//partnersAdapter.addPartner(values[0]);
+    	partners.add(values[0]);
     }
 
     @Override
@@ -49,20 +52,26 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
             status = mainJsonObject.getInt("status");
             
             boolean disableMagicWands = (isTermSearch && status == STATUS_FOUND) || (offset > 0);
-            partnersAdapter.setShowMagicWands(!disableMagicWands);
-            
             if(!disableMagicWands) {
                 URL twPartnerSearchUrl = getTownWizardPartnerUrl();
                 JSONObject twPartnerJsonObject = getPartnersJson(twPartnerSearchUrl);
                 List<Partner> partners = convertToPartnerList(twPartnerJsonObject);
-                if(!partners.isEmpty()) {
-                    Partner p = partners.get(0);                    
-                    publishProgress(new Partner(Constants.CONTENT_PARTNER_EVENTS,
-                            p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));
-                    publishProgress(new Partner(Constants.CONTENT_PARTNER_RESTAURANTS,
-                            p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));
-                    publishProgress(new Partner(Constants.CONTENT_PARTNER_PLACES,
-                            p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));
+                if(!partners.isEmpty()) {                    
+                    Partner p = partners.get(0);
+                    List<Category> categories = Category.getCategories(
+                            context, Integer.valueOf(p.getId()).toString());
+                    if(findInList(categories, Constants.EVENTS) != null) {
+                        publishProgress(new Partner(Constants.CONTENT_PARTNER_EVENTS,
+                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
+                    }
+                    if(findInList(categories, Constants.RESTAURANTS) != null) {
+                        publishProgress(new Partner(Constants.CONTENT_PARTNER_RESTAURANTS,
+                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
+                    }
+                    if(findInList(categories, Constants.DIRECTORY) != null) {
+                        publishProgress(new Partner(Constants.CONTENT_PARTNER_PLACES,
+                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
+                    }
                 }
             }
             
@@ -84,7 +93,9 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
-        if (status != STATUS_FOUND) {
+        if(status == STATUS_FOUND) {
+           partnersAdapter.addPartners(partners); 
+        } else {
             /*
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
             String title = context.getResources().getString(R.string.whoops);
@@ -99,8 +110,10 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
             });
             alertDialog.show();
             */
-            Partner partner = (Partner) context.getListAdapter().getItem(0);
-            context.startWebActivityWithHome(partner);
+            if(!partners.isEmpty()) {
+                Partner partner = partners.get(0);
+                context.startWebActivityWithHome(partner);
+            }
         }
     }
     
@@ -148,5 +161,12 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
             nextOffset = 0;
         }
         return nextOffset;
+    }
+    
+    private Category findInList(List<Category> categories, String name) {
+        for(Category c : categories) {
+            if(name.equals(c.getName())) return c;
+        }
+        return null;
     }
 }
