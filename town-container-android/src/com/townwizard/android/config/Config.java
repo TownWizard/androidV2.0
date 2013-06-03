@@ -29,7 +29,7 @@ public final class Config extends Application {
     public static final int MAP_ZOOM_DEFAULT = 15;
     public static final boolean IS_DEV = CONTAINER_SITE.contains("test");
     
-    public static final String CONTENT_PARTNER_NAME = "TownWizardApps";
+    public static final String CONTENT_PARTNER_NAME = "TownWizard Auto Content";
     public static final String CONTENT_PARTNER_CONTENT_FOLDER = "twcontent";
     public static final String CONTENT_PARTNER_ZIP_CODE_URL = CONTENT_PARTNER_CONTENT_FOLDER + "/auto-zip.php";
     

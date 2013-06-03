@@ -115,7 +115,7 @@ public class CategoriesAdapter extends BaseAdapter {
             } else if(Constants.CONTENT_PARTNER_RESTAURANTS.equals(partnerName)) {
                 return getCategoryByName(Constants.RESTAURANTS, null);
             } else if(Constants.CONTENT_PARTNER_PLACES.equals(partnerName)) {
-                return getCategoryByName(Constants.DIRECTORY, null);
+                return getCategoryByName(Constants.PLACES, null);
             }
         }        
         

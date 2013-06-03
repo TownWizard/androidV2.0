@@ -18,7 +18,6 @@ public class Constants {
     public static final String NEWS = "News";
     public static final String RESTAURANTS = "Restaurants";
     public static final String PLACES = "Places";
-    public static final String DIRECTORY = "Directory";
     public static final String HELP_AND_SUPPORT = "Help & Support";
     public static final String HELP_AND_SUPPORT_AMP = "Help & amp; Support";
     public static final String ADVERTISE_WITH_US = "Advertise with Us";

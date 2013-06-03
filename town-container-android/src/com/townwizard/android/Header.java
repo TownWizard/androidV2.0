@@ -155,7 +155,7 @@ public class Header {
                             newPartnerName = Constants.CONTENT_PARTNER_EVENTS_DISPLAY;
                         } else if(Constants.RESTAURANTS.equals(cName)) {
                             newPartnerName = Constants.CONTENT_PARTNER_RESTAURANTS_DISPLAY;
-                        } else if(Constants.DIRECTORY.equals(cName)) {
+                        } else if(Constants.PLACES.equals(cName)) {
                             newPartnerName = Constants.CONTENT_PARTNER_PLACES_DISPLAY;
                         }
                         if(newPartnerName != null) {

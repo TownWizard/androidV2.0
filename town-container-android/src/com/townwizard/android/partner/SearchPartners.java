@@ -68,7 +68,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
                         publishProgress(new Partner(Constants.CONTENT_PARTNER_RESTAURANTS,
                                 p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
                     }
-                    if(findInList(categories, Constants.DIRECTORY) != null) {
+                    if(findInList(categories, Constants.PLACES) != null) {
                         publishProgress(new Partner(Constants.CONTENT_PARTNER_PLACES,
                                 p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
                     }
@@ -77,7 +77,11 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
             
             if (status == STATUS_FOUND) {
                 List<Partner> partners = convertToPartnerList(mainJsonObject);
-                for(Partner p : partners) publishProgress(p);                
+                for(Partner p : partners) {
+                    if(!Config.CONTENT_PARTNER_NAME.equals(p.getName())) {
+                        publishProgress(p);
+                    }
+                }
                 nextOffset = getNextOffset(mainJsonObject, offset);
                 if(nextOffset != 0) {
                     publishProgress(new Partner("Load more", "", "", -1, ""));
