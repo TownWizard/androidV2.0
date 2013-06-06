@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,12 +18,10 @@ import com.townwizard.android.TownWizardActivity;
 import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.utils.JsonUtils;
 import com.townwizard.android.utils.ServerConnector;
 
 public class SearchPartners extends AsyncTask<String, Partner, Integer> {
-    
-    private static final String OFFSET = "&offset=";
-    private static final int STATUS_FOUND = 1;
     
     private int status = 0;
     private PartnersAdapter partnersAdapter;
@@ -39,7 +36,6 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     @Override
     protected void onProgressUpdate(Partner... values) {
     	super.onProgressUpdate(values);
-    	//partnersAdapter.addPartner(values[0]);
     	partners.add(values[0]);
     }
 
@@ -51,43 +47,43 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
         int nextOffset = offset;
         try {
             URL partnerSearchUrl = getPartnerSearchUrl(searchRequest, offset);          
-            JSONObject mainJsonObject = getPartnersJson(partnerSearchUrl);
-            status = mainJsonObject.getInt("status");
+            JSONObject mainJson = getPartnersJson(partnerSearchUrl);
+            status = JsonUtils.getStatus(mainJson);
             
-            boolean disableMagicWands = (isTermSearch && status == STATUS_FOUND) || (offset > 0);
+            boolean disableMagicWands = (isTermSearch && status == JsonUtils.STATUS_FOUND) || (offset > 0);
             if(!disableMagicWands) {
                 URL twPartnerSearchUrl = getTownWizardPartnerUrl();
                 JSONObject twPartnerJsonObject = getPartnersJson(twPartnerSearchUrl);
-                List<Partner> partners = convertToPartnerList(twPartnerJsonObject);
+                List<Partner> partners = JsonUtils.jsonToPartnerList(twPartnerJsonObject);
                 if(!partners.isEmpty()) {                    
                     Partner p = partners.get(0);
                     List<Category> categories = Category.getCategories(
                             context, Integer.valueOf(p.getId()).toString());                    
                     if(findInList(categories, Constants.EVENTS) != null) {
                         publishProgress(new Partner(Constants.CONTENT_PARTNER_EVENTS,
-                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
+                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl(), null));
                     }                    
                     if(findInList(categories, Constants.RESTAURANTS) != null) {
                         publishProgress(new Partner(Constants.CONTENT_PARTNER_RESTAURANTS,
-                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
+                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl(), null));
                     }
                     if(findInList(categories, Constants.PLACES) != null) {
                         publishProgress(new Partner(Constants.CONTENT_PARTNER_PLACES,
-                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
+                                p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl(), null));
                     }
                 }
             }
             
-            if (status == STATUS_FOUND) {
-                List<Partner> partners = convertToPartnerList(mainJsonObject);
+            if (status == JsonUtils.STATUS_FOUND) {
+                List<Partner> partners = JsonUtils.jsonToPartnerList(mainJson);
                 for(Partner p : partners) {
                     if(!Config.CONTENT_PARTNER_NAME.equals(p.getName())) {
                         publishProgress(p);
                     }
                 }
-                nextOffset = getNextOffset(mainJsonObject, offset);
+                nextOffset = JsonUtils.getNextOffset(mainJson, offset);
                 if(nextOffset != 0) {
-                    publishProgress(new Partner("Load more", "", "", -1, ""));
+                    publishProgress(new Partner("Load more", "", "", -1, "", null));
                 }
             }
         } catch (Exception e) {
@@ -99,7 +95,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
-        if(status == STATUS_FOUND) {
+        if(status == JsonUtils.STATUS_FOUND) {
            partnersAdapter.addPartners(partners); 
         } else {
             if(!partners.isEmpty()) {
@@ -123,7 +119,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     }
     
     private URL getPartnerSearchUrl(String searchRequest, int offset) throws MalformedURLException {
-        String url = Config.PARTNER_API + "?" + searchRequest + OFFSET + offset;
+        String url = Config.PARTNER_API + "?" + searchRequest + "&offset=" + offset;
         Log.d("Partner search URL = ", url);
         return new URL(url);
     }
@@ -136,38 +132,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
         String response = ServerConnector.getServerResponse(searchUrl);
         return new JSONObject(response);
     }
-    
-    private List<Partner> convertToPartnerList(JSONObject mainJsonObject) throws JSONException {        
-        JSONArray jsArr = mainJsonObject.getJSONArray("data");
-        List<Partner> result = new ArrayList<Partner>(jsArr.length());
-        for (int i = 0; i < jsArr.length(); i++) {
-            JSONObject jsObject = jsArr.getJSONObject(i);
-            int partnerId = jsObject.getInt("id");
-            String name = jsObject.getString("name");
-            String url = jsObject.getString("website_url");
-            String androidAppId = jsObject.getString("android_app_id");
-            String imageUrl = jsObject.getString("image");
-            if (url.charAt(url.length() - 1) != '/') {
-                url += "/";
-            }
-            result.add(new Partner(name, url, androidAppId, partnerId, imageUrl));
-        }
-        return result;
-    }
-    
-    private int getNextOffset(JSONObject mainJsonObject, int offset) throws JSONException {
-        int nextOffset = offset;
-        JSONObject metaInf = mainJsonObject.getJSONObject("meta");
-        int total = metaInf.getInt("total");
-        int limit = metaInf.getInt("limit");
-        if (offset + limit < total) {
-            nextOffset = metaInf.getInt("next_offset");
-        } else {
-            nextOffset = 0;
-        }
-        return nextOffset;
-    }
-    
+
     private Category findInList(List<Category> categories, String name) {
         for(Category c : categories) {
             if(name.equals(c.getName())) return c;

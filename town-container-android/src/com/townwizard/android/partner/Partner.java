@@ -1,5 +1,7 @@
 package com.townwizard.android.partner;
 
+import java.util.Locale;
+
 import com.townwizard.android.config.Constants;
 
 public class Partner implements java.io.Serializable {
@@ -11,13 +13,15 @@ public class Partner implements java.io.Serializable {
 	private final String androidAppId;
 	private final String imageUrl;
 	private final int id;
+	private final Locale locale;
 
-	public Partner(String name, String url, String androidAppId, int id, String imageUrl) {
+	public Partner(String name, String url, String androidAppId, int id, String imageUrl, String locale) {
 		this.name = handleSpecialCharacters(name);
 		this.url = url;
 		this.androidAppId = androidAppId;
 		this.id = id;
 		this.imageUrl = imageUrl;
+		this.locale = locale != null ? new Locale(locale) : Locale.getDefault();
 	}
 	
 	public String getName() {
@@ -32,12 +36,16 @@ public class Partner implements java.io.Serializable {
 		return androidAppId;
 	}
 	
-	public String getImageUrl(){
+	public String getImageUrl() {
 		return imageUrl;
 	}
 
 	public int getId(){
 		return id;
+	}
+	
+	public Locale getLocale() {
+	    return locale;
 	}
 	
 	public boolean isContentPartner() {

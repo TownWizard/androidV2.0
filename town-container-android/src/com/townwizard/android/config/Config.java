@@ -13,12 +13,13 @@ import android.content.Context;
 
 import com.townwizard.android.category.Category;
 import com.townwizard.android.partner.Partner;
+import com.townwizard.android.utils.JsonUtils;
 import com.townwizard.android.utils.ServerConnector;
 import com.townwizard.android.utils.Utils;
 
 public final class Config extends Application {
     
-    public static final String CONTAINER_SITE="http://www.townwizardcontainerapptest.com";
+    public static final String CONTAINER_SITE="http://www.townwizardcontainerapp.com";
     public static final String PARTNER_API=CONTAINER_SITE+"/apiv30/partner/";
     public static final String SECTION_API=CONTAINER_SITE+"/apiv30/section/partner/";
     public static final String DEFAULT_ABOUT_US_URI = "components/com_shines_v2.1/iphone-about.php";
@@ -115,22 +116,11 @@ public final class Config extends Application {
         try {
             URL url = new URL(Config.PARTNER_API + partnerId);
             String response = ServerConnector.getServerResponse(url);
-            JSONObject mMainJsonObject = new JSONObject(response);
-            int status = mMainJsonObject.getInt("status");
-
-            if (status == 1) {
-                JSONObject jsObj = mMainJsonObject.getJSONObject("data");
-                int id = jsObj.getInt("id");
-                String name = jsObj.getString("name");                
-                String androidAppId = jsObj.getString("android_app_id");
-                String imageUrl = jsObj.getString("image");
-                String siteUrl = jsObj.getString("website_url");                
-                if (siteUrl.charAt(siteUrl.length() - 1) != '/') {
-                    siteUrl += "/";
-                }
-                
-                setPartner(new Partner(name, siteUrl, androidAppId, id, imageUrl));
-            }
+            JSONObject mainJson = new JSONObject(response);
+            Partner p = JsonUtils.jsonToPartner(mainJson);
+            if(p != null) {
+                setPartner(p);
+            }            
         } catch (Exception e) {
             e.printStackTrace();
         }
