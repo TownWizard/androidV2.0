@@ -15,13 +15,13 @@ public class Partner implements java.io.Serializable {
 	private final int id;
 	private final Locale locale;
 
-	public Partner(String name, String url, String androidAppId, int id, String imageUrl, String locale) {
+	public Partner(String name, String url, String androidAppId, int id, String imageUrl, String language) {
 		this.name = handleSpecialCharacters(name);
 		this.url = url;
 		this.androidAppId = androidAppId;
 		this.id = id;
 		this.imageUrl = imageUrl;
-		this.locale = locale != null ? new Locale(locale) : Locale.getDefault();
+		this.locale = language != null ? new Locale(language) : Locale.getDefault();
 	}
 	
 	public String getName() {

@@ -65,8 +65,9 @@ public final class JsonUtils {
         if (siteUrl.charAt(siteUrl.length() - 1) != '/') {
             siteUrl += "/";
         }
-        String locale = partnerJson.optString("locale");
-        return new Partner(name, siteUrl, androidAppId, id, imageUrl, locale);
+        String language = partnerJson.optString("language");
+        //String language = "es";
+        return new Partner(name, siteUrl, androidAppId, id, imageUrl, language);
     }
 
 }

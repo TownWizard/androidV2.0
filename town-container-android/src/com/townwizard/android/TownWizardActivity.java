@@ -113,6 +113,7 @@ public class TownWizardActivity extends ListActivity {
             }
         });
         
+        Config.getConfig(this).setPartner(null);
         executeSearch();
     }
     

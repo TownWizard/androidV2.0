@@ -7,12 +7,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
@@ -144,6 +146,13 @@ public final class Utils {
             return true;
         }
         return false;
-    }    
+    }
+    
+    public static void setLocale(Locale locale, Context context) {
+        Resources r = context.getResources();
+        Configuration c = r.getConfiguration();
+        c.locale = locale;
+        r.updateConfiguration(c, r.getDisplayMetrics());
+    }
 
 }

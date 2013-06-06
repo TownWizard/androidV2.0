@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.json.JSONObject;
@@ -42,7 +43,7 @@ public final class Config extends Application {
     private static final String CATEGORY_CACHE_FILE = "category";
     
     private String partnerId;
-    private boolean containerApp;
+    private boolean containerApp;    
     
     private Partner partner;
     private Category category;
@@ -56,7 +57,7 @@ public final class Config extends Application {
     public void onCreate() {
         super.onCreate();
         partnerId = loadPartnerId();
-        containerApp = (GENERIC_PARTNER_ID.equals(partnerId));
+        containerApp = GENERIC_PARTNER_ID.equals(partnerId);
     }
 
     public boolean isContainerApp() {
@@ -66,7 +67,7 @@ public final class Config extends Application {
     public String getPartnerId() {
         return partnerId;
     }
-    
+
     public Partner getPartner() {
         if(partner == null) {
             restoreApplicationData();
@@ -79,6 +80,11 @@ public final class Config extends Application {
     
     public void setPartner(Partner partner) {
         this.partner = partner;
+        if(partner != null) {
+            Locale partnerLocale = partner.getLocale();
+            Locale locale = partnerLocale != null ? partnerLocale : Locale.getDefault();
+            Utils.setLocale(locale, getBaseContext());
+        }
     }
     
     public Category getCategory() {
