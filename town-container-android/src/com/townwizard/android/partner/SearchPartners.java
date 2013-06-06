@@ -9,9 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.townwizard.android.R;
 import com.townwizard.android.TownWizardActivity;
 import com.townwizard.android.category.Category;
 import com.townwizard.android.config.Config;
@@ -59,11 +62,11 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
                 if(!partners.isEmpty()) {                    
                     Partner p = partners.get(0);
                     List<Category> categories = Category.getCategories(
-                            context, Integer.valueOf(p.getId()).toString());
+                            context, Integer.valueOf(p.getId()).toString());                    
                     if(findInList(categories, Constants.EVENTS) != null) {
                         publishProgress(new Partner(Constants.CONTENT_PARTNER_EVENTS,
                                 p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
-                    }
+                    }                    
                     if(findInList(categories, Constants.RESTAURANTS) != null) {
                         publishProgress(new Partner(Constants.CONTENT_PARTNER_RESTAURANTS,
                                 p.getUrl(), p.getAndroidAppId(), p.getId(), p.getImageUrl()));                        
@@ -86,8 +89,7 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
                 if(nextOffset != 0) {
                     publishProgress(new Partner("Load more", "", "", -1, ""));
                 }
-            } 
-            
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,23 +102,22 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
         if(status == STATUS_FOUND) {
            partnersAdapter.addPartners(partners); 
         } else {
-            /*
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-            String title = context.getResources().getString(R.string.whoops);
-            String message = context.getResources().getString(R.string.partners_not_found);
-            alertDialog.setTitle(title);
-            alertDialog.setMessage(message);
-            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            alertDialog.show();
-            */
             if(!partners.isEmpty()) {
                 Partner partner = partners.get(0);
                 context.startWebActivityWithHome(partner);
+            } else {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                String title = context.getResources().getString(R.string.whoops);
+                String message = context.getResources().getString(R.string.partners_not_found);
+                alertDialog.setTitle(title);
+                alertDialog.setMessage(message);
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
             }
         }
     }
