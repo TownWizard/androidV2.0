@@ -83,7 +83,8 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
                 }
                 nextOffset = JsonUtils.getNextOffset(mainJson, offset);
                 if(nextOffset != 0) {
-                    publishProgress(new Partner("Load more", "", "", -1, "", null));
+                    publishProgress(new Partner(
+                            context.getResources().getString(R.string.load_more), "", "", -1, "", null));
                 }
             }
         } catch (Exception e) {
@@ -107,12 +108,13 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
                 String message = context.getResources().getString(R.string.partners_not_found);
                 alertDialog.setTitle(title);
                 alertDialog.setMessage(message);
-                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                alertDialog.setPositiveButton(context.getResources().getString(R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
                 alertDialog.show();
             }
         }

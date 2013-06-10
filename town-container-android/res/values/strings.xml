@@ -2,33 +2,56 @@
 <resources>
     <string name="applicationId">318928931561066</string>
     <string name="app_name">TownWizard</string>
+
+    <!-- Search partners screen -->
     <string name="enter_ZIP">Enter ZIP or name of town</string>
-    <string name="update_your_status">Update your status</string>
-    <string name="search_for_friends">Search friends to tag</string>
+    <string name="load_more">Load more</string>
+    <string name="whats_happening_near">What\'s Happening Near</string>
+    <string name="restaurants_near">Restaurants Near</string>
+    <string name="places_near">Places Near</string>
     <string name="whoops">Whoops</string>
     <string name="partners_not_found">Sorry, but it looks like we don\'t have a TownWizard in your area yet!</string>
+    
+    <!-- Categories screen -->
+    <string name="about">ABOUT</string>
+    <string name="change">CHANGE</string>
+    <string name="powered_by">powered by townwizard</string>
+    
+    <!--  Upload photos -->
+    <string name="upload_photo">UPLOAD YOUR PHOTOS</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_from_library">Choose from library</string>
     <string name="upload_successful">Upload Successful!</string>
     <string name="thanks_for_sharing">Thanks for sharing!</string>
     <string name="sorry">Sorry</string>
     <string name="service_currently_unavaible">Service currently unavaible. Please try again later.</string>
-    <string name="about">ABOUT</string>
-    <string name="change">CHANGE</string>
-    <string name="back">Back</string>
-    <string name="upload_photo">UPLOAD YOUR PHOTOS</string>
-    <string name="cancel">Cancel</string>
     <string name="upload">Upload</string>
     <string name="write_a_caption">Write a caption</string>
-    <string name="whats_on_your_mind">What\'s on your mind?</string>
-    <string name="check_in">CHECK IN</string>
+    
+    <!-- Facebook places screen -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="total">total</string>
+    <string name="by_friends">by friends</string>
+    
+    <!-- Facebook checkin -->
+    <string name="whats_on_your_mind">What\'s on your mind?</string>
+    <string name="check_in">CHECK IN</string>    
     <string name="cont">Continue</string>
     <string name="checkin_confirm">Do you want to check in to</string>
     <string name="checkin_success">You\'ve successfully checked in</string>
     <string name="checkin_failure">There was a problem with the check in. Please, try again</string>
     <string name="checkin_wait">Please wait&#8230;</string>
+    <string name="update_your_status">Update your status</string>
+    <string name="search_for_friends">Search friends to tag</string>
+    
+    <!-- All screens -->
+    <string name="back">Back</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>        
     <string name="no_connection">No connection available!</string>
     <string name="please_connect">Please connect to cellular network or Wi-Fi</string>
     <string name="open_settings">Open settings</string>
     <string name="empty"></string>
+    
 </resources>

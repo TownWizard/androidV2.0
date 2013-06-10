@@ -42,7 +42,9 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 
 	    TextView tv = (TextView) view.findViewById(R.id.name);
 
-		if (partner.getName().equals("Load more")) {
+	    String loadMore = getContext().getResources().getString(R.string.load_more);
+	    
+		if (loadMore.equals(partner.getName())) {
 			tv.setGravity(Gravity.CENTER);
 			tv.setTextColor(Color.BLACK);
 			View circle = view.findViewById(R.id.circle);

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,8 +93,11 @@ public class FacebookPlacesAdapter extends BaseAdapter {
         String chns = place.getCheckins();
         Integer fChns = friendCheckins.get(place.getId());
         
-        checkinsView.setText((chns != null ? chns : 0) + " total     ");
-        friendCheckinsView.setText((fChns != null ? fChns : 0) + " by friends");
+        Resources res = context.getResources();
+        
+        
+        checkinsView.setText((chns != null ? chns : 0) + " " + res.getString(R.string.total) + "     ");
+        friendCheckinsView.setText((fChns != null ? fChns : 0) + " " + res.getString(R.string.by_friends));
 
         return view;
     }

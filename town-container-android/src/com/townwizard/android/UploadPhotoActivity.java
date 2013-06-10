@@ -216,13 +216,13 @@ public class UploadPhotoActivity extends Activity {
 
         aBuilder.setTitle(title);
         aBuilder.setMessage(message);
-        aBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
+        aBuilder.setPositiveButton(getResources().getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
         aBuilder.show();
     }
 

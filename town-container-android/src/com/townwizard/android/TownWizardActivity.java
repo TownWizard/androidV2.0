@@ -132,8 +132,8 @@ public class TownWizardActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Partner partner = (Partner) getListAdapter().getItem(position);
-        String pName = partner.getName();
-        if (pName.equals("Load more")) {
+        String loadMore = getResources().getString(R.string.load_more);
+        if (loadMore.equals(partner.getName())) {
             mListAdapter.removeItem(mListAdapter.getCount() - 1);
             executeSearch();
         } else {

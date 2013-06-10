@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,14 +150,15 @@ public class Header {
                 if(zip != null) {
                     Category c = Config.getConfig(activity).getCategory();
                     if(c != null) {
+                        Resources res = activity.getResources();
                         String cName = c.getName();
                         String newPartnerName = null;
                         if(Constants.EVENTS.equals(cName)) {
-                            newPartnerName = Constants.CONTENT_PARTNER_EVENTS_DISPLAY;
+                            newPartnerName = res.getString(R.string.whats_happening_near);
                         } else if(Constants.RESTAURANTS.equals(cName)) {
-                            newPartnerName = Constants.CONTENT_PARTNER_RESTAURANTS_DISPLAY;
+                            newPartnerName = res.getString(R.string.restaurants_near);
                         } else if(Constants.PLACES.equals(cName)) {
-                            newPartnerName = Constants.CONTENT_PARTNER_PLACES_DISPLAY;
+                            newPartnerName = res.getString(R.string.places_near);
                         }
                         if(newPartnerName != null) {
                             newPartnerName += " " + zip;

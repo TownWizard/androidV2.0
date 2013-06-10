@@ -154,7 +154,7 @@ public class CategoriesAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.category_section_header, parent, false);
         }
         TextView textView = (TextView)view.findViewById(R.id.category_section_title);
-        textView.setText(section.getName());
+        textView.setText(context.getResources().getString(section.getNameResource()));
         return view;
     }
     
@@ -201,9 +201,14 @@ public class CategoriesAdapter extends BaseAdapter {
         
         private CategorySection(String name) {            
             this.name = name;
-        }        
+        }       
         
-        String getName() { return name; }
+        int getNameResource() {
+            if(Constants.POWERED_BY_TW.equals(name)) {
+                return R.string.powered_by;
+            }
+            return R.string.empty;
+        }
     }
 
 }

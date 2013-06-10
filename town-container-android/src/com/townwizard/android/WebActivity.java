@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.MailTo;
 import android.net.Uri;
@@ -78,19 +79,23 @@ public class WebActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(WebActivity.this);
-                        alertDialog.setPositiveButton("Take photo", new OnClickListener() {
+                        Resources res = getResources();
+                        alertDialog.setPositiveButton(res.getString(R.string.take_photo),
+                                new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         startCameraIntent();
                                     }
                                 });
-                        alertDialog.setNeutralButton("Choose from library",  new OnClickListener() {
+                        alertDialog.setNeutralButton(res.getString(R.string.choose_from_library),
+                                new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         startChooseFromLibraryIntent();
                                     }
                                 });
-                        alertDialog.setNegativeButton("Cancel", new OnClickListener() {
+                        alertDialog.setNegativeButton(res.getString(R.string.cancel),
+                                new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.cancel();
