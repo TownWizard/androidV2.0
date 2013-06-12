@@ -1,5 +1,7 @@
 package com.townwizard.android.partner;
 
+import com.townwizard.android.config.Constants;
+
 public class Partner implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,6 +38,12 @@ public class Partner implements java.io.Serializable {
 
 	public int getId(){
 		return id;
+	}
+	
+	public boolean isContentPartner() {
+	    return Constants.CONTENT_PARTNER_EVENTS.equals(name) ||
+	           Constants.CONTENT_PARTNER_RESTAURANTS.equals(name) ||
+	           Constants.CONTENT_PARTNER_PLACES.equals(name);
 	}
 
     @Override

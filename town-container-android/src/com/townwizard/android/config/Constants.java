@@ -30,6 +30,14 @@ public class Constants {
     public static final String TWITTER = "Twitter";
     public static final String SHOPPING = "Shopping";
     
+   
+    public static final String CONTENT_PARTNER_EVENTS = "What's Happening Nearby?";
+    public static final String CONTENT_PARTNER_RESTAURANTS = "Nearby Restaurants";
+    public static final String CONTENT_PARTNER_PLACES = "Nearby Places";
+    public static final String CONTENT_PARTNER_EVENTS_DISPLAY = "What's Happening Near";
+    public static final String CONTENT_PARTNER_RESTAURANTS_DISPLAY = "Restaurants Near";
+    public static final String CONTENT_PARTNER_PLACES_DISPLAY = "Places Near";   
+
     public static final String POWERED_BY_TW = "powered by townwizard";
     
     public static final String TW_DB_API = "townwizard-db-api";

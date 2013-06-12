@@ -27,7 +27,13 @@ public final class Config extends Application {
     public static final int FB_CHECKIN_DISTANCE_METERS = 2000;
     public static final int FB_CHECKIN_RESULTS_LIMIT = 20;
     public static final int MAP_ZOOM_DEFAULT = 15;
-    public static final boolean IS_DEV = CONTAINER_SITE.contains("test"); 
+    public static final boolean IS_DEV = CONTAINER_SITE.contains("test");
+    
+    public static final String CONTENT_PARTNER_NAME = "TownWizard Auto Content";
+    public static final String CONTENT_PARTNER_CONTENT_FOLDER = "twcontent";
+    public static final String CONTENT_PARTNER_ZIP_CODE_URL = CONTENT_PARTNER_CONTENT_FOLDER + "/auto-zip.php";
+    
+    public static final String TOWNWIZARD_PHONE = "18666510001";
     
     private static final String GENERIC_PARTNER_ID = "TownWizard";
     private static final String PARAMS_FILE = "params.txt";
@@ -39,6 +45,7 @@ public final class Config extends Application {
     
     private Partner partner;
     private Category category;
+    private String zip;
         
     public static Config getConfig(Context context) {
         return (Config)context.getApplicationContext();
@@ -82,6 +89,14 @@ public final class Config extends Application {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+    
+    public String getZip() {
+        return zip;
+    }
+    
+    public void setZip(String zip) {
+        this.zip = zip;
     }
     
     public void cacheApplicationData() {

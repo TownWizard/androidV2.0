@@ -18,6 +18,7 @@ import com.townwizard.android.R;
 import com.townwizard.android.category.Category.ViewType;
 import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.partner.Partner;
 
 public class CategoriesAdapter extends BaseAdapter {
 
@@ -106,6 +107,18 @@ public class CategoriesAdapter extends BaseAdapter {
     }
     
     public Category getHomeCategory() {
+        Partner p = Config.getConfig(context).getPartner();
+        if(p != null) {
+            String partnerName = p.getName();
+            if(Constants.CONTENT_PARTNER_EVENTS.equals(partnerName)) {
+                return getCategoryByName(Constants.EVENTS, null);
+            } else if(Constants.CONTENT_PARTNER_RESTAURANTS.equals(partnerName)) {
+                return getCategoryByName(Constants.RESTAURANTS, null);
+            } else if(Constants.CONTENT_PARTNER_PLACES.equals(partnerName)) {
+                return getCategoryByName(Constants.PLACES, null);
+            }
+        }        
+        
         for(String cName : new String[]{Constants.HOME, Constants.NEWS, Constants.EVENTS}) {
             Category c = getCategoryByName(cName, null);
             if(c != null && c.getName() != null) {

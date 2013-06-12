@@ -18,10 +18,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.townwizard.android.category.CategoriesAdapter;
@@ -55,6 +58,13 @@ public class WebActivity extends Activity {
         boolean online = Utils.checkConnectivity(this);
         Partner partner = Config.getConfig(this).getPartner();
         Category category = Config.getConfig(this).getCategory();
+        
+        String categoryUrl = null;
+        if(category != null && online) {
+            categoryUrl = getFullCategoryUrl(category);        
+            Log.d("Category url", categoryUrl);            
+        }        
+        
         boolean contentViewSet = false;
         
         if(partner != null && category != null) {
@@ -91,9 +101,25 @@ public class WebActivity extends Activity {
                 });
             }
         }
-        
+
         if(!contentViewSet) {
-            setContentView(R.layout.web);
+            if(categoryUrl != null && categoryUrl.contains(Config.CONTENT_PARTNER_CONTENT_FOLDER)) {
+                setContentView(R.layout.web_with_banner);
+                ImageView ownThisTownBanner = (ImageView)findViewById(R.id.own_this_town);
+                if(ownThisTownBanner != null) {
+                    ownThisTownBanner.setOnTouchListener(new OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Intent i = new Intent(Intent.ACTION_DIAL, null);
+                            i.setData(Uri.parse("tel:" + Config.TOWNWIZARD_PHONE));
+                            startActivity(i);
+                            return true;
+                        }                        
+                    });
+                }
+            } else {
+                setContentView(R.layout.web);
+            }
         }
 
         mWebView = (WebView) findViewById(R.id.webview);
@@ -106,12 +132,6 @@ public class WebActivity extends Activity {
         Utils.makeZoomControlsInvisible(mWebView);
 
         header = Header.build(this, mWebView);
-    
-        if(category != null && online) {
-            String categoryUrl = getFullCategoryUrl(category);        
-            Log.d("Category url", categoryUrl);
-            mWebView.loadUrl(categoryUrl);
-        }
     }
     
     @Override
@@ -285,19 +305,34 @@ public class WebActivity extends Activity {
     
     private String getFullCategoryUrl(Category category) {
         String url = category.getUrl();
+        String categoryName = category.getName();
+        Partner partner = Config.getConfig(this).getPartner();
+        
         if(!url.startsWith("http")) {
-            Partner partner = Config.getConfig(this).getPartner();
             if(partner != null) {
                 url = partner.getUrl() + url;
             }
         }
         
-        String categoryName = category.getName();
-        if(Constants.RESTAURANTS.equals(categoryName) ||
-           Constants.PLACES.equals(categoryName) ||
-           Constants.EVENTS.equals(categoryName)) {            
-            url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
-            url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
+        boolean zipSet = false;
+        if(partner != null && (
+                Constants.CONTENT_PARTNER_EVENTS.equals(partner.getName()) ||
+                Constants.CONTENT_PARTNER_PLACES.equals(partner.getName()) ||
+                Constants.CONTENT_PARTNER_RESTAURANTS.equals(partner.getName()))) {
+            String zip = Config.getConfig(this).getZip();
+            if(zip != null) {
+                url = addParameterToUrl(url, "zip", zip);
+                zipSet = true;
+            }
+        }
+        
+        if(!zipSet) {
+            if(Constants.RESTAURANTS.equals(categoryName) ||
+               Constants.PLACES.equals(categoryName) ||               
+               Constants.EVENTS.equals(categoryName)) {            
+                url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
+                url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
+            }
         }
         
         return url;
