@@ -3,8 +3,16 @@ package com.townwizard.android.category;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +20,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.townwizard.android.R;
+import com.townwizard.android.config.Config;
 import com.townwizard.android.config.Constants;
+import com.townwizard.android.utils.ServerConnector;
 
 public class Category implements java.io.Serializable {
 
@@ -132,4 +142,50 @@ public class Category implements java.io.Serializable {
 	    
 	    return name;
 	}
+	
+    public static List<Category> getCategories(Context context, String partnerId) throws Exception {
+        URL url = new URL(Config.SECTION_API + URLEncoder.encode(partnerId, "UTF-8"));        
+        String response = ServerConnector.getServerResponse(url);
+
+        List<Category> result = null;
+        if (response.length() > 0) {
+            JSONObject mMainJsonObject = new JSONObject(response);
+            int status = mMainJsonObject.getInt("status");
+            if (status == 1) {
+                JSONArray jsArr = mMainJsonObject.getJSONArray("data");
+                result = new ArrayList<Category>();
+                for (int i = 0; i < jsArr.length(); i++) {
+                    JSONObject jsObject = jsArr.getJSONObject(i);
+                    String name = jsObject.getString("display_name");
+                    String categoryUrl = getCategoryUrl(jsObject);                        
+                    String viewType = getViewType(jsObject);
+                    Bitmap image = Category.getImageFromResourceByName(context, name);
+                    result.add(new Category(image, name, categoryUrl, viewType));
+                }
+            } else {
+                result = Collections.<Category>emptyList();
+            }
+        } else {
+            result = Collections.<Category>emptyList();
+        }
+        return result;
+    }
+
+    private static String getCategoryUrl(JSONObject jsObject) throws JSONException {
+        String categoryUrl = null;
+        if(jsObject.has("android_url")) {
+            categoryUrl = jsObject.getString("android_url");
+        }
+        if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
+        
+        if(categoryUrl == null && Config.IS_DEV) {
+            categoryUrl = jsObject.getString("url");
+            if("null".equals(categoryUrl) || "".equals(categoryUrl)) categoryUrl = null;
+        }
+        return categoryUrl;
+    }
+    
+    private static String getViewType(JSONObject jsObject) throws JSONException {
+        return jsObject.has("android_ui_type") ? jsObject.getString("android_ui_type") : null;
+    }    
 }

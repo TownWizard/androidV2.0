@@ -1,6 +1,6 @@
 package com.townwizard.android.partner;
 
-import com.townwizard.android.R;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,13 +11,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.townwizard.android.R;
+
 public class PartnersAdapter extends ArrayAdapter<Partner> {
 	
-    private LayoutInflater layoutInflater;
+    private LayoutInflater layoutInflater;    
 
-	public PartnersAdapter(Context context, int textViewResourceId) {
+    public PartnersAdapter(Context context, int textViewResourceId) {
 		super(context, textViewResourceId);
 		layoutInflater = LayoutInflater.from(context);
+		
 	}
 
 	public void clearSearchList() {
@@ -29,12 +32,14 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 		remove(getItem(position));
 		notifyDataSetChanged();
 	}
-
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {	        
-	    View view = layoutInflater.inflate(R.layout.partner, null);
-	    
 	    Partner partner = getItem(position);
+	    View view = partner.isContentPartner() ? 
+	            layoutInflater.inflate(R.layout.partner_first, null) :
+	            layoutInflater.inflate(R.layout.partner, null);
+
 	    TextView tv = (TextView) view.findViewById(R.id.name);
 
 		if (partner.getName().equals("Load more")) {
@@ -53,5 +58,10 @@ public class PartnersAdapter extends ArrayAdapter<Partner> {
 	public void addPartner(Partner item) {
 		add(item);
 		notifyDataSetChanged();
+	}
+	
+	public void addPartners(List<Partner> partners) {
+	    for(Partner p : partners) add(p);
+	    notifyDataSetChanged();
 	}
 }

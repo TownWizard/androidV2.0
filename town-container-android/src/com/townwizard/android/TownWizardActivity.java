@@ -1,5 +1,6 @@
 package com.townwizard.android;
 
+
 import java.util.concurrent.ExecutionException;
 
 import android.app.ListActivity;
@@ -11,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -130,51 +130,67 @@ public class TownWizardActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Partner item = (Partner) getListAdapter().getItem(position);
-
-        if (item.getName().equals("Load more")) {
+        Partner partner = (Partner) getListAdapter().getItem(position);
+        String pName = partner.getName();
+        if (pName.equals("Load more")) {
             mListAdapter.removeItem(mListAdapter.getCount() - 1);
             executeSearch();
         } else {
-            if (item.getAndroidAppId().length() == 0) {
-                CategoriesAdapter categoriesAdapter = 
-                        CategoriesLoadTask.loadCategories(this, Integer.valueOf(item.getId()).toString(), false);
-                
-                Intent web = new Intent(this, WebActivity.class);
-                Config.getConfig(this).setPartner(item);
-                Config.getConfig(this).setCategory(categoriesAdapter.getHomeCategory());
-                startActivity(web);
+            if (partner.getAndroidAppId().length() == 0) {
+                startWebActivityWithHome(partner);
             } else {
                 Intent browseIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://play.google.com/store/apps/details?id=" + item.getAndroidAppId()));
+                        Uri.parse("https://play.google.com/store/apps/details?id=" + partner.getAndroidAppId()));
                 startActivity(browseIntent);
             }
         }
     }
     
-    public void executeSearch() {
-        if(!Utils.isOnline(this)) return;
-        String searchRequest = null;
-        if (mInputEditText.getText().toString().equals("")) {
-            searchRequest = "lat=" + CurrentLocation.latitude() + "&lon=" + CurrentLocation.longitude();
-            Log.d("Latitude", Double.toString(CurrentLocation.latitude()));
-            Log.d("Longitude", Double.toString(CurrentLocation.longitude()));
-        } else {
-            searchRequest = "q=" + mInputEditText.getText().toString();
-
-        }
+    public void startWebActivityWithHome(Partner partner) {
+        CategoriesAdapter categoriesAdapter = 
+                CategoriesLoadTask.loadCategories(this, Integer.valueOf(partner.getId()).toString(), false);
         
+        Intent web = new Intent(this, WebActivity.class);
+        Config.getConfig(this).setPartner(partner);
+        Config.getConfig(this).setCategory(categoriesAdapter.getHomeCategory());
+        startActivity(web);        
+    }
+    
+    private void executeSearch() {
+        if(!Utils.isOnline(this)) return;
+
+        String input = mInputEditText.getText().toString();
+        saveSearchZip(input);
+        
+        String searchRequest = null;
+        if (input == null || input.length() == 0) {
+            searchRequest = "lat=" + CurrentLocation.latitude() + "&lon=" + CurrentLocation.longitude();
+        } else {
+            searchRequest = "q=" + input;
+        }
+
         Utils.hideScreenKeyboard(mInputEditText, this);
 
         String[] params = { searchRequest, Integer.toString(mOffset) };
         try {
             mOffset = new SearchPartners(this, mListAdapter).execute(params).get();
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+    
+    private void saveSearchZip(String searchRequest) {
+        if(isZip(searchRequest)) {
+            Config.getConfig(this).setZip(searchRequest.split("-")[0]);
+        } else {
+            Config.getConfig(this).setZip(null);
+        }
+    }
+    
+    private boolean isZip(String s) {
+        return s.matches("^\\d{5}(-\\d{4})?$");
     }
 
 }
