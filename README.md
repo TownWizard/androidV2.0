@@ -1,2 +1,1 @@
-TownWizard Android Application v2.0
-===========
+2013-07-13: created branch release2.0
