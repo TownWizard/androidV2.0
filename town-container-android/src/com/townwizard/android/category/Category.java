@@ -131,7 +131,9 @@ public class Category implements java.io.Serializable {
         categoryToResource.put(Constants.VIDEOS, R.drawable.videos);
         categoryToResource.put(Constants.HELP_AND_SUPPORT_AMP, R.drawable.help);
         categoryToResource.put(Constants.ADVERTISE_WITH_US, R.drawable.advertise);
-        categoryToResource.put(Constants.ABOUT_US, R.drawable.about);
+        //categoryToResource.put(Constants.ABOUT_US, R.drawable.about);
+        categoryToResource.put(Constants.ABOUT_US, R.drawable.icon_question);
+        categoryToResource.put(Constants.ABOUT, R.drawable.icon_question);
         categoryToResource.put(Constants.CONTACT_US, R.drawable.contact);
         categoryToResource.put(Constants.WEATHER, R.drawable.weather);
         categoryToResource.put(Constants.FACEBOOK, R.drawable.facebook);

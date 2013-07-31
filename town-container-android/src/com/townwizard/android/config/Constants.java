@@ -13,7 +13,8 @@ public class Constants {
     
     // Category names
     public static final String VIDEOS = "Videos";
-    public static final String ABOUT_US = "About Us";
+    public static final String ABOUT_US = "About Us"; // about this app/partner
+    public static final String ABOUT = "About";       // about this town
     public static final String HOME = "Home";
     public static final String NEWS = "News";
     public static final String RESTAURANTS = "Restaurants";
