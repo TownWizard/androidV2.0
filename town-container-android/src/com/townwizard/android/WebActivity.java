@@ -69,7 +69,7 @@ public class WebActivity extends Activity {
         
         if(partner != null && category != null) {
             mUrlSite = partner.getUrl();
-            if (category.getName().contains(Constants.PHOTOS) && isUploadScriptExist(mUrlSite + sUpload)) {
+            if (category.getSectionName().contains(Constants.PHOTOS) && isUploadScriptExist(mUrlSite + sUpload)) {
                 Log.d("WebActivity", "File exist");
                 setContentView(R.layout.web_with_upload);
                 contentViewSet = true;
@@ -305,7 +305,8 @@ public class WebActivity extends Activity {
     
     private String getFullCategoryUrl(Category category) {
         String url = category.getUrl();
-        String categoryName = category.getName();
+        // String categoryName = category.getName(); //bhavan: this is section name
+        String categoryName = category.getSectionName();
         Partner partner = Config.getConfig(this).getPartner();
         
         if(!url.startsWith("http")) {
@@ -326,10 +327,13 @@ public class WebActivity extends Activity {
             }
         }
         
+        // bhavan: let's add lattitude/longitude for section name "star" as well.
+        //         star can be used for any general category
         if(!zipSet) {
             if(Constants.RESTAURANTS.equals(categoryName) ||
                Constants.PLACES.equals(categoryName) ||               
-               Constants.EVENTS.equals(categoryName)) {            
+               Constants.EVENTS.equals(categoryName) ||
+               Constants.STAR.equals(categoryName)) {            
                 url = addParameterToUrl(url, "lat", Double.valueOf(CurrentLocation.latitude()).toString());
                 url = addParameterToUrl(url, "lon", Double.valueOf(CurrentLocation.longitude()).toString());
             }

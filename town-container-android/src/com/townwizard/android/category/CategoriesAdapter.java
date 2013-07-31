@@ -121,19 +121,21 @@ public class CategoriesAdapter extends BaseAdapter {
         
         for(String cName : new String[]{Constants.HOME, Constants.NEWS, Constants.EVENTS}) {
             Category c = getCategoryByName(cName, null);
-            if(c != null && c.getName() != null) {
+            if(c != null && c.getSectionName() != null) {
                 return c;
             }
         }
         return getCategoryByName(Constants.HOME, Config.DEFAULT_HOME_URI);
     }
     
+    // bhavan: this method should work using section name, not display name
     private Category getCategoryByName(String name, String defaultUrl) {
         Category category = null;
         List<Category> generalCategories = categories.get(CategorySection.GENERAL);
         if(generalCategories != null) {
             for(Category c : generalCategories) {
-                if(name.equals(c.getName())) {
+                //bhavan: if(name.equals(c.getName())) {
+                if(name.equals(c.getSectionName())) {    
                     category = c;
                     break;
                 }
@@ -141,7 +143,9 @@ public class CategoriesAdapter extends BaseAdapter {
         }
         if(category == null) {
             if(defaultUrl != null) {
-                category = new Category(null, name, defaultUrl, ViewType.WEB);
+                // bhavan: create cateory using same name as display name and section name
+                // category = new Category(null, name, defaultUrl, ViewType.WEB);
+                category = new Category(null, name, name, defaultUrl, ViewType.WEB);
             }
         }       
         return category;
@@ -167,12 +171,13 @@ public class CategoriesAdapter extends BaseAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.section_image);
         TextView textView = (TextView) view.findViewById(R.id.section_text);        
         imageView.setImageBitmap(category.getImage());
-        textView.setText(category.getName());
+        textView.setText(category.getDisplayName());
         return view;
     }    
     
     private CategorySection getSection(Category category) {
-        CategorySection result = CATEGORY_TO_SECTION.get(category.getName());
+        // bhavan: CategorySection result = CATEGORY_TO_SECTION.get(category.getName());
+        CategorySection result = CATEGORY_TO_SECTION.get(category.getDisplayName());
         if(result != null) {
             return result;
         }

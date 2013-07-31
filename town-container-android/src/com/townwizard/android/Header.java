@@ -53,7 +53,8 @@ public class Header {
         Config config = Config.getConfig(activity);
         Category c = config.getCategory();
         if(c != null) {
-            headerCategoryView.setText(c.getName());
+            // bhavan: use display name: headerCategoryView.setText(c.getName());
+            headerCategoryView.setText(c.getDisplayName());
         }
         TextView headerPartnerView = (TextView) header.findViewById(R.id.header_partner_name);        
         String partnerName = getPartnerName();
@@ -149,7 +150,9 @@ public class Header {
                 if(zip != null) {
                     Category c = Config.getConfig(activity).getCategory();
                     if(c != null) {
-                        String cName = c.getName();
+                        // bhavan: use display name: String cName = c.getName();
+                        //String cName = c.getName();
+                        String cName = c.getDisplayName();
                         String newPartnerName = null;
                         if(Constants.EVENTS.equals(cName)) {
                             newPartnerName = Constants.CONTENT_PARTNER_EVENTS_DISPLAY;

@@ -41,28 +41,36 @@ public class Category implements java.io.Serializable {
     }
 	
     transient private final Bitmap image;
-	private final String name;
+	private final String displayName; // bhavan: was "name"
+	                                  // displayName is show in the menu in the app
+	private final String sectionName; // bhavan: handle section and display name e.g. "fine dining"
+	                                  // sectionName drives app behaviour e.g. "Restaurants"
 	private final String url;
 	transient private final ViewType viewType;
 	
-    public Category(Bitmap image, String name, String url, ViewType viewType) {
+    public Category(Bitmap image, String displayname, String sectionname, String url, ViewType viewType) {
         this.image = image;
-        this.name = handleSpecialChars(name);
+        this.displayName = handleSpecialChars(displayname);
+        this.sectionName = handleSpecialChars(sectionname);
         this.url = url;
         this.viewType = viewType;
     }
     
-	public Category(Bitmap image, String name, String url, String viewType) {
-	    this(image, name, url, ViewType.fromString(viewType));
+	public Category(Bitmap image, String displayname, String sectionname, String url, String viewType) {
+	    this(image, displayname, sectionname, url, ViewType.fromString(viewType));
 	}
 	
 	public Bitmap getImage(){
 		return image;
 	}
 	
-	public String getName(){
-		return name;
-	}
+    public String getDisplayName(){
+        return displayName;
+    }
+    
+    public String getSectionName(){
+        return sectionName;
+    }
 	
 	public String getUrl(){
 		return url;
@@ -84,29 +92,32 @@ public class Category implements java.io.Serializable {
         }
     }
     
-    public static Bitmap getImageFromResourceByName(Context context, String categoryName) {
-        Integer resource = categoryToResource.get(categoryName);
+    public static Bitmap getImageFromResourceByName(Context context, String displayname, String sectionname) {
+        Integer resource = categoryToResource.get(displayname);
         if(resource == null) {
-            resource = R.drawable.icon_star;
+            resource = categoryToResource.get(sectionname);
+            if(resource == null) {
+                resource = R.drawable.icon_star;
+            }
         }
         return BitmapFactory.decodeResource(context.getResources(), resource);
     }
     
     public Class<? extends Activity> getJsonViewActivityClass() {
-        return IMPLEMENTED_JSON_VIEWS.get(getName());
+        return IMPLEMENTED_JSON_VIEWS.get(getSectionName());
     }
     
     public boolean hasView() {
         if(url == null) return false;
         if (ViewType.NONE.equals(getViewType())) return false;
-        else if(ViewType.JSON.equals(getViewType()) && IMPLEMENTED_JSON_VIEWS.get(getName()) == null)
+        else if(ViewType.JSON.equals(getViewType()) && IMPLEMENTED_JSON_VIEWS.get(getSectionName()) == null)
             return false;
         return true;
     }
     
     @Override
     public String toString() {
-        return name + ": " + url;
+        return displayName + ": " + url; // bhavan: investigate use of this fuction
     }
     
     private static Map<String, Integer> categoryToResource = new HashMap<String, Integer>();
@@ -127,6 +138,7 @@ public class Category implements java.io.Serializable {
         categoryToResource.put(Constants.GOOGLE_PLUS, R.drawable.google_plus);
         categoryToResource.put(Constants.TWITTER, R.drawable.twitter);
         categoryToResource.put(Constants.SHOPPING, R.drawable.shopping);
+        categoryToResource.put(Constants.STAR, R.drawable.icon_star);
     }
     
     private static final Map<String, Class<? extends Activity>> IMPLEMENTED_JSON_VIEWS = 
@@ -156,11 +168,13 @@ public class Category implements java.io.Serializable {
                 result = new ArrayList<Category>();
                 for (int i = 0; i < jsArr.length(); i++) {
                     JSONObject jsObject = jsArr.getJSONObject(i);
-                    String name = jsObject.getString("display_name");
+                    // bhavan: String name = jsObject.getString("display_name");
+                    String displayName = jsObject.getString("display_name");
+                    String sectionName = jsObject.getString("section_name");
                     String categoryUrl = getCategoryUrl(jsObject);                        
                     String viewType = getViewType(jsObject);
-                    Bitmap image = Category.getImageFromResourceByName(context, name);
-                    result.add(new Category(image, name, categoryUrl, viewType));
+                    Bitmap image = Category.getImageFromResourceByName(context, displayName, sectionName);
+                    result.add(new Category(image, displayName, sectionName, categoryUrl, viewType));
                 }
             } else {
                 result = Collections.<Category>emptyList();

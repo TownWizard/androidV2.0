@@ -170,7 +170,8 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
     
     private Category findInList(List<Category> categories, String name) {
         for(Category c : categories) {
-            if(name.equals(c.getName())) return c;
+            // bhavan: use display name: if(name.equals(c.getName())) return c;
+            if(name.equals(c.getDisplayName())) return c;
         }
         return null;
     }

@@ -29,7 +29,7 @@ public class Constants {
     public static final String GOOGLE_PLUS = "Google +";
     public static final String TWITTER = "Twitter";
     public static final String SHOPPING = "Shopping";
-    
+    public static final String STAR = "Star";
    
     public static final String CONTENT_PARTNER_EVENTS = "What's Happening Nearby?";
     public static final String CONTENT_PARTNER_RESTAURANTS = "Nearby Restaurants";
