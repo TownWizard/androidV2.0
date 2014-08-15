@@ -4,7 +4,7 @@
 
 define("PARTNERS_SITE", 'http://www.townwizardcontainerapp.com/apiv30/partner');
 define("PARTNERS_FILE", 'partners/partners.json');
-define("MAX_PARTNER_ID", 200);
+define("MAX_PARTNER_ID", 250);
 
 function main($argc, $argv) {
 	if($argc > 1) $max_partner_id = intval($argv[1]);
