@@ -54,7 +54,10 @@ public class SearchPartners extends AsyncTask<String, Partner, Integer> {
             JSONObject mainJsonObject = getPartnersJson(partnerSearchUrl);
             status = mainJsonObject.getInt("status");
             
-            boolean disableMagicWands = (isTermSearch && status == STATUS_FOUND) || (offset > 0);
+            // bhavan: MagicWand (auto content) is only working in stg back end server
+            // turn it off for now
+            // boolean disableMagicWands = (isTermSearch && status == STATUS_FOUND) || (offset > 0);
+            boolean disableMagicWands = true;
             if(!disableMagicWands) {
                 URL twPartnerSearchUrl = getTownWizardPartnerUrl();
                 JSONObject twPartnerJsonObject = getPartnersJson(twPartnerSearchUrl);
